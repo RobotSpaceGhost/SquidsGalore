@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "squidsg:raw_squidchop"
+  },
+  "result": "squidsg:squidchop",
+  "experience": 0.35,
+  "cookingtime": 200
+}

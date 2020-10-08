@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "squidsg:blocks/kraken_glass_low"
+  }
+}

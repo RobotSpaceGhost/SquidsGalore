@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "lit=true": { "model": "squidsg:block/kraken_glass_high" },
+    "lit=false,indirect=true": { "model": "squidsg:block/kraken_glass_low" },
+    "lit=false,indirect=false": { "model": "squidsg:block/kraken_glass" }
+  }
+}

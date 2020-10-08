@@ -1,0 +1,12 @@
+{
+  "item.squidsg.ink_on_a_stick": "Ink on a Stick",
+  "item.squidsg.raw_squid_beef": "Raw Squid Beef",
+  "item.squidsg.raw_squidchop": "Raw Squidchop",
+  "item.squidsg.squid_beef": "Squid Steak",
+  "item.squidsg.squidchop": "Squidchop",
+  "item.squidsg.bucket_of_squid": "Bucket of Squid",
+  "item.squidsg.bucket_of_salty_squid": "Bucket of Salty Squid",
+  "block.squidsg.kraken_glass": "Kraken Glass",
+  "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
+  "itemGroup.squidTab": "Squids Galore"
+}

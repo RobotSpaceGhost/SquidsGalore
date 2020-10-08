@@ -1,0 +1,1 @@
+A repository for Squids Galore mod by RobotSpaceGhost. See wiki for more information!

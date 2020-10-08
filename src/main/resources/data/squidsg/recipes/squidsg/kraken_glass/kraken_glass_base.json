@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "dgd",
+    "gbg",
+    "dgd"
+  ],
+  "key":
+  {
+    "b":
+    {
+      "item": "minecraft:dragon_breath"
+    },
+    "d":
+    {
+      "tag": "forge:dyes/black"
+    },
+    "g":
+    {
+      "tag": "forge:glass/black"
+    }
+  },
+  "result":
+  {
+    "item": "squidsg:kraken_glass",
+    "count": 4
+  }
+}

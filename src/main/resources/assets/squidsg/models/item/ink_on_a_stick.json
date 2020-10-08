@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "squidsg:items/ink_on_a_stick"
+  }
+}

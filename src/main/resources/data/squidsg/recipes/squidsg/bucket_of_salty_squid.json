@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "wfw",
+    "fbf",
+    "wfw"
+  ],
+  "key":
+  {
+    "w":
+    {
+      "type": "forge:nbt",
+      "item": "minecraft:potion",
+      "nbt": "{Potion:'minecraft:water'}"
+    },
+    "f":
+    {
+      "tag": "minecraft:fishes"
+    },
+    "b":
+    {
+      "item": "squidsg:bucket_of_squid"
+    }
+  },
+  "result":
+  {
+    "item": "squidsg:bucket_of_salty_squid",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "squidsg:raw_squid_beef"
+  },
+  "result": "squidsg:squid_beef",
+  "experience": 0.35,
+  "cookingtime": 200
+}

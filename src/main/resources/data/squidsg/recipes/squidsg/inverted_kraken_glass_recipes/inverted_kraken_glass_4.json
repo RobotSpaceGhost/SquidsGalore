@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "squidsg:kraken_glass"
+    },
+    {
+      "item": "squidsg:kraken_glass"
+    },
+    {
+      "item": "squidsg:kraken_glass"
+    },
+    {
+      "item": "squidsg:kraken_glass"
+    },
+    {
+      "item": "minecraft:redstone_torch"
+    }
+  ],
+  "result":
+  {
+    "item": "squidsg:inverted_kraken_glass",
+    "count": 4
+  }
+}
