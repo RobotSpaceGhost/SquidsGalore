@@ -25,10 +25,10 @@ public class SquidsGalore
     public SquidsGalore() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        //ModEntityTypes.ENTITY_TYPES.register(modEventBus);
+
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems. ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-
+        ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         MinecraftForge.EVENT_BUS.register(this);
     }
