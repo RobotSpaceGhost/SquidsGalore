@@ -2,8 +2,6 @@ package com.robotspaceghost.squidsgalore.entities;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.entity.model.QuadrupedModel;
-import net.minecraft.client.renderer.entity.model.SpiderModel;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -27,11 +25,11 @@ public class BabyKrakenEntity extends AnimalEntity {
         super(type, worldIn);
     }
     //func_233815_a_ -> create()
-    public static AttributeModifierMap.MutableAttribute setCustomattributes(){
+    public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
         return MobEntity.registerAttributes()
-                .func_233815_a_(Attributes.MAX_HEALTH, 12.0D)
-                .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D);
-
+                .func_233815_a_(Attributes.MAX_HEALTH, 10.0D)
+                .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
+                .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
     }
 
     @Override
@@ -39,10 +37,10 @@ public class BabyKrakenEntity extends AnimalEntity {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this,1.25D));
-        this.goalSelector.addGoal(2,new TemptGoal(this, 1.1D, TEMPTATION_ITEMS, false));
-        this.goalSelector.addGoal(3, new FollowBoatGoal(this));
-        this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
-        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1,new TemptGoal(this, 1.1D, TEMPTATION_ITEMS, false));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this,1.0D));
+        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0f));
+        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
     }
 
     @Override
@@ -78,6 +76,6 @@ public class BabyKrakenEntity extends AnimalEntity {
     @Nullable
     @Override
     public AgeableEntity createChild(AgeableEntity ageable) {
-        return ModEntityTypes.BABY_KRAKEN.get().create(this.world);
+        return null;
     }
 }

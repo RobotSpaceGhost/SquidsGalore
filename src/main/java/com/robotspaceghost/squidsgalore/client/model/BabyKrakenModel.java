@@ -27,6 +27,24 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
         head = new ModelRenderer(this);
         head.setRotationPoint(0.0F, 16.0F, -1.0F);
         head.setTextureOffset(0, 0).addBox(-4.0F, -6.0F, -3.5F, 8.0F, 8.0F, 8.0F, 0.0F, false);
+        head.setTextureOffset(0, 0).addBox(-3.0F, -8.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(0, 0).addBox(2.0F, -8.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 7).addBox(1.0F, -3.0F, 4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 7).addBox(1.0F, -5.0F, 5.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(43, 7).addBox(2.0F, -6.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(43, 7).addBox(3.0F, -7.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 6).addBox(4.0F, -7.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 6).addBox(5.0F, -6.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(43, 7).addBox(-2.0F, -3.0F, 4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 7).addBox(-2.0F, -5.0F, 5.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 6).addBox(-3.0F, -6.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 8).addBox(-4.0F, -7.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 6).addBox(-5.0F, -7.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(42, 6).addBox(-6.0F, -6.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(32, 8).addBox(-2.0F, -1.0F, -4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(36, 8).addBox(-1.0F, -1.0F, -4.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(32, 7).addBox(0.0F, -1.0F, -4.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(32, 4).addBox(1.0F, -1.0F, -4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
         neck = new ModelRenderer(this);
         neck.setRotationPoint(0.0F, 15.0F, 0.5F);
@@ -34,7 +52,7 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
 
         body = new ModelRenderer(this);
         body.setRotationPoint(0.0F, 15.0F, 9.0F);
-        body.setTextureOffset(0, 0).addBox(-1.0F, -1.0F, -10.0F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+        body.setTextureOffset(10, 11).addBox(-1.0F, -1.0F, -10.0F, 1.0F, 1.0F, 1.0F, 0.0F, false);
 
         tentacle1 = new ModelRenderer(this);
         tentacle1.setRotationPoint(-2.0F, 18.0F, 2.0F);

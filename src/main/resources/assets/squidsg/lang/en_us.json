@@ -8,6 +8,6 @@
   "item.squidsg.bucket_of_salty_squid": "Bucket of Salty Squid",
   "block.squidsg.kraken_glass": "Kraken Glass",
   "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
-  "entity.squidsg.baby_kraken" : "Baby Kraken",
-  "itemGroup.squidTab": "Squids Galore"
+  "itemGroup.squidTab": "Squids Galore",
+  "entity.squidsg.baby_kraken": "Baby Kraken"
 }
