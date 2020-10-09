@@ -31,6 +31,7 @@ public class BabyKrakenEntity extends AnimalEntity {
                 .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
                 .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
     }
+    
 
     @Override
     protected void registerGoals(){

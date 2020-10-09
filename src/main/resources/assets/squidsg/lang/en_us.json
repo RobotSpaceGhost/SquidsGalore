@@ -6,8 +6,10 @@
   "item.squidsg.squidchop": "Squidchop",
   "item.squidsg.bucket_of_squid": "Bucket of Squid",
   "item.squidsg.bucket_of_salty_squid": "Bucket of Salty Squid",
+  "item.squidsg.baby_kraken_egg" : "Baby Kraken Egg",
   "block.squidsg.kraken_glass": "Kraken Glass",
   "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
+  "block.squidsg.glow_block" : "Glow Block (Why and how do you have this?)",
   "itemGroup.squidTab": "Squids Galore",
   "entity.squidsg.baby_kraken": "Baby Kraken"
 }
