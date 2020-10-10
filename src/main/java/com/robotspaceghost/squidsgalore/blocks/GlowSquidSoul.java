@@ -23,7 +23,7 @@ import java.util.Random;
 public class GlowSquidSoul extends Block implements IWaterLoggable {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    protected static final VoxelShape SOUL_SHAPE = Block.makeCuboidShape(7.0D, 7.0D, 7.0D, 10.0D, 10.0D, 10.0D);
+    protected static final VoxelShape SOUL_SHAPE = Block.makeCuboidShape(8.0D, 8.0D, 8.0D, 9.0D, 9.0D, 9.0D);
 
     public GlowSquidSoul() {
         super(Block.Properties.from(Blocks.REDSTONE_LAMP)
@@ -39,10 +39,12 @@ public class GlowSquidSoul extends Block implements IWaterLoggable {
         this.setDefaultState(this.getDefaultState().with(LIT, Boolean.TRUE).with(WATERLOGGED, Boolean.FALSE));
 
     }
+
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
                 return SOUL_SHAPE;
     }
+
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
@@ -73,15 +75,15 @@ public class GlowSquidSoul extends Block implements IWaterLoggable {
         return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
     }
 
-
+    /*
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (!worldIn.isRemote) {
             boolean wet = state.get(WATERLOGGED);
             if (neighborIsGlowSquidSoul(worldIn,pos)) {
-                clearGlowSquidSoul(worldIn, pos, wet);
+                clearGlowSquidSoul(worldIn, pos, blockIn, wet);
             }
         }
-    }
+    }*/
 
     public void clearGlowSquidSoul(World worldIn, BlockPos pos, boolean wet){
         if (wet){
@@ -91,6 +93,25 @@ public class GlowSquidSoul extends Block implements IWaterLoggable {
         }
     }
 
+    public void clearSurroundingSouls(World worldIn, BlockPos pos, boolean clearCenter){
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                for (int k = -1; k < 2; k++){
+                    BlockPos newPos = new BlockPos(pos.offset(Direction.EAST, i).offset(Direction.UP, j).offset(Direction.NORTH, k));
+                    BlockState newState = worldIn.getBlockState(newPos);
+                    Block newBlock = worldIn.getBlockState(newPos).getBlock();
+                    if (!clearCenter && (i == 0) && (j == 0) && (k == 0)){
+                        System.out.println(i + ", " + j + ", " + k);
+                        System.out.println("center of soul found!");
+                    }
+                    else if (newBlock instanceof GlowSquidSoul){
+                        ((GlowSquidSoul) newBlock).clearGlowSquidSoul(worldIn, newPos, ((GlowSquidSoul) newBlock).isWet(newState));
+                    }
+                }
+            }
+        }
+    }
+    /*
     public boolean neighborIsGlowSquidSoul(World worldIn, BlockPos pos){
         BlockState centerState = worldIn.getBlockState(pos).getBlock().getDefaultState();
         if (centerState != ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState()) return false; //just in case?
@@ -101,26 +122,26 @@ public class GlowSquidSoul extends Block implements IWaterLoggable {
         int nFlag = (worldIn.getBlockState(pos.offset(Direction.NORTH, 1)).getBlock().getDefaultState() == centerState) ? 1 : 0;
         int sFlag = (worldIn.getBlockState(pos.offset(Direction.SOUTH, 1)).getBlock().getDefaultState() == centerState)  ? 1 : 0;
         return ((uFlag + dFlag + eFlag + wFlag + nFlag + sFlag) >= 1);
-    }
+    } */
     public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
         ItemStack itemstack = useContext.getItem();
-        if (useContext.replacingClickedOnBlock() && itemstack.getItem() != this.asItem()) {
-                return true;
-        }else{
-                return false;
-        }
+        return useContext.replacingClickedOnBlock() && itemstack.getItem() != this.asItem();
     }
-
+    /*
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         boolean wet = state.get(WATERLOGGED);
+        Block blockIn = worldIn.getBlockState(pos).getBlock();
         if (neighborIsGlowSquidSoul(worldIn,pos)) {
-            clearGlowSquidSoul(worldIn, pos, wet);
+            clearGlowSquidSoul(worldIn, pos, blockIn, wet);
         }
-    }
+    } */
+
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIT, WATERLOGGED);
     }
-
+    public boolean isWet(BlockState state){
+        return state.get(WATERLOGGED);
+    }
     public boolean isTransparent(BlockState state) {
         return true;
     }

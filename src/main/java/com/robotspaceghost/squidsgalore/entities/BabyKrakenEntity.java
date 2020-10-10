@@ -1,6 +1,10 @@
 package com.robotspaceghost.squidsgalore.entities;
+import com.robotspaceghost.squidsgalore.blocks.GlowSquidSoul;
+import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModItems;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -37,10 +41,10 @@ public class BabyKrakenEntity extends AnimalEntity {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this,1.25D));
-        this.goalSelector.addGoal(1,new TemptGoal(this, 1.1D, TEMPTATION_ITEMS, false));
+        this.goalSelector.addGoal(2, new TemptGoal(this, 1.1D, TEMPTATION_ITEMS, false));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this,1.0D));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0f));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
+        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
     }
 
     @Override
@@ -72,7 +76,44 @@ public class BabyKrakenEntity extends AnimalEntity {
     protected void playSwimSound(float volume) {
         super.playSwimSound(volume);
     }
-
+    /*
+    ------------------------
+    start glowsquid func
+    ----------------------
+     */
+    @Override
+    public void livingTick() {
+        super.livingTick();
+        if (this.isAlive()) {
+            BlockPos soulLoc = new BlockPos(this.getPosX(), this.getPosY() + 1, this.getPosZ());
+            World worldIn = this.getEntityWorld();
+            if (worldIn.getBlockState(soulLoc).getBlock().getDefaultState() != ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState()) {
+                if ((worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.AIR.getDefaultState()) ||
+                        (worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.WATER.getDefaultState())) {
+                    worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState());
+                    Block newBlock = worldIn.getBlockState(soulLoc).getBlock();
+                    if (newBlock instanceof GlowSquidSoul) {
+                        ((GlowSquidSoul) newBlock).clearSurroundingSouls(worldIn, soulLoc, false);
+                    }
+                }
+            }
+        }
+    }
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        BlockPos soulLoc = new BlockPos(this.getPosX(), this.getPosY() + 1, this.getPosZ());
+        World worldIn = this.getEntityWorld();
+        Block soulBlock = worldIn.getBlockState(soulLoc).getBlock();
+        if (soulBlock instanceof GlowSquidSoul) {
+            ((GlowSquidSoul) soulBlock).clearSurroundingSouls(worldIn, soulLoc, true);
+        }
+    }
+/*
+------------------------
+end glowsquid func
+----------------------
+ */
     @Nullable
     @Override
     public AgeableEntity createChild(AgeableEntity ageable) {
