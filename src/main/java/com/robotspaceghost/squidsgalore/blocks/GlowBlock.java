@@ -61,37 +61,42 @@ public class GlowBlock extends Block implements IWaterLoggable {
 
 
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        /*
         if (!worldIn.isRemote) {
-            boolean flag = state.get(LIT);
-            if (flag != worldIn.isBlockPowered(pos)) {
-                if (flag) {
-                    worldIn.getPendingBlockTicks().scheduleTick(pos, this, 4);
-                } else {
-                    worldIn.setBlockState(pos, state.func_235896_a_(LIT), 2);
-                }
+            boolean wet = state.get(WATERLOGGED);
+            if (neighborIsGlowBlock(worldIn,pos,blockIn)) {
+                clearGlowBlock(worldIn, pos, wet);
             }
-
         }
-
-         */
     }
 
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        /*if (state.get(LIT) && !worldIn.isBlockPowered(pos)) {
-            worldIn.setBlockState(pos, state.func_235896_a_(LIT), 2);
-        }*/
+    public void clearGlowBlock(World worldIn, BlockPos pos, boolean wet){
+        if (wet){
+            worldIn.setBlockState(pos, Blocks.WATER.getDefaultState());
+        }else{
+            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+        }
+    }
 
+    public boolean neighborIsGlowBlock(World worldIn, BlockPos pos, Block blockIn){
+        int uFlag = (worldIn.getBlockState(pos.offset(Direction.UP, 1)).getBlock() == blockIn) ? 1 : 0;
+        int dFlag = (worldIn.getBlockState(pos.offset(Direction.DOWN, 1)).getBlock() == blockIn) ? 1 : 0;
+        int eFlag = (worldIn.getBlockState(pos.offset(Direction.NORTH, 1)).getBlock() == blockIn) ? 1 : 0;
+        int wFlag = (worldIn.getBlockState(pos.offset(Direction.EAST, 1)).getBlock() == blockIn) ? 1 : 0;
+        int nFlag = (worldIn.getBlockState(pos.offset(Direction.SOUTH, 1)).getBlock() == blockIn) ? 1 : 0;
+        int sFlag = (worldIn.getBlockState(pos.offset(Direction.WEST, 1)).getBlock() == blockIn)  ? 1 : 0;
+
+        return ((uFlag + dFlag + eFlag + wFlag + nFlag + sFlag) >= 1);
+    }
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+        boolean wet = state.get(WATERLOGGED);
+        if (neighborIsGlowBlock(worldIn,pos,state.getBlock())) {
+            clearGlowBlock(worldIn, pos, wet);
+        }
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIT, WATERLOGGED);
     }
-    /*
-    @Override
-    public boolean isAir(BlockState state, IBlockReader world, BlockPos pos) {
-        return true;
-    }*/
     @Override
     public boolean isTransparent(BlockState state) {
         return true;
