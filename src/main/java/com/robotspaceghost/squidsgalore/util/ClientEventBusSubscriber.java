@@ -22,7 +22,7 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event){
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.BABY_KRAKEN.get(), BabyKrakenRenderer::new);
-        RenderTypeLookup.setRenderLayer(ModBlocks.GLOW_BLOCK.get(), RenderType.getCutout());
+
     }
 
     @SubscribeEvent

@@ -16,7 +16,6 @@ public class ModEntityTypes {
     //Entity Types
     public static final RegistryObject<EntityType<BabyKrakenEntity>> BABY_KRAKEN = ENTITY_TYPES.register("baby_kraken",
             () -> EntityType.Builder.create(BabyKrakenEntity::new,  EntityClassification.CREATURE)
-
                     .size(1.0f, 1.0f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "baby_kraken").toString()));
 }
