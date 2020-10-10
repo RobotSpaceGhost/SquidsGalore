@@ -32,6 +32,8 @@ public class GlowBlock extends Block implements IWaterLoggable {
         super(Block.Properties.from(Blocks.REDSTONE_LAMP)
         .doesNotBlockMovement()
         .notSolid()
+        .zeroHardnessAndResistance()
+
         /*
                 .setRequiresTool()
                 .harvestLevel(2)
@@ -97,8 +99,6 @@ public class GlowBlock extends Block implements IWaterLoggable {
         int wFlag = (worldIn.getBlockState(pos.offset(Direction.WEST, 1)).getBlock().getDefaultState() == centerState) ? 1 : 0;
         int nFlag = (worldIn.getBlockState(pos.offset(Direction.NORTH, 1)).getBlock().getDefaultState() == centerState) ? 1 : 0;
         int sFlag = (worldIn.getBlockState(pos.offset(Direction.SOUTH, 1)).getBlock().getDefaultState() == centerState)  ? 1 : 0;
-        if ((uFlag + dFlag + eFlag + wFlag + nFlag + sFlag) >= 1) System.out.println("Adjacent to glowblock");
-        else System.out.println("Not adjacent to glowblock");
         return ((uFlag + dFlag + eFlag + wFlag + nFlag + sFlag) >= 1);
     }
     public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
