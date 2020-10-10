@@ -9,7 +9,7 @@
   "item.squidsg.baby_kraken_egg" : "Baby Kraken Egg",
   "block.squidsg.kraken_glass": "Kraken Glass",
   "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
-  "block.squidsg.glow_block" : "Glow Block (Why and how do you have this?)",
+  "block.squidsg.glow_squid_soul" : "Glow Squid Soul (Creative Mode Only)",
   "itemGroup.squidTab": "Squids Galore",
   "entity.squidsg.baby_kraken": "Baby Kraken"
 }

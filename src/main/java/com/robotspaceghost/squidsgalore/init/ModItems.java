@@ -41,8 +41,8 @@ public class ModItems {
     public static final RegistryObject<Item> INVERTED_KRAKEN_GLASS_ITEM = ITEMS.register("inverted_kraken_glass",
             () -> new BlockItemBase(ModBlocks.INVERTED_KRAKEN_GLASS.get()));
 
-    //GlowBlock OnlyCreative
-    public static final RegistryObject<Item> GLOW_BLOCK_ITEM = ITEMS.register("glow_block",
-            () -> new BlockItemBase(ModBlocks.GLOW_BLOCK.get()));
+    //GlowSquidSoul OnlyCreative
+    public static final RegistryObject<Item> GLOW_SQUID_SOUL_ITEM = ITEMS.register("glow_squid_soul",
+            () -> new BlockItemBase(ModBlocks.GLOW_SQUID_SOUL.get()));
 
 }

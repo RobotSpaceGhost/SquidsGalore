@@ -2,6 +2,6 @@
   "parent": "block/cube_all",
   "ambientocclusion": false,
   "textures": {
-    "all": "squidsg:blocks/glow_block"
+    "all": "squidsg:blocks/glow_squid_soul"
   }
 }

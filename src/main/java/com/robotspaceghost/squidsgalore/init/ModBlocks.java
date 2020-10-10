@@ -1,7 +1,7 @@
 package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
-import com.robotspaceghost.squidsgalore.blocks.GlowBlock;
+import com.robotspaceghost.squidsgalore.blocks.GlowSquidSoul;
 import com.robotspaceghost.squidsgalore.blocks.InvertedKrakenGlass;
 import com.robotspaceghost.squidsgalore.blocks.KrakenGlass;
 import net.minecraft.block.Block;
@@ -14,6 +14,6 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> KRAKEN_GLASS = BLOCKS.register("kraken_glass", KrakenGlass::new);
     public static final RegistryObject<Block> INVERTED_KRAKEN_GLASS = BLOCKS.register("inverted_kraken_glass", InvertedKrakenGlass::new);
-    public static final RegistryObject<Block> GLOW_BLOCK = BLOCKS.register("glow_block", GlowBlock::new);
+    public static final RegistryObject<Block> GLOW_SQUID_SOUL = BLOCKS.register("glow_squid_soul", GlowSquidSoul::new);
 
 }

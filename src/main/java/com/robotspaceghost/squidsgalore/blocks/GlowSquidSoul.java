@@ -20,12 +20,12 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class GlowBlock extends Block implements IWaterLoggable {
+public class GlowSquidSoul extends Block implements IWaterLoggable {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    protected static final VoxelShape SOUL_SHAPE = Block.makeCuboidShape(8.0D, 8.0D, 8.0D, 9.0D, 9.0D, 9.0D);
+    protected static final VoxelShape SOUL_SHAPE = Block.makeCuboidShape(7.0D, 7.0D, 7.0D, 10.0D, 10.0D, 10.0D);
 
-    public GlowBlock() {
+    public GlowSquidSoul() {
         super(Block.Properties.from(Blocks.REDSTONE_LAMP)
         .doesNotBlockMovement()
         .notSolid()
@@ -77,13 +77,13 @@ public class GlowBlock extends Block implements IWaterLoggable {
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (!worldIn.isRemote) {
             boolean wet = state.get(WATERLOGGED);
-            if (neighborIsGlowBlock(worldIn,pos)) {
-                clearGlowBlock(worldIn, pos, wet);
+            if (neighborIsGlowSquidSoul(worldIn,pos)) {
+                clearGlowSquidSoul(worldIn, pos, wet);
             }
         }
     }
 
-    public void clearGlowBlock(World worldIn, BlockPos pos, boolean wet){
+    public void clearGlowSquidSoul(World worldIn, BlockPos pos, boolean wet){
         if (wet){
             worldIn.setBlockState(pos, Blocks.WATER.getDefaultState());
         }else{
@@ -91,9 +91,9 @@ public class GlowBlock extends Block implements IWaterLoggable {
         }
     }
 
-    public boolean neighborIsGlowBlock(World worldIn, BlockPos pos){
+    public boolean neighborIsGlowSquidSoul(World worldIn, BlockPos pos){
         BlockState centerState = worldIn.getBlockState(pos).getBlock().getDefaultState();
-        if (centerState != ModBlocks.GLOW_BLOCK.get().getDefaultState()) return false; //just in case?
+        if (centerState != ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState()) return false; //just in case?
         int uFlag = (worldIn.getBlockState(pos.offset(Direction.UP, 1)).getBlock().getDefaultState() == centerState) ? 1 : 0;
         int dFlag = (worldIn.getBlockState(pos.offset(Direction.DOWN, 1)).getBlock().getDefaultState() == centerState) ? 1 : 0;
         int eFlag = (worldIn.getBlockState(pos.offset(Direction.EAST, 1)).getBlock().getDefaultState() == centerState) ? 1 : 0;
@@ -113,8 +113,8 @@ public class GlowBlock extends Block implements IWaterLoggable {
 
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         boolean wet = state.get(WATERLOGGED);
-        if (neighborIsGlowBlock(worldIn,pos)) {
-            clearGlowBlock(worldIn, pos, wet);
+        if (neighborIsGlowSquidSoul(worldIn,pos)) {
+            clearGlowSquidSoul(worldIn, pos, wet);
         }
     }
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {

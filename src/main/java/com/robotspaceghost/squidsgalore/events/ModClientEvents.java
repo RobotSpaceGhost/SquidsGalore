@@ -23,7 +23,7 @@ public class ModClientEvents {
             BlockState lookBlockState = worldIn.getBlockState(targetPos).getBlock().getDefaultState();
             PlayerEntity player = worldIn.getClosestPlayer(cameraPos.getX(),cameraPos.getY(),cameraPos.getZ(),2.0D,true);
 
-            if (player != null && !player.isCreative() && lookBlockState == ModBlocks.GLOW_BLOCK.get().getBlock().getDefaultState()){
+            if (player != null && !player.isCreative() && lookBlockState == ModBlocks.GLOW_SQUID_SOUL.get().getBlock().getDefaultState()){
                 event.setCanceled(true);
             }
         }
