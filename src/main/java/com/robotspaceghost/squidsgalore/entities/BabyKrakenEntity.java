@@ -1,5 +1,4 @@
 package com.robotspaceghost.squidsgalore.entities;
-import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;

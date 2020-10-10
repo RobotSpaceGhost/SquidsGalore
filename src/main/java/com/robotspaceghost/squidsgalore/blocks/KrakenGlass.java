@@ -1,13 +1,11 @@
 package com.robotspaceghost.squidsgalore.blocks;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
@@ -30,12 +28,6 @@ public class KrakenGlass extends Block {
         this.setDefaultState(this.getDefaultState().with(LIT, Boolean.FALSE).with(INDIRECT, Boolean.FALSE));
 
     }
-/*
-    public int getLightValue(BlockState state, World worldIn, BlockPos pos) {
-        return state.get(LIT) ? super.getLightValue(state, worldIn, pos) : 0;
-    }
-
- */
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
     }

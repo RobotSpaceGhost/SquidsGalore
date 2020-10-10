@@ -6,7 +6,6 @@ import com.robotspaceghost.squidsgalore.blocks.InvertedKrakenGlass;
 import com.robotspaceghost.squidsgalore.blocks.KrakenGlass;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
