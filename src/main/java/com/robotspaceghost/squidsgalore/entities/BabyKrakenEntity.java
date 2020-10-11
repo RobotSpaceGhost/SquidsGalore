@@ -88,11 +88,19 @@ public class BabyKrakenEntity extends AnimalEntity {
     protected void playSwimSound(float volume) {
         super.playSwimSound(volume);
     }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
+
+
+
     /*
-    ------------------------
-    start glowsquid func
-    ----------------------
-     */
+        ------------------------
+        start glowsquid func
+        ----------------------
+         */
     //public List entities;
     //public AxisAlignedBB aura;
     /*
@@ -102,6 +110,7 @@ public class BabyKrakenEntity extends AnimalEntity {
             if (!entities.isEmpty() && (entities.size() >= 2)) {
                 System.out.println("These Entities Are within Range!" + entities + "");
      }*/
+    /*
     public BlockPos soulLoc = new BlockPos(0,250,0);
     @Override
     public void livingTick() {
@@ -135,11 +144,29 @@ public class BabyKrakenEntity extends AnimalEntity {
             ((GlowSquidSoul) worldIn.getBlockState(soulLoc).getBlock()).clearGlowSquidSoul(worldIn,soulLoc,(worldIn.getFluidState(soulLoc).getFluid() == Fluids.WATER));
         }
     }
-/*
-------------------------
-end glowsquid func
-----------------------
- */
+    */
+    /*
+    ------------------------
+    end glowsquid func
+    ----------------------
+     */
+
+    /*
+    -----------------
+    lava squid func start
+    --------------------
+     */
+    /*
+    @Override
+    public boolean canRenderOnFire() {
+        return false;
+    }
+    */
+    /*
+    ---------------------
+    lava squid end func
+    --------------------
+     */
     @Nullable
     @Override
     public AgeableEntity createChild(AgeableEntity ageable) {
