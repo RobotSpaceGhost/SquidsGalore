@@ -2,6 +2,7 @@ package com.robotspaceghost.squidsgalore.entities;
 import com.robotspaceghost.squidsgalore.blocks.GlowSquidSoul;
 import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModItems;
+import javafx.beans.property.BooleanProperty;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -13,6 +14,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -93,8 +95,14 @@ public class BabyKrakenEntity extends AnimalEntity {
      */
     //public List entities;
     //public AxisAlignedBB aura;
-    public BlockPos soulLoc = new BlockPos(0,250,0);
+    /*
+            aura = new AxisAlignedBB(this.getPosX() - 1, this.getPosY() - 1, this.getPosZ() - 1, this.getPosX() + 2, this.getPosY() + 2, this.getPosZ() + 2);
+            entities = world.getEntitiesWithinAABB(getClass(), aura);
 
+            if (!entities.isEmpty() && (entities.size() >= 2)) {
+                System.out.println("These Entities Are within Range!" + entities + "");
+     }*/
+    public BlockPos soulLoc = new BlockPos(0,250,0);
     @Override
     public void livingTick() {
         super.livingTick();
@@ -102,13 +110,7 @@ public class BabyKrakenEntity extends AnimalEntity {
         if (this.isAlive()) {
             BlockPos newSoulLoc = new BlockPos(this.getPosX(), this.getPosY(), this.getPosZ());
             World worldIn = this.getEntityWorld();
-            /*
-            aura = new AxisAlignedBB(this.getPosX() - 1, this.getPosY() - 1, this.getPosZ() - 1, this.getPosX() + 2, this.getPosY() + 2, this.getPosZ() + 2);
-            entities = world.getEntitiesWithinAABB(getClass(), aura);
 
-            if (!entities.isEmpty() && (entities.size() >= 2)) {
-                System.out.println("These Entities Are within Range!" + entities + "");
-            }*/
             if ((soulLoc.getX() != newSoulLoc.getX()) || (soulLoc.getY() != newSoulLoc.getY()) || (soulLoc.getZ() != newSoulLoc.getZ())){
                 if (worldIn.getBlockState(soulLoc).getBlock() instanceof GlowSquidSoul) {
                         ((GlowSquidSoul) worldIn.getBlockState(soulLoc).getBlock()).clearGlowSquidSoul(worldIn,soulLoc,(worldIn.getFluidState(soulLoc).getFluid() == Fluids.WATER));
@@ -116,7 +118,11 @@ public class BabyKrakenEntity extends AnimalEntity {
                 soulLoc = new BlockPos(newSoulLoc); //change soul location
                 if ((worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.AIR.getDefaultState()) ||
                    (worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.WATER.getDefaultState())){
-                    worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState());
+                    if ((worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.WATER.getDefaultState())) {
+                        worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState().with(BlockStateProperties.WATERLOGGED, true));
+                    }else{
+                        worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState());
+                    }
                 }
             }
         }

@@ -27,13 +27,7 @@ public class GlowSquidSoul extends Block implements IWaterLoggable {
         super(Block.Properties.from(Blocks.REDSTONE_LAMP)
         .doesNotBlockMovement()
         .notSolid()
-        .zeroHardnessAndResistance()
-
-        /*
-                .setRequiresTool()
-                .harvestLevel(2)
-                .harvestTool(ToolType.PICKAXE)
-        */);
+        .zeroHardnessAndResistance());
         this.setDefaultState(this.getDefaultState().with(LIT, Boolean.TRUE).with(WATERLOGGED, Boolean.FALSE));
 
     }
