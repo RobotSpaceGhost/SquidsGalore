@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class BabyKrakenEntity extends AnimalEntity {
+public class BabyKrakenEntity extends CreatureEntity {
     /*
     todo: stareAtFlowerGoal, sitOnBedGoal make tameable, belong to spawning player, if killed by player semiperm debuff "Omen of the Seas"
     safg: stops for a moment to stare at flowers, like it stares at players
@@ -35,7 +35,7 @@ public class BabyKrakenEntity extends AnimalEntity {
     */
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
 
-    public BabyKrakenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
+    public BabyKrakenEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
     }
     //func_233815_a_ -> create()
@@ -94,8 +94,10 @@ public class BabyKrakenEntity extends AnimalEntity {
         return true;
     }
 
-
-
+    @Override
+    public boolean canBeLeashedTo(PlayerEntity player) {
+        return super.canBeLeashedTo(player);
+    }
     /*
         ------------------------
         start glowsquid func
@@ -167,9 +169,4 @@ public class BabyKrakenEntity extends AnimalEntity {
     lava squid end func
     --------------------
      */
-    @Nullable
-    @Override
-    public AgeableEntity createChild(AgeableEntity ageable) {
-        return null;
-    }
 }
