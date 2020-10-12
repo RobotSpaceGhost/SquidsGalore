@@ -24,5 +24,6 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent
     public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
         ModSpawnEggItem.initSpawnEggs();
+
     }
 }

@@ -9,11 +9,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.GoalSelector;
+import net.minecraft.entity.ai.goal.TemptGoal;
+import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -60,6 +64,7 @@ public class ModEvents {
             //-----------------
             // other squids here
             //---------------
+            if (squid instanceof SquidEntity){milk = new ItemStack(Items.INK_SAC);}
             player.getHeldItemMainhand().shrink(1);
             if (milk != null){
                 if (!player.addItemStackToInventory(milk)) {
@@ -70,7 +75,6 @@ public class ModEvents {
             }
         }
     }
-
     /*
     @SubscribeEvent
     public static void burnImmunity(LivingAttackEvent event){

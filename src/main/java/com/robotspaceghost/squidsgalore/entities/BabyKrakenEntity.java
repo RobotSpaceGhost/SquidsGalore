@@ -96,11 +96,6 @@ public class BabyKrakenEntity extends CreatureEntity {
     }
 
     @Override
-    public boolean canBeLeashedTo(PlayerEntity player) {
-        return super.canBeLeashedTo(player);
-    }
-
-    @Override
     public void livingTick() {
         if (!this.world.isRemote){
             if (milkTimer < milkTimerMax){
