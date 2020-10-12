@@ -209,14 +209,19 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
     public boolean canDespawn(double distanceToClosestPlayer) {
         return !this.isFromBucket() && !this.hasCustomName();
     }
-
+    @Override
+    public boolean canBeLeashedTo(PlayerEntity player) {
+        return true;
+    }
     /**
      * Will return how many at most can spawn in a chunk at once.
      */
     public int getMaxSpawnedInChunk() {
         return 8;
     }
-
+    //-----------------------------------------------------------------
+    // bucket stuff
+    //-------------------------------------------------------------
     protected void registerData() {
         super.registerData();
         this.dataManager.register(FROM_BUCKET, false);
@@ -279,7 +284,9 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
 
     protected abstract ItemStack getFishBucket();
 
-
+    //-----------------------------------------------------------------
+    // end bucket stuff
+    //-------------------------------------------------------------
     /**
      * Handler for {@link World#setEntityState}
      */

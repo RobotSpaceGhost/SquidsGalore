@@ -75,6 +75,7 @@ public class ModEvents {
             }
         }
     }
+
     /*
     @SubscribeEvent
     public static void burnImmunity(LivingAttackEvent event){
