@@ -3,9 +3,9 @@ package com.robotspaceghost.squidsgalore.init;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.blocks.BlockItemBase;
 import com.robotspaceghost.squidsgalore.items.*;
+import com.robotspaceghost.squidsgalore.items.Buckets.SquidBucketItem;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.fish.SalmonEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.FishBucketItem;
@@ -24,8 +24,8 @@ public class ModItems {
     public static final RegistryObject<ModSpawnEggItem> BABY_KRAKEN_EGG = ITEMS.register("baby_kraken_egg",
             () -> new ModSpawnEggItem(ModEntityTypes.BABY_KRAKEN, 0x100F10, 0x9E05AF, new Item.Properties().group(SquidsGalore.TAB)));
     //Buckets
-    public static final RegistryObject<FishBucketItem> BUCKET_OF_SQUID = ITEMS.register("bucket_of_squid",
-            () -> new FishBucketItem(() -> EntityType.SALMON, () -> Fluids.WATER, (new Item.Properties()).maxStackSize(1).group(SquidsGalore.TAB)));
+    public static final RegistryObject<SquidBucketItem> BUCKET_OF_SQUID = ITEMS.register("bucket_of_squid",
+            () -> new SquidBucketItem((ModEntityTypes.BABY_KRAKEN), () -> Fluids.WATER, (new Item.Properties()).maxStackSize(1).group(SquidsGalore.TAB)));
 
     public static final RegistryObject<Item> BUCKET_OF_SALTY_SQUID = ITEMS.register("bucket_of_salty_squid",ItemBase::new);
 

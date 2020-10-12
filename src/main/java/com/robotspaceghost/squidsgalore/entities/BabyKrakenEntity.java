@@ -30,7 +30,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     ofts: upon entering ocean biome, summon boss fight
 
     */
-    //private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(AbstractFishEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
     public static final Item SQUID_MILK = Items.DRAGON_BREATH.getItem();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
@@ -104,7 +104,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) { return false;
     }
-    /*
+
     //---------------------------------------------------------------------
     // bucket stuff
     //---------------------------------------------------------------------
@@ -136,7 +136,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         if (itemstack.getItem() == Items.WATER_BUCKET && this.isAlive()) {
             this.playSound(SoundEvents.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F);
             itemstack.shrink(1);
-            ItemStack itemstack1 = this.getFishBucket();
+            ItemStack itemstack1 = this.getSquidBucket();
             this.setBucketData(itemstack1);
             if (!this.world.isRemote) {
                 CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity)p_230254_1_, itemstack1);
@@ -161,11 +161,11 @@ public class BabyKrakenEntity extends CreatureEntity {
         }
 
     }
-
-    protected ItemStack getFishBucket() {
+    //todo change bucket of squid to bucket of baby kraken
+    protected ItemStack getSquidBucket() {
         return new ItemStack(ModItems.BUCKET_OF_SQUID.get());
     }
-    */
+
     //---------------------------------------------------------------------------
     // end bucket stuff
     //----------------------------------------------------------------

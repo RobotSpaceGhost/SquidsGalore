@@ -38,7 +38,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.Random;
 
 public abstract class ModWaterSquidEntity extends WaterMobEntity {
-    private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(AbstractFishEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(ModWaterSquidEntity.class, DataSerializers.BOOLEAN);
     public float squidPitch;
     public float prevSquidPitch;
     public float squidYaw;
@@ -253,7 +253,7 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         if (itemstack.getItem() == Items.WATER_BUCKET && this.isAlive()) {
             this.playSound(SoundEvents.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F);
             itemstack.shrink(1);
-            ItemStack itemstack1 = this.getFishBucket();
+            ItemStack itemstack1 = this.getSquidBucket();
             this.setBucketData(itemstack1);
             if (!this.world.isRemote) {
                 CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity)p_230254_1_, itemstack1);
@@ -282,7 +282,7 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
 
     }
 
-    protected abstract ItemStack getFishBucket();
+    protected abstract ItemStack getSquidBucket();
 
     //-----------------------------------------------------------------
     // end bucket stuff
