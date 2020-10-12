@@ -104,12 +104,14 @@ public class BabyKrakenEntity extends CreatureEntity {
     public void livingTick() {
         if (!this.world.isRemote){
             if (milkTimer < milkTimerMax){
-                if (Math.abs(this.world.getDayTime() - worldTimeWhenMilked) >= milkTimerMax) {
-                    milkTimer = milkTimerMax;
+                long curTime = this.world.getDayTime();
+                if ((curTime >= worldTimeWhenMilked && ((curTime - worldTimeWhenMilked) >= milkTimerMax))
+                    ||(curTime < worldTimeWhenMilked && (((24000 - (worldTimeWhenMilked % 24000)) + (curTime % 24000)) >= milkTimerMax ))){
+                     milkTimer = milkTimerMax;
                 }
                 else milkTimer++;
             }
-            if (milkTimer == milkTimerMax){
+            if (milkTimer == milkTimerMax && (availableMilks != maximumMilks)){
                 availableMilks = maximumMilks;
             }
         }
