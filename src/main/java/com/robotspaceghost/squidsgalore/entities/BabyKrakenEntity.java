@@ -1,28 +1,20 @@
 package com.robotspaceghost.squidsgalore.entities;
-import com.robotspaceghost.squidsgalore.blocks.GlowSquidSoul;
-import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModItems;
-import javafx.beans.property.BooleanProperty;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import javax.annotation.Nullable;
-import java.util.List;
 
 
 public class BabyKrakenEntity extends CreatureEntity {
@@ -34,9 +26,20 @@ public class BabyKrakenEntity extends CreatureEntity {
 
     */
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
+    public static final Item SQUID_MILK = Items.DRAGON_BREATH.getItem();
+    private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
+    private static final SoundEvent milkedFail = SoundEvents.ENTITY_CAT_HISS;
+    private int milkTimer;
+    private static final int milkTimerMax = 12000;
+    private int availableMilks;
+    private static final int maximumMilks = 1;
+    private long worldTimeWhenMilked;
 
     public BabyKrakenEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
+        availableMilks = maximumMilks;
+        milkTimer = milkTimerMax;
+        worldTimeWhenMilked = this.world.getDayTime();
     }
     //func_233815_a_ -> create()
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
@@ -45,7 +48,6 @@ public class BabyKrakenEntity extends CreatureEntity {
                 .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
                 .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
     }
-    
 
     @Override
     protected void registerGoals(){
@@ -56,7 +58,6 @@ public class BabyKrakenEntity extends CreatureEntity {
         this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this,1.0D));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
-        //this.goalSelector.addGoal(6, new );
     }
 
     @Override
@@ -98,6 +99,42 @@ public class BabyKrakenEntity extends CreatureEntity {
     public boolean canBeLeashedTo(PlayerEntity player) {
         return super.canBeLeashedTo(player);
     }
+
+    @Override
+    public void livingTick() {
+        if (!this.world.isRemote){
+            if (milkTimer < milkTimerMax){
+                if (Math.abs(this.world.getDayTime() - worldTimeWhenMilked) >= milkTimerMax) {
+                    milkTimer = milkTimerMax;
+                }
+                else milkTimer++;
+            }
+            if (milkTimer == milkTimerMax){
+                availableMilks = maximumMilks;
+            }
+        }
+        super.livingTick();
+
+    }
+
+    public ItemStack milkSquid(){
+        if (!this.world.isRemote) {
+            if (availableMilks > 0) {
+                availableMilks--;
+                if (availableMilks == 0){
+                    worldTimeWhenMilked = this.world.getDayTime();
+                    milkTimer = 0;
+                }
+                playSound(milkedPass, 1.0f, 1.0f);
+                return new ItemStack(SQUID_MILK);
+            }else{
+                playSound(milkedFail, 1.0f, 1.0f);
+            }
+        }
+        return null;
+    }
+
+
     /*
         ------------------------
         start glowsquid func
@@ -113,6 +150,7 @@ public class BabyKrakenEntity extends CreatureEntity {
                 System.out.println("These Entities Are within Range!" + entities + "");
      }*/
     /*
+    //change some stuff to !isremote probably
     public BlockPos soulLoc = new BlockPos(0,250,0);
     @Override
     public void livingTick() {
