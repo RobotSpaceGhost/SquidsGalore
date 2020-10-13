@@ -2,15 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:ink_sac"
-    },
-    {
-      "item": "minecraft:book"
+      "item": "squidsg:squid_ink"
     }
   ],
   "result":
   {
-    "item": "squidsg:squidictionary",
+    "item": "minecraft:ink_sac",
     "count": 1
   }
 }

@@ -24,12 +24,17 @@ public class ModItems {
     public static final RegistryObject<ModSpawnEggItem> BABY_KRAKEN_EGG = ITEMS.register("baby_kraken_egg",
             () -> new ModSpawnEggItem(ModEntityTypes.BABY_KRAKEN, 0x100F10, 0x9E05AF, new Item.Properties().group(SquidsGalore.TAB)));
     //Buckets
+    public static final RegistryObject<SquidBucketItem> BUCKET_OF_BABY_KRAKEN = ITEMS.register("bucket_of_baby_kraken",
+            () -> new SquidBucketItem((ModEntityTypes.BABY_KRAKEN), () -> Fluids.WATER, (new Item.Properties()).maxStackSize(1).group(SquidsGalore.TAB)));
+
     public static final RegistryObject<SquidBucketItem> BUCKET_OF_SQUID = ITEMS.register("bucket_of_squid",
             () -> new SquidBucketItem((ModEntityTypes.BABY_KRAKEN), () -> Fluids.WATER, (new Item.Properties()).maxStackSize(1).group(SquidsGalore.TAB)));
 
     public static final RegistryObject<Item> BUCKET_OF_SALTY_SQUID = ITEMS.register("bucket_of_salty_squid",ItemBase::new);
 
     //Squid Milk
+    public static final RegistryObject<Item> SQUID_INK = ITEMS.register("squid_ink",ItemBase::new);
+    public static final RegistryObject<Item> KRAKEN_BREATH = ITEMS.register("kraken_breath",ItemBase::new);
 
     //Food
     public static final RegistryObject<RawSquidMeat> RAW_SQUID_BEEF = ITEMS.register("raw_squid_beef", RawSquidMeat::new);

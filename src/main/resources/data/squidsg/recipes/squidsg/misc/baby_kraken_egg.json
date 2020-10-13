@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "ibi",
+    "beb",
+    "ibi"
+  ],
+  "key":
+  {
+    "i":
+    {
+      "item": "minecraft:ink_sac"
+    },
+    "b":
+    {
+      "tag": "squidsg:buckets"
+    },
+    "e":
+    {
+      "item": "minecraft:dragon_egg"
+    }
+  },
+  "result":
+  {
+    "item": "squidsg:baby_kraken_egg",
+    "count": 1
+  }
+}

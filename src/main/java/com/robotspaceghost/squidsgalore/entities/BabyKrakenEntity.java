@@ -32,7 +32,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     */
     private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
-    public static final Item SQUID_MILK = Items.DRAGON_BREATH.getItem();
+    public static final Item SQUID_MILK = ModItems.KRAKEN_BREATH.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
     private static final SoundEvent milkedFail = SoundEvents.ENTITY_CAT_HISS;
     private int milkTimer;
@@ -163,7 +163,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     }
     //todo change bucket of squid to bucket of baby kraken
     protected ItemStack getSquidBucket() {
-        return new ItemStack(ModItems.BUCKET_OF_SQUID.get());
+        return new ItemStack(ModItems.BUCKET_OF_BABY_KRAKEN.get());
     }
 
     //---------------------------------------------------------------------------

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "squidsg:kraken_breath"
+    }
+  ],
+  "result":
+  {
+    "item": "minecraft:dragon_breath",
+    "count": 1
+  }
+}
