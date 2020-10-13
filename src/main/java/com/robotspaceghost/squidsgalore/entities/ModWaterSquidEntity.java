@@ -72,11 +72,6 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         this.goalSelector.addGoal(8, new ModWaterSquidEntity.FleeGoal());
     }
 
-    public static AttributeModifierMap.MutableAttribute func_234176_m_() {
-        return MobEntity.func_233666_p_().func_233815_a_(Attributes.MAX_HEALTH, 10.0D)
-                .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
-                .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
-    }
 
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_SQUID_AMBIENT;

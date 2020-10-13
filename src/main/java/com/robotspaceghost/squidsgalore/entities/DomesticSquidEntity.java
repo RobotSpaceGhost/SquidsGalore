@@ -2,6 +2,9 @@ package com.robotspaceghost.squidsgalore.entities;
 
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -17,7 +20,7 @@ import net.minecraft.world.World;
 
 public class DomesticSquidEntity extends ModWaterSquidEntity {
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.PUFFERFISH);
-    public static final Item SQUID_MILK = Items.INK_SAC.getItem();
+    public static final Item SQUID_MILK = ModItems.SQUID_INK.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_SQUID_SQUIRT;
     private static final SoundEvent milkedFail = SoundEvents.ENTITY_SQUID_HURT;
     private int milkTimer;
@@ -28,7 +31,12 @@ public class DomesticSquidEntity extends ModWaterSquidEntity {
     public DomesticSquidEntity(EntityType<? extends DomesticSquidEntity> type, World worldIn) {
         super(type, worldIn);
     }
-
+    public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
+        return MobEntity.registerAttributes()
+                .func_233815_a_(Attributes.MAX_HEALTH, 10.0D)
+                .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
+                .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
+    }
     @Override
     protected ItemStack getSquidBucket() {
         return new ItemStack(ModItems.BUCKET_OF_SQUID.get());

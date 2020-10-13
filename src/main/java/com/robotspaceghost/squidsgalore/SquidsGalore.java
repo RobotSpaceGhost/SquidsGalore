@@ -1,6 +1,8 @@
 package com.robotspaceghost.squidsgalore;
 
+import com.robotspaceghost.squidsgalore.client.render.DomesticSquidRenderer;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
+import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
@@ -36,6 +38,7 @@ public class SquidsGalore
     private void setup(final FMLCommonSetupEvent event) {
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(ModEntityTypes.BABY_KRAKEN.get(), BabyKrakenEntity.setCustomAttributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidEntity.setCustomAttributes().func_233813_a_());
         });
     }
 

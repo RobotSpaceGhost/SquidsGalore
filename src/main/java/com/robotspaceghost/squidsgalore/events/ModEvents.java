@@ -64,7 +64,7 @@ public class ModEvents {
             //-----------------
             // other squids here
             //---------------
-            if (squid instanceof SquidEntity){milk = new ItemStack(ModItems.SQUID_INK.get());}
+            if (squid instanceof SquidEntity){milk = new ItemStack(Items.INK_SAC);}
             player.getHeldItemMainhand().shrink(1);
             if (milk != null){
                 if (!player.addItemStackToInventory(milk)) {

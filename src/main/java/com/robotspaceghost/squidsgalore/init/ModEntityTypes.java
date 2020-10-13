@@ -2,6 +2,7 @@ package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
+import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -18,4 +19,8 @@ public class ModEntityTypes {
             () -> EntityType.Builder.create(BabyKrakenEntity::new,  EntityClassification.CREATURE)
                     .size(1.0f, 0.75f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "baby_kraken").toString()));
+    public static final RegistryObject<EntityType<DomesticSquidEntity>> DOMESTIC_SQUID = ENTITY_TYPES.register("domestic_squid",
+            () -> EntityType.Builder.create(DomesticSquidEntity::new,  EntityClassification.CREATURE)
+                    .size(1.0f, 0.75f)
+                    .build(new ResourceLocation(SquidsGalore.MOD_ID, "domestic_squid").toString()));
 }
