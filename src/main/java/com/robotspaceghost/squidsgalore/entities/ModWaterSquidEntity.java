@@ -99,6 +99,9 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
 
     public void livingTick() {
         super.livingTick();
+        //--------------------------------------------------------------------
+        // movement stuff
+        //-------------------------------------------------------------------
         this.prevSquidPitch = this.squidPitch;
         this.prevSquidYaw = this.squidYaw;
         this.prevSquidRotation = this.squidRotation;
@@ -160,6 +163,32 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         }
 
     }
+    private Vector3d func_207400_b(Vector3d p_207400_1_) {
+        Vector3d vector3d = p_207400_1_.rotatePitch(this.prevSquidPitch * ((float)Math.PI / 180F));
+        return vector3d.rotateYaw(-this.prevRenderYawOffset * ((float)Math.PI / 180F));
+    }
+    @OnlyIn(Dist.CLIENT)
+    public void handleStatusUpdate(byte id) {
+        if (id == 19) {
+            this.squidRotation = 0.0F;
+        } else {
+            super.handleStatusUpdate(id);
+        }
+
+    }
+
+    public void setMovementVector(float randomMotionVecXIn, float randomMotionVecYIn, float randomMotionVecZIn) {
+        this.randomMotionVecX = randomMotionVecXIn;
+        this.randomMotionVecY = randomMotionVecYIn;
+        this.randomMotionVecZ = randomMotionVecZIn;
+    }
+
+    public boolean hasMovementVector() {
+        return this.randomMotionVecX != 0.0F || this.randomMotionVecY != 0.0F || this.randomMotionVecZ != 0.0F;
+    }
+    //--------------------------------------------------------------------
+    // end movement stuff
+    //-------------------------------------------------------------------
     /**
      * Called when the entity is attacked.
      */
@@ -170,11 +199,6 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         } else {
             return false;
         }
-    }
-
-    private Vector3d func_207400_b(Vector3d p_207400_1_) {
-        Vector3d vector3d = p_207400_1_.rotatePitch(this.prevSquidPitch * ((float)Math.PI / 180F));
-        return vector3d.rotateYaw(-this.prevRenderYawOffset * ((float)Math.PI / 180F));
     }
 
     private void squirtInk() {
@@ -282,28 +306,6 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
     //-----------------------------------------------------------------
     // end bucket stuff
     //-------------------------------------------------------------
-    /**
-     * Handler for {@link World#setEntityState}
-     */
-    @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
-        if (id == 19) {
-            this.squidRotation = 0.0F;
-        } else {
-            super.handleStatusUpdate(id);
-        }
-
-    }
-
-    public void setMovementVector(float randomMotionVecXIn, float randomMotionVecYIn, float randomMotionVecZIn) {
-        this.randomMotionVecX = randomMotionVecXIn;
-        this.randomMotionVecY = randomMotionVecYIn;
-        this.randomMotionVecZ = randomMotionVecZIn;
-    }
-
-    public boolean hasMovementVector() {
-        return this.randomMotionVecX != 0.0F || this.randomMotionVecY != 0.0F || this.randomMotionVecZ != 0.0F;
-    }
 
     class FleeGoal extends Goal {
         private int tickCounter;

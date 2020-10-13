@@ -20,7 +20,7 @@ public class ModEntityTypes {
                     .size(1.0f, 0.75f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "baby_kraken").toString()));
     public static final RegistryObject<EntityType<DomesticSquidEntity>> DOMESTIC_SQUID = ENTITY_TYPES.register("domestic_squid",
-            () -> EntityType.Builder.create(DomesticSquidEntity::new,  EntityClassification.CREATURE)
+            () -> EntityType.Builder.create(DomesticSquidEntity::new,  EntityClassification.WATER_CREATURE)
                     .size(1.0f, 0.75f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "domestic_squid").toString()));
 }

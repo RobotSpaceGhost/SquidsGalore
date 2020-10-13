@@ -48,7 +48,7 @@ public class DomesticSquidModel<T extends DomesticSquidEntity> extends Segmented
      */
     public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         for(ModelRenderer modelrenderer : this.legs) {
-            modelrenderer.rotateAngleX = -ageInTicks;
+            modelrenderer.rotateAngleX = ageInTicks; //set to negative for flying squid
         }
 
     }
