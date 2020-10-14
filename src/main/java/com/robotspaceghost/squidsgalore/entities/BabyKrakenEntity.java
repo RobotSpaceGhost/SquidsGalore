@@ -70,40 +70,33 @@ public class BabyKrakenEntity extends CreatureEntity {
     protected int getExperiencePoints(PlayerEntity player) {
         return 0;
     }
-
-    @Override
-    protected SoundEvent getAmbientSound(){
-        return SoundEvents.ENTITY_SQUID_AMBIENT;
-
-    }
-    @Override
+    //-----------------------------
+    // audio
+    //---------------------------
+    protected SoundEvent getAmbientSound(){ return SoundEvents.ENTITY_SQUID_AMBIENT; }
     protected SoundEvent getDeathSound(){
         return SoundEvents.ENTITY_ELDER_GUARDIAN_DEATH_LAND;
     }
-
-    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_CAT_HURT;
     }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        super.playSound(SoundEvents.ENTITY_ENDERMITE_STEP, 0.15f, 1.0f);
-    }
-
-    @Override
+    protected void playStepSound(BlockPos pos, BlockState blockIn) { playSound(SoundEvents.ENTITY_ENDERMITE_STEP, 0.15f, 1.0f); }
     protected void playSwimSound(float volume) {
         super.playSwimSound(volume);
     }
-
+    //-------------------------
+    // end audio
+    //---------------------
     @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) { return false;
-    }
+    public boolean isPushedByWater() { return false; }
+
+    @Override
+    public boolean canDespawn(double distanceToClosestPlayer) { return false;}
 
     //---------------------------------------------------------------------
     // bucket stuff
@@ -131,27 +124,26 @@ public class BabyKrakenEntity extends CreatureEntity {
         this.setFromBucket(compound.getBoolean("FromBucket"));
     }
 
-    protected ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
+    protected ActionResultType squidBucketAction(PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.WATER_BUCKET && this.isAlive()) {
             this.playSound(SoundEvents.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F);
             itemstack.shrink(1);
-            ItemStack itemstack1 = this.getSquidBucket();
-            this.setBucketData(itemstack1);
+            ItemStack bucketType = this.getSquidBucket();
+            this.setBucketData(bucketType);
             if (!this.world.isRemote) {
-                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity)p_230254_1_, itemstack1);
+                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity)player, bucketType);
             }
-
             if (itemstack.isEmpty()) {
-                p_230254_1_.setHeldItem(p_230254_2_, itemstack1);
-            } else if (!p_230254_1_.inventory.addItemStackToInventory(itemstack1)) {
-                p_230254_1_.dropItem(itemstack1, false);
+                player.setHeldItem(hand, bucketType);
+            } else if (!player.inventory.addItemStackToInventory(bucketType)) {
+                player.dropItem(bucketType, false);
             }
 
             this.remove();
-            return ActionResultType.func_233537_a_(this.world.isRemote);
+            return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
         } else {
-            return super.func_230254_b_(p_230254_1_, p_230254_2_);
+            return ActionResultType.PASS;
         }
     }
 
@@ -159,9 +151,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         if (this.hasCustomName()) {
             bucket.setDisplayName(this.getCustomName());
         }
-
     }
-    //todo change bucket of squid to bucket of baby kraken
     protected ItemStack getSquidBucket() {
         return new ItemStack(ModItems.BUCKET_OF_BABY_KRAKEN.get());
     }
@@ -190,6 +180,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         }
         super.livingTick();
 
+        
     }
 
     public ItemStack milkSquid(){

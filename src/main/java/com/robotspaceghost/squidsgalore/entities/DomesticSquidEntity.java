@@ -1,25 +1,21 @@
 package com.robotspaceghost.squidsgalore.entities;
 
+import com.robotspaceghost.squidsgalore.entities.goals.SquidTemptGoal;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public class DomesticSquidEntity extends ModWaterSquidEntity {
-    public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.PUFFERFISH);
+    public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get(), Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.PUFFERFISH);
     public static final Item SQUID_MILK = ModItems.SQUID_INK.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_SQUID_SQUIRT;
     private static final SoundEvent milkedFail = SoundEvents.ENTITY_SQUID_HURT;
@@ -45,8 +41,9 @@ public class DomesticSquidEntity extends ModWaterSquidEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.3D,TEMPTATION_ITEMS, false));
+        this.goalSelector.addGoal(3, new SquidTemptGoal(this, 1.3D,TEMPTATION_ITEMS));
     }
+
 
     @Override
     public void livingTick() {

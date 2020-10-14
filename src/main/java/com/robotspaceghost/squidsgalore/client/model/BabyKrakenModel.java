@@ -134,6 +134,9 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
         this.tentacle6.rotateAngleZ += -f9;
         this.tentacle7.rotateAngleZ += f10;
         this.tentacle8.rotateAngleZ += -f10;
+
+        //if(entityIn.isAlive() && entityIn.isInWater())this.tentacle8.rotateAngleX = ageInTicks;
+
     }
 
     @Override

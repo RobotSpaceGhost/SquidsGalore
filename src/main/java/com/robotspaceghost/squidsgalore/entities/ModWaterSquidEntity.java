@@ -1,5 +1,6 @@
 package com.robotspaceghost.squidsgalore.entities;
 
+import com.robotspaceghost.squidsgalore.entities.goals.SquidTemptGoal;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
@@ -8,8 +9,9 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +25,10 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.FlyingPathNavigator;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.*;
@@ -34,11 +40,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 
+import java.util.EnumSet;
 import java.util.Random;
 
 public abstract class ModWaterSquidEntity extends WaterMobEntity {
     private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(ModWaterSquidEntity.class, DataSerializers.BOOLEAN);
+    //private static final EntityPredicate ENTITY_PREDICATE = (new EntityPredicate()).setDistance(10.0D).allowInvulnerable().allowFriendlyFire().setSkipAttackChecks().setLineOfSiteRequired();
     public float squidPitch;
     public float prevSquidPitch;
     public float squidYaw;
@@ -47,12 +56,12 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
     public float prevSquidRotation;
     public float tentacleAngle;
     public float lastTentacleAngle;
-    private float randomMotionSpeed;
+    private float MotionSpeed;
     private float rotationVelocity;
     private float rotateSpeed;
-    private float randomMotionVecX;
-    private float randomMotionVecY;
-    private float randomMotionVecZ;
+    private float MotionVecX;
+    private float MotionVecY;
+    private float MotionVecZ;
 
     public ModWaterSquidEntity(EntityType<? extends ModWaterSquidEntity> type, World worldIn) {
         super(type, worldIn);
@@ -67,7 +76,8 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new PanicGoal(this,1.25D));
-        this.goalSelector.addGoal(2, new TemptGoal(this, 1.3D, Ingredient.fromItems(ModItems.INK_ON_A_STICK.get()), false));
+        //this.goalSelector.addGoal(2, new SquidTemptGoal(this, 1.3D, Ingredient.fromItems(ModItems.INK_ON_A_STICK.get())));
+        this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.addGoal(7, new ModWaterSquidEntity.MoveRandomGoal(this));
         this.goalSelector.addGoal(8, new ModWaterSquidEntity.FleeGoal());
     }
@@ -93,12 +103,11 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         return 0.4F;
     }
 
-    protected boolean canTriggerWalking() {
-        return false;
-    }
+
 
     public void livingTick() {
         super.livingTick();
+
         //--------------------------------------------------------------------
         // movement stuff
         //-------------------------------------------------------------------
@@ -107,6 +116,7 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         this.prevSquidRotation = this.squidRotation;
         this.lastTentacleAngle = this.tentacleAngle;
         this.squidRotation += this.rotationVelocity;
+
         if ((double)this.squidRotation > (Math.PI * 2D)) {
             if (this.world.isRemote) {
                 this.squidRotation = ((float)Math.PI * 2F);
@@ -119,50 +129,90 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
                 this.world.setEntityState(this, (byte)19);
             }
         }
+        /*
+        if(!this.world.isRemote && this.goalSelector.getRunningGoals().anyMatch(prioritizedGoal -> prioritizedGoal.getGoal() instanceof SquidTemptGoal)){
+            int i = this.getIdleTime();
+            if (i > 100) {
+                this.setMovementVector(0.0F, 0.0F, 0.0F);
+            } else if (this.inWater && !this.hasMovementVector()) {
+                PlayerEntity nearestPlayer =  this.world.getClosestPlayer(ENTITY_PREDICATE, this);
+                Vector3d toPlayer = new Vector3d(nearestPlayer.getPosX() - this.getPosX(), nearestPlayer.getPosY() - this.getPosY(), nearestPlayer.getPosZ() - this.getPosZ());
+                BlockState blockstate = ModWaterSquidEntity.this.world.getBlockState(new BlockPos(ModWaterSquidEntity.this.getPosX() + toPlayer.x, ModWaterSquidEntity.this.getPosY() + toPlayer.y, ModWaterSquidEntity.this.getPosZ() + toPlayer.z));
+                FluidState fluidstate = ModWaterSquidEntity.this.world.getFluidState(new BlockPos(ModWaterSquidEntity.this.getPosX() + toPlayer.x, ModWaterSquidEntity.this.getPosY() + toPlayer.y, ModWaterSquidEntity.this.getPosZ() + toPlayer.z));
+               if (fluidstate.isTagged(FluidTags.WATER) || blockstate.getBlock() == Blocks.AIR) {
+                   double d0 = toPlayer.length();
+                   if (d0 > 0.0D) {
+                       toPlayer.normalize();
+                       float f = 3.0F;
+                       if (d0 > 5.0D) {
+                           f = (float)((double)f - (d0 - 5.0D) / 5.0D);
+                       }
+                       if (f > 0.0F) {
+                           toPlayer = toPlayer.scale((double)f);
+                       }
+                   }
 
+                   if (blockstate.getBlock() == Blocks.AIR) {
+                       toPlayer = toPlayer.subtract(0.0D, toPlayer.y, 0.0D);
+                   }
+                   this.setMovementVector((float)toPlayer.x / 20.0F, (float)toPlayer.y / 20.0F, (float)toPlayer.z / 20.0F);
+               }
+               this.world.addParticle(ParticleTypes.BUBBLE, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+               //this.setMotion(this.MotionVecX * this.MotionSpeed, this.MotionVecY * this.MotionSpeed, this.MotionVecZ * this.MotionSpeed);
+            }
+        }
+
+         */
         if (this.isInWaterOrBubbleColumn()) {
             if (this.squidRotation < (float)Math.PI) {
                 float f = this.squidRotation / (float)Math.PI;
                 this.tentacleAngle = MathHelper.sin(f * f * (float)Math.PI) * (float)Math.PI * 0.25F;
                 if ((double)f > 0.75D) {
-                    this.randomMotionSpeed = 1.0F;
+                    this.MotionSpeed = 1.0F;
                     this.rotateSpeed = 1.0F;
                 } else {
                     this.rotateSpeed *= 0.8F;
                 }
             } else {
                 this.tentacleAngle = 0.0F;
-                this.randomMotionSpeed *= 0.9F;
+                this.MotionSpeed *= 0.9F;
                 this.rotateSpeed *= 0.99F;
             }
 
             if (!this.world.isRemote) {
-                this.setMotion((double)(this.randomMotionVecX * this.randomMotionSpeed), (double)(this.randomMotionVecY * this.randomMotionSpeed), (double)(this.randomMotionVecZ * this.randomMotionSpeed));
+                this.setMotion((double)(this.MotionVecX * this.MotionSpeed), (double)(this.MotionVecY * this.MotionSpeed), (double)(this.MotionVecZ * this.MotionSpeed));
             }
 
             Vector3d vector3d = this.getMotion();
             float f1 = MathHelper.sqrt(horizontalMag(vector3d));
             this.renderYawOffset += (-((float)MathHelper.atan2(vector3d.x, vector3d.z)) * (180F / (float)Math.PI) - this.renderYawOffset) * 0.1F;
             this.rotationYaw = this.renderYawOffset;
+            if (this.goalSelector.getRunningGoals().anyMatch(prioritizedGoal -> prioritizedGoal.getGoal() instanceof SquidTemptGoal)) {
+                System.out.println("Squid being tempted");
+            }
             this.squidYaw = (float)((double)this.squidYaw + Math.PI * (double)this.rotateSpeed * 1.5D);
             this.squidPitch += (-((float)MathHelper.atan2((double)f1, vector3d.y)) * (180F / (float)Math.PI) - this.squidPitch) * 0.1F;
+
         } else {
-            this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.squidRotation)) * (float)Math.PI * 0.25F;
+            this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.squidRotation)) * (float) Math.PI * 0.25F;
             if (!this.world.isRemote) {
                 double d0 = this.getMotion().y;
                 if (this.isPotionActive(Effects.LEVITATION)) {
-                    d0 = 0.05D * (double)(this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1);
+                    d0 = 0.05D * (double) (this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1);
                 } else if (!this.hasNoGravity()) {
                     d0 -= 0.08D;
                 }
 
-                this.setMotion(0.0D, d0 * (double)0.98F, 0.0D);
+                this.setMotion(0.0D, d0 * (double) 0.98F, 0.0D);
             }
-
-            this.squidPitch = (float)((double)this.squidPitch + (double)(-90.0F - this.squidPitch) * 0.02D);
+            this.squidPitch = (float) ((double) this.squidPitch + (double) (-90.0F - this.squidPitch) * 0.02D);
         }
-
     }
+    protected boolean canTriggerWalking() {
+        return false;
+    }
+
+
     private Vector3d func_207400_b(Vector3d p_207400_1_) {
         Vector3d vector3d = p_207400_1_.rotatePitch(this.prevSquidPitch * ((float)Math.PI / 180F));
         return vector3d.rotateYaw(-this.prevRenderYawOffset * ((float)Math.PI / 180F));
@@ -177,15 +227,21 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
 
     }
 
-    public void setMovementVector(float randomMotionVecXIn, float randomMotionVecYIn, float randomMotionVecZIn) {
-        this.randomMotionVecX = randomMotionVecXIn;
-        this.randomMotionVecY = randomMotionVecYIn;
-        this.randomMotionVecZ = randomMotionVecZIn;
+    public void setMovementVector(float MotionVecXIn, float MotionVecYIn, float MotionVecZIn) {
+        this.MotionVecX = MotionVecXIn;
+        this.MotionVecY = MotionVecYIn;
+        this.MotionVecZ = MotionVecZIn;
     }
 
     public boolean hasMovementVector() {
-        return this.randomMotionVecX != 0.0F || this.randomMotionVecY != 0.0F || this.randomMotionVecZ != 0.0F;
+        return this.MotionVecX != 0.0F || this.MotionVecY != 0.0F || this.MotionVecZ != 0.0F;
     }
+
+    @Override
+    protected PathNavigator createNavigator(World worldIn) {
+        return new SwimmerPathNavigator(this, worldIn);
+    }
+
     //--------------------------------------------------------------------
     // end movement stuff
     //-------------------------------------------------------------------
