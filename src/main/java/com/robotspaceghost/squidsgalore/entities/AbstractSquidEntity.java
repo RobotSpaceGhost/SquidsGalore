@@ -118,8 +118,9 @@ public abstract class AbstractSquidEntity extends AnimalEntity {
         super.readAdditional(compound);
         this.setFromBucket(compound.getBoolean("FromBucket"));
     }
+    @Override
+    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
 
-    protected ActionResultType squidBucketAction(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.WATER_BUCKET && this.isAlive()) {
             this.playSound(SoundEvents.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F);
@@ -137,9 +138,8 @@ public abstract class AbstractSquidEntity extends AnimalEntity {
 
             this.remove();
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        } else {
-            return ActionResultType.PASS;
         }
+        return super.func_230254_b_(player,hand);
     }
 
     protected void setBucketData(ItemStack bucket) {

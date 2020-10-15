@@ -17,8 +17,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 
@@ -32,6 +35,9 @@ public class BabyKrakenEntity extends CreatureEntity {
     */
     private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
+    protected static boolean sitting;
+    private static PlayerEntity owner; //make final
+    private static boolean onOwnerHead;
     public static final Item SQUID_MILK = ModItems.KRAKEN_BREATH.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
     private static final SoundEvent milkedFail = SoundEvents.ENTITY_CAT_HISS;
@@ -46,6 +52,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         availableMilks = maximumMilks;
         milkTimer = milkTimerMax;
         worldTimeWhenMilked = this.world.getDayTime();
+        onOwnerHead = false;
     }
     //func_233815_a_ -> create()
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
@@ -97,9 +104,45 @@ public class BabyKrakenEntity extends CreatureEntity {
 
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) { return false;}
+    //--------------------------------------------------
+    //  owner commands
+    //----------------------------------------------
+    public boolean isSitting(){
+        return sitting;
+    }
+    public void sitOrStand(){
+        if (sitting) this.getCollisionBox(this).grow(.1);
+        else this.getCollisionBox(this).shrink(.1);
+        sitting = !this.isSitting();
+        System.out.println("Changed sitting to " + sitting);
+    }
 
+    @Override
+    public void setAIMoveSpeed(float speedIn) {
+        if (this.isSitting()) { super.setAIMoveSpeed(0);}
+        else super.setAIMoveSpeed(speedIn);
+    }
+
+    @Override
+    public void setMoveForward(float amount) {
+        if (this.isSitting()) super.setMoveForward(0);
+        else super.setMoveForward(amount);
+    }
+    @Override
+    public void setMoveVertical(float amount) {
+        if (this.isSitting()) super.setMoveVertical(0);
+        else super.setMoveVertical(amount);
+    }
+    @Override
+    public void setMoveStrafing(float amount) {
+        if (this.isSitting()) super.setMoveStrafing(0);
+        else super.setMoveStrafing(amount);
+    }
+    //----------------------------------
+    //  end owner commands
+    //-------------------------------------------
     //---------------------------------------------------------------------
-    // bucket stuff
+    // bucket info
     //---------------------------------------------------------------------
     protected void registerData() {
         super.registerData();
@@ -123,8 +166,8 @@ public class BabyKrakenEntity extends CreatureEntity {
         super.readAdditional(compound);
         this.setFromBucket(compound.getBoolean("FromBucket"));
     }
-
-    protected ActionResultType squidBucketAction(PlayerEntity player, Hand hand) {
+    @Override
+    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.WATER_BUCKET && this.isAlive()) {
             this.playSound(SoundEvents.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F);
@@ -139,13 +182,31 @@ public class BabyKrakenEntity extends CreatureEntity {
             } else if (!player.inventory.addItemStackToInventory(bucketType)) {
                 player.dropItem(bucketType, false);
             }
-
             this.remove();
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        } else {
-            return ActionResultType.PASS;
         }
+        //short snippet for breeding
+        else if(!itemstack.isEmpty() && itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
+            if (!this.world.isRemote) {
+                this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
+            }
+            if (!player.abilities.isCreativeMode) {
+                itemstack.shrink(1);
+            }
+            return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
+        }else if(itemstack.isEmpty() && this.isAlive()){
+            if (!this.world.isRemote && hand ==  player.getActiveHand()) { // Todo: add owner check here
+                if (this.isSitting()){
+                    this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
+                }
+                else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
+                this.sitOrStand();
+            }
+            return this.world.isRemote ? ActionResultType.FAIL : ActionResultType.PASS;
+        }//short snippet for sitting
+        return super.func_230254_b_(player, hand);
     }
+
 
     protected void setBucketData(ItemStack bucket) {
         if (this.hasCustomName()) {
@@ -157,7 +218,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     }
 
     //---------------------------------------------------------------------------
-    // end bucket stuff
+    // end bucket info
     //----------------------------------------------------------------
     @Override
     public void livingTick() {
@@ -178,8 +239,8 @@ public class BabyKrakenEntity extends CreatureEntity {
                 availableMilks = maximumMilks;
             }
         }
-        super.livingTick();
 
+        super.livingTick();
         
     }
 
@@ -260,20 +321,4 @@ public class BabyKrakenEntity extends CreatureEntity {
     ----------------------
      */
 
-    /*
-    -----------------
-    lava squid func start
-    --------------------
-     */
-    /*
-    @Override
-    public boolean canRenderOnFire() {
-        return false;
-    }
-    */
-    /*
-    ---------------------
-    lava squid end func
-    --------------------
-     */
 }
