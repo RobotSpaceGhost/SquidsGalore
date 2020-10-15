@@ -1,5 +1,6 @@
 package com.robotspaceghost.squidsgalore.items.Buckets;
 
+import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.ModWaterSquidEntity;
 import net.minecraft.client.util.ITooltipFlag;
@@ -54,7 +55,7 @@ public class SquidBucketItem extends BucketItem {
         Entity entity = getSquidType().spawn(worldIn, p_205357_2_, (PlayerEntity)null, pos, SpawnReason.BUCKET, true, false);
         if (entity != null) {
             if (entity instanceof BabyKrakenEntity) ((BabyKrakenEntity)entity).setFromBucket(true);
-            else if (entity instanceof ModWaterSquidEntity) ((ModWaterSquidEntity)entity).setFromBucket(true);
+            else if (entity instanceof AbstractSquidEntity) ((AbstractFishEntity)entity).setFromBucket(true);
         }
 
     }

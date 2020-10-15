@@ -17,12 +17,14 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 
 public class BabyKrakenEntity extends CreatureEntity {
@@ -35,8 +37,8 @@ public class BabyKrakenEntity extends CreatureEntity {
     */
     private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
-    protected static boolean sitting;
-    private static PlayerEntity owner; //make final
+    protected static final DataParameter<Boolean> KRAKEN_SITTING = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
+    private PlayerEntity owner; //make final
     private static boolean onOwnerHead;
     public static final Item SQUID_MILK = ModItems.KRAKEN_BREATH.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
@@ -107,15 +109,6 @@ public class BabyKrakenEntity extends CreatureEntity {
     //--------------------------------------------------
     //  owner commands
     //----------------------------------------------
-    public boolean isSitting(){
-        return sitting;
-    }
-    public void sitOrStand(){
-        if (sitting) this.getCollisionBox(this).grow(.1);
-        else this.getCollisionBox(this).shrink(.1);
-        sitting = !this.isSitting();
-        System.out.println("Changed sitting to " + sitting);
-    }
 
     @Override
     public void setAIMoveSpeed(float speedIn) {
@@ -138,16 +131,37 @@ public class BabyKrakenEntity extends CreatureEntity {
         if (this.isSitting()) super.setMoveStrafing(0);
         else super.setMoveStrafing(amount);
     }
+    public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
+    public void sitOrStand(boolean isKrakenSitting){ this.dataManager.set(KRAKEN_SITTING, isKrakenSitting); }
     //----------------------------------
     //  end owner commands
     //-------------------------------------------
-    //---------------------------------------------------------------------
-    // bucket info
-    //---------------------------------------------------------------------
+    //--------------------------
+    // nbt data
+    //----------------------
     protected void registerData() {
         super.registerData();
         this.dataManager.register(FROM_BUCKET, false);
+        this.dataManager.register(KRAKEN_SITTING, false);
     }
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putBoolean("FromBucket", this.isFromBucket());
+        compound.putBoolean("KrakenSitting", this.isSitting());
+    }
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.setFromBucket(compound.getBoolean("FromBucket"));
+        this.sitOrStand(compound.getBoolean("KrakenSitting"));
+
+    }
+    //--------------------
+    // end nbt data
+    //--------------------------
+    //---------------------------------------------------------------------
+    // bucket info
+    //---------------------------------------------------------------------
+
 
     private boolean isFromBucket() {
         return this.dataManager.get(FROM_BUCKET);
@@ -156,16 +170,12 @@ public class BabyKrakenEntity extends CreatureEntity {
     public void setFromBucket(boolean p_203706_1_) {
         this.dataManager.set(FROM_BUCKET, p_203706_1_);
     }
-
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putBoolean("FromBucket", this.isFromBucket());
-    }
-
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        this.setFromBucket(compound.getBoolean("FromBucket"));
-    }
+    //---------------------------------------------------------------------------
+    // end bucket info
+    //----------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    // player interaction
+    //----------------------------------------------------------------
     @Override
     public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
@@ -184,8 +194,7 @@ public class BabyKrakenEntity extends CreatureEntity {
             }
             this.remove();
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        }
-        //short snippet for breeding
+        }//short snippet for milking
         else if(!itemstack.isEmpty() && itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
             if (!this.world.isRemote) {
                 this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
@@ -194,13 +203,23 @@ public class BabyKrakenEntity extends CreatureEntity {
                 itemstack.shrink(1);
             }
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        }else if(itemstack.isEmpty() && this.isAlive()){
+        }//short snippet for feeding
+        else if(itemstack.isEmpty() && this.isAlive()){
             if (!this.world.isRemote && hand ==  player.getActiveHand()) { // Todo: add owner check here
-                if (this.isSitting()){
-                    this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
+                if (!this.isInWater()) {
+                    if (this.isSitting()) {
+                        this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
+                    } else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
+                } else {
+                    if (this.isSitting()) {
+                        this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 0.2F, 1.0F);
+
+                    }else{
+                        this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 0.2F, 1.0F);
+
+                    }
                 }
-                else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
-                this.sitOrStand();
+                this.sitOrStand(!this.isSitting());
             }
             return this.world.isRemote ? ActionResultType.FAIL : ActionResultType.PASS;
         }//short snippet for sitting
@@ -218,11 +237,10 @@ public class BabyKrakenEntity extends CreatureEntity {
     }
 
     //---------------------------------------------------------------------------
-    // end bucket info
+    // end player interaction
     //----------------------------------------------------------------
     @Override
     public void livingTick() {
-
     //--------------------------------------------------------------------
     // milk info
     //---------------------------------------------------------
