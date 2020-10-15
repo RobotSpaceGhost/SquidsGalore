@@ -131,6 +131,20 @@ public class BabyKrakenEntity extends CreatureEntity {
         if (this.isSitting()) super.setMoveStrafing(0);
         else super.setMoveStrafing(amount);
     }
+
+    @Override
+    public void travel(Vector3d moveVec) {
+        super.travel(moveVec);
+        if (this.isServerWorld() && this.isInWater()) {
+            this.moveRelative(this.getAIMoveSpeed(), moveVec);
+            this.move(MoverType.SELF, this.getMotion());
+            this.setMotion(this.getMotion().scale(0.2D));
+            this.setMotion(this.getMotion().add(0.0D, -0.005D, 0.0D));
+
+        }
+
+
+    }
     public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
     public void sitOrStand(boolean isKrakenSitting){ this.dataManager.set(KRAKEN_SITTING, isKrakenSitting); }
     //----------------------------------

@@ -19,9 +19,9 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
     private final ModelRenderer ringTentacleLeft;
     private final ModelRenderer pinkieTentacleRight;
     private final ModelRenderer pinkieTentacleLeft;
+    private boolean swimDirection;
 
     public BabyKrakenModel() {
-
         textureWidth = 64;
         textureHeight = 32;
 
@@ -161,15 +161,27 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
             float pinkieTentacleSwingY = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + 0.0F) * 0.4F) * limbSwingAmount;
             float pinkieTentacleSwingZ = Math.abs(MathHelper.sin(limbSwing * 0.6662F + 0.0F) * 0.4F) * limbSwingAmount;
             if (entityIn.isInWater()) {
-                float swimShift = entityIn.ticksExisted % 90;
-                this.indexTentacleRight.rotateAngleZ = - (float) Math.toRadians(swimShift);
-                this.indexTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
-                this.middleTentacleRight.rotateAngleZ = -(float) Math.toRadians(swimShift);
-                this.middleTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
-                this.ringTentacleRight.rotateAngleZ = -(float) Math.toRadians(swimShift);
-                this.ringTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
-                this.pinkieTentacleRight.rotateAngleZ = -(float) Math.toRadians(swimShift);
-                this.pinkieTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
+                float swimSpeed = 3f;
+                float swimShift = (entityIn.ticksExisted * swimSpeed) % 180;
+                if (swimShift < 90){
+                    this.indexTentacleRight.rotateAngleZ = - (float) Math.toRadians(swimShift);
+                    this.indexTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
+                    this.middleTentacleRight.rotateAngleZ = -(float) Math.toRadians(swimShift);
+                    this.middleTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
+                    this.ringTentacleRight.rotateAngleZ = -(float) Math.toRadians(swimShift);
+                    this.ringTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
+                    this.pinkieTentacleRight.rotateAngleZ = -(float) Math.toRadians(swimShift);
+                    this.pinkieTentacleLeft.rotateAngleZ = (float) Math.toRadians(swimShift);
+                } else{
+                    this.indexTentacleRight.rotateAngleZ = - (float) Math.toRadians(180 - swimShift);
+                    this.indexTentacleLeft.rotateAngleZ = (float) Math.toRadians(180 - swimShift);
+                    this.middleTentacleRight.rotateAngleZ = -(float) Math.toRadians(180 - swimShift);
+                    this.middleTentacleLeft.rotateAngleZ = (float) Math.toRadians(180 - swimShift);
+                    this.ringTentacleRight.rotateAngleZ = -(float) Math.toRadians(180 - swimShift);
+                    this.ringTentacleLeft.rotateAngleZ = (float) Math.toRadians(180 - swimShift);
+                    this.pinkieTentacleRight.rotateAngleZ = -(float) Math.toRadians(180 - swimShift);
+                    this.pinkieTentacleLeft.rotateAngleZ = (float) Math.toRadians(180 - swimShift);
+                }
             }else{
                 this.indexTentacleRight.rotateAngleZ += indexTentacleSwingZ;
                 this.indexTentacleLeft.rotateAngleY += -indexTentacleSwingY;
