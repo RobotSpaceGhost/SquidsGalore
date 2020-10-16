@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,23 +18,28 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SChangeGameStatePacket;
 import net.minecraft.pathfinding.*;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import java.util.EnumSet;
-import java.util.UUID;
+import net.minecraft.world.server.ServerWorld;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.UUID;
 
 public class BabyKrakenEntity extends CreatureEntity {
     /*
-    todo: stareAtFlowerGoal, sitOnBedGoal make babyKraken, belong to spawning player, if killed by player semiperm debuff "Omen of the Seas"
-    safg: stops for a moment to stare at flowers, like it stares at players
-    sobg: like cats
-    ofts: upon entering ocean biome, summon boss fight
+    todo: if killed by player semiperm debuff "Omen of the Seas"
+
+    ofts: upon entering ocean biome, summon boss fight, for now blind player and summon a penisload of drowned and 2 guardians and 1 elder guardian
 
     */
     private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
@@ -58,7 +64,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     //func_233815_a_ -> create()
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
         return MobEntity.registerAttributes()
-                .func_233815_a_(Attributes.MAX_HEALTH, 10.0D)
+                .func_233815_a_(Attributes.MAX_HEALTH, 30.0D)
                 .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
                 .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
     }
@@ -77,47 +83,35 @@ public class BabyKrakenEntity extends CreatureEntity {
     }
 
     @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
+    @Override
+    public boolean isPushedByWater() { return false; }
+    @Override
+    public boolean canDespawn(double distanceToClosestPlayer) { return false;}
+    @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 0;
     }
+
     //-----------------------------
     // audio
     //---------------------------
     protected SoundEvent getAmbientSound(){ return SoundEvents.ENTITY_SQUID_AMBIENT; }
-    protected SoundEvent getDeathSound(){
-        return SoundEvents.ENTITY_ELDER_GUARDIAN_DEATH_LAND;
-    }
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_CAT_HURT;
-    }
+    protected SoundEvent getDeathSound(){ return SoundEvents.ENTITY_ELDER_GUARDIAN_DEATH_LAND; }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return SoundEvents.ENTITY_CAT_HURT; }
     protected void playStepSound(BlockPos pos, BlockState blockIn) { playSound(SoundEvents.ENTITY_ENDERMITE_STEP, 0.15f, 1.0f); }
-    protected void playSwimSound(float volume) {
-        super.playSwimSound(volume);
-    }
-    //-------------------------
-    // end audio
-    //---------------------
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
-    public boolean isPushedByWater() { return false; }
-
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) { return false;}
+    protected void playSwimSound(float volume) { super.playSwimSound(volume); }
 
     //--------------------------------------------------
     //  Movement
     //----------------------------------------------
-
     @Override
     public void setAIMoveSpeed(float speedIn) {
         if (this.isSitting()) { super.setAIMoveSpeed(0);}
         else super.setAIMoveSpeed(speedIn);
     }
-
     @Override
     public void setMoveForward(float amount) {
         if (this.isSitting()) super.setMoveForward(0);
@@ -144,36 +138,35 @@ public class BabyKrakenEntity extends CreatureEntity {
             this.setMotion(this.getMotion().add(0.0D, -0.005D, 0.0D));
 
         }
-
-
     }
 
     @Override
     public boolean canBeLeashedTo(PlayerEntity player) { return (player.getUniqueID().toString().equals(this.getOwnerId()) && super.canBeLeashedTo(player)); }
-
     public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
     public void sitOrStand(boolean isKrakenSitting){ this.dataManager.set(KRAKEN_SITTING, isKrakenSitting); }
-    //----------------------------------
-    //  end movement
-    //-------------------------------------------
+
     //--------------------------------------
     // owner data
     //---------------------------------
-    public void setOwnerId(String ownerId) {
-        this.dataManager.set(KRAKEN_MOM, ownerId);
-        System.out.println("Owner id set to: " +  ownerId);
-    }
-    public String getOwnerId() {
-        return this.dataManager.get(KRAKEN_MOM);
-    }
+    public void setOwnerId(String ownerId) { this.dataManager.set(KRAKEN_MOM, ownerId); }
+    public String getOwnerId() { return this.dataManager.get(KRAKEN_MOM); }
     public PlayerEntity getKrakenMom(){
         String owner = getOwnerId();
         if (owner.equals("None") || owner.equals("")) return null;
         return this.world.getPlayerByUuid(UUID.fromString(owner));
     }
-    //-------------------------------------
-    // end owner data
-    //--------------------------------
+
+    //---------------------------------------------------------------------
+    // bucket data
+    //---------------------------------------------------------------------
+    private boolean isFromBucket() { return this.dataManager.get(FROM_BUCKET); }
+    public void setFromBucket(boolean p_203706_1_) { this.dataManager.set(FROM_BUCKET, p_203706_1_); }
+    protected ItemStack getSquidBucket() { return new ItemStack(ModItems.BUCKET_OF_BABY_KRAKEN.get()); }
+    protected void setBucketData(ItemStack bucket) {
+        if (this.hasCustomName()) {
+            bucket.setDisplayName(this.getCustomName());
+        }
+    }
     //--------------------------
     // nbt data
     //----------------------
@@ -197,24 +190,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         this.setOwnerId(compound.getString("KrakenMom"));
 
     }
-    //--------------------
-    // end nbt data
-    //--------------------------
-    //---------------------------------------------------------------------
-    // bucket info
-    //---------------------------------------------------------------------
 
-
-    private boolean isFromBucket() {
-        return this.dataManager.get(FROM_BUCKET);
-    }
-
-    public void setFromBucket(boolean p_203706_1_) {
-        this.dataManager.set(FROM_BUCKET, p_203706_1_);
-    }
-    //---------------------------------------------------------------------------
-    // end bucket info
-    //----------------------------------------------------------------
     //---------------------------------------------------------------------------
     // player interaction
     //----------------------------------------------------------------
@@ -239,11 +215,18 @@ public class BabyKrakenEntity extends CreatureEntity {
         }//short snippet for bucketing
         else if(!itemstack.isEmpty() &&  itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
             if (!this.world.isRemote) {
-                this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
+                if (this.getHealth() < this.getMaxHealth()) {
+                    this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
+                    this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 80, 1));
+                }else{
+                    InventoryHelper.spawnItemStack(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), new ItemStack(itemstack.getItem()));
+                    this.playSound(SoundEvents.ENTITY_FOX_SPIT, 1.0F, 1.0F);
+                }
+                if (!player.abilities.isCreativeMode) {
+                    itemstack.shrink(1);
+                }
             }
-            if (!player.abilities.isCreativeMode) {
-                itemstack.shrink(1);
-            }
+
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
         }//short snippet for feeding
         else if(itemstack.isEmpty() && player.getUniqueID().toString().equals(this.getOwnerId()) && this.isAlive()){
@@ -269,41 +252,9 @@ public class BabyKrakenEntity extends CreatureEntity {
         return super.func_230254_b_(player, hand);
     }
 
-
-    protected void setBucketData(ItemStack bucket) {
-        if (this.hasCustomName()) {
-            bucket.setDisplayName(this.getCustomName());
-        }
-    }
-    protected ItemStack getSquidBucket() {
-        return new ItemStack(ModItems.BUCKET_OF_BABY_KRAKEN.get());
-    }
-
-    //---------------------------------------------------------------------------
-    // end player interaction
-    //----------------------------------------------------------------
-    @Override
-    public void livingTick() {
-    //--------------------------------------------------------------------
-    // milk info
-    //---------------------------------------------------------
-        if (!this.world.isRemote){
-            if (milkTimer < milkTimerMax){
-                long curTime = this.world.getDayTime();
-                if ((curTime >= worldTimeWhenMilked && ((curTime - worldTimeWhenMilked) >= milkTimerMax))
-                    ||(curTime < worldTimeWhenMilked && (((24000 - (worldTimeWhenMilked % 24000)) + (curTime % 24000)) >= milkTimerMax ))){
-                     milkTimer = milkTimerMax;
-                }
-                else milkTimer++;
-            }
-            if (milkTimer == milkTimerMax && (availableMilks != maximumMilks)){
-                availableMilks = maximumMilks;
-            }
-        }
-        super.livingTick();
-        
-    }
-
+    //-----------------------------------------
+    // milk helper
+    //-----------------------------------
     public ItemStack milkSquid(){
         if (!this.world.isRemote) {
             if (availableMilks > 0) {
@@ -319,10 +270,56 @@ public class BabyKrakenEntity extends CreatureEntity {
             }
         }
         return null;
-        //--------------------------------------------------------------------
-        // end milk info
-        //---------------------------------------------------------
     }
+    //---------------------------------------------------
+    // every tick
+    //---------------------------------------------
+    @Override
+    public void livingTick() {
+        if (!this.world.isRemote){
+            if (milkTimer < milkTimerMax){
+                long curTime = this.world.getDayTime();
+                if ((curTime >= worldTimeWhenMilked && ((curTime - worldTimeWhenMilked) >= milkTimerMax))
+                    ||(curTime < worldTimeWhenMilked && (((24000 - (worldTimeWhenMilked % 24000)) + (curTime % 24000)) >= milkTimerMax ))){
+                     milkTimer = milkTimerMax;
+                }
+                else milkTimer++;
+            }
+            if (milkTimer == milkTimerMax && (availableMilks != maximumMilks)){
+                availableMilks = maximumMilks;
+            }
+        }
+        super.livingTick();
+
+    }
+    //------------------------------------------------
+    // on death
+    //-----------------------------------------
+    @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+        int i = 20;
+        if ((this.ticksExisted + this.getEntityId()) % i == 0) {
+            Effect effect = Effects.BLINDNESS;
+            List<ServerPlayerEntity> list = ((ServerWorld)this.world).getPlayers((player) -> this.getRevengeTarget() == player && player.interactionManager.survivalOrAdventure());
+            int j = 2;
+            int k = 200;
+            int l = 20;
+
+            for(ServerPlayerEntity serverplayerentity : list) {
+                if (!serverplayerentity.isPotionActive(effect) || serverplayerentity.getActivePotionEffect(effect).getAmplifier() < j || serverplayerentity.getActivePotionEffect(effect).getDuration() < l) {
+                    System.out.println("my health is: "+ this.getHealth() + "/" + this.getMaxHealth());
+                    System.out.println("applying effect: " + effect.getName());
+                    serverplayerentity.connection.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.field_241774_k_, this.isSilent() ? 0.0F : 1.0F));
+                    serverplayerentity.addPotionEffect(new EffectInstance(effect, k, j));
+                }
+            }
+        }
+
+    }
+    //--------------------------------------
+    // custom goal
+    //------------------------------------
     public class FollowKrakenMom extends Goal {
         private final BabyKrakenEntity babyKraken;
         private PlayerEntity krakenMom;
