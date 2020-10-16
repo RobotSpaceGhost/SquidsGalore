@@ -2,11 +2,11 @@ package com.robotspaceghost.squidsgalore.entities;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -17,24 +17,20 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.server.management.PreYggdrasilConverter;
+import net.minecraft.pathfinding.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.EnumSet;
 import java.util.UUID;
 
 
 public class BabyKrakenEntity extends CreatureEntity {
     /*
-    todo: stareAtFlowerGoal, sitOnBedGoal make tameable, belong to spawning player, if killed by player semiperm debuff "Omen of the Seas"
+    todo: stareAtFlowerGoal, sitOnBedGoal make babyKraken, belong to spawning player, if killed by player semiperm debuff "Omen of the Seas"
     safg: stops for a moment to stare at flowers, like it stares at players
     sobg: like cats
     ofts: upon entering ocean biome, summon boss fight
@@ -44,7 +40,6 @@ public class BabyKrakenEntity extends CreatureEntity {
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
     protected static final DataParameter<Boolean> KRAKEN_SITTING = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
     protected static final DataParameter<String> KRAKEN_MOM = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.STRING);
-    protected boolean onOwnerHead;
     public static final Item SQUID_MILK = ModItems.KRAKEN_BREATH.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
     public static final SoundEvent milkedFail = SoundEvents.ENTITY_CAT_HISS;
@@ -59,7 +54,6 @@ public class BabyKrakenEntity extends CreatureEntity {
         availableMilks = maximumMilks;
         milkTimer = milkTimerMax;
         worldTimeWhenMilked = this.world.getDayTime();
-        onOwnerHead = false;
     }
     //func_233815_a_ -> create()
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
@@ -75,9 +69,11 @@ public class BabyKrakenEntity extends CreatureEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this,1.25D));
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.3D, TEMPTATION_ITEMS, false));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this,1.0D));
+        this.goalSelector.addGoal(3, new FollowKrakenMom(this, 1.0, 6,2));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
-        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(5, new LookAtGoal(this, this.getClass(), 5.0f));
+        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+
     }
 
     @Override
@@ -169,6 +165,11 @@ public class BabyKrakenEntity extends CreatureEntity {
     }
     public String getOwnerId() {
         return this.dataManager.get(KRAKEN_MOM);
+    }
+    public PlayerEntity getKrakenMom(){
+        String owner = getOwnerId();
+        if (owner.equals("None") || owner.equals("")) return null;
+        return this.world.getPlayerByUuid(UUID.fromString(owner));
     }
     //-------------------------------------
     // end owner data
@@ -321,6 +322,142 @@ public class BabyKrakenEntity extends CreatureEntity {
         //--------------------------------------------------------------------
         // end milk info
         //---------------------------------------------------------
+    }
+    public class FollowKrakenMom extends Goal {
+        private final BabyKrakenEntity babyKraken;
+        private PlayerEntity krakenMom;
+        private final double followSpeed;
+        private final PathNavigator navigator;
+        private int timeToRecalcPath;
+        private final IWorldReader world;
+        private final float maxDist;
+        private final float minDist;
+        private float oldWaterCost;
+
+        public FollowKrakenMom(BabyKrakenEntity babyKrakenEntity, double followSpeedVal, float minimumDist, float maximumDist) {
+            this.babyKraken = babyKrakenEntity;
+            this.world = babyKrakenEntity.world;
+            this.followSpeed = followSpeedVal;
+            this.navigator = babyKrakenEntity.getNavigator();
+            this.minDist = minimumDist;
+            this.maxDist = maximumDist;
+            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            if (!(babyKrakenEntity.getNavigator() instanceof GroundPathNavigator)) {
+                throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+            }
+        }
+
+        public boolean shouldExecute() {
+            if(babyKraken.isAlive() && !babyKraken.getEntityWorld().isRemote()) {
+                PlayerEntity owner = babyKraken.getKrakenMom();
+                if (owner == null) {
+                    return false;
+                } else if (owner.isSpectator()) {
+                    return false;
+                }else if(babyKraken.isSitting()){
+                    return false;
+                } else if (this.babyKraken.getDistanceSq(owner) < (double)(this.minDist * this.minDist)) {
+                    return false;
+                } else {
+                    this.krakenMom = owner;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean shouldContinueExecuting() {
+            if (this.navigator.noPath()) {
+                return false;
+            } else {
+                return !(this.babyKraken.getDistanceSq(this.krakenMom) <= (double)(this.maxDist * this.maxDist));
+            }
+        }
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void startExecuting() {
+            this.timeToRecalcPath = 0;
+            this.oldWaterCost = this.babyKraken.getPathPriority(PathNodeType.WATER);
+            this.babyKraken.setPathPriority(PathNodeType.WATER, 0.0F);
+        }
+
+        /**
+         * Reset the task's internal state. Called when this task is interrupted by another one
+         */
+        public void resetTask() {
+            this.krakenMom = null;
+            this.navigator.clearPath();
+            this.babyKraken.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+        }
+
+        /**
+         * Keep ticking a continuous task that has already been started
+         */
+        public void tick() {
+            this.babyKraken.getLookController().setLookPositionWithEntity(this.krakenMom, 10.0F, (float)this.babyKraken.getVerticalFaceSpeed());
+            if (--this.timeToRecalcPath <= 0) {
+                this.timeToRecalcPath = 10;
+                if (!this.babyKraken.getLeashed() && !this.babyKraken.isPassenger()) {
+                    if (this.babyKraken.getDistanceSq(this.krakenMom) >= 144.0D) {
+                        this.func_226330_g_();
+                    } else {
+                        this.navigator.tryMoveToEntityLiving(this.krakenMom, this.followSpeed);
+                    }
+
+                }
+            }
+        }
+
+        //following three methods teleport func
+        private void func_226330_g_() {
+            BlockPos blockpos = this.krakenMom.func_233580_cy_();
+
+            for(int i = 0; i < 10; ++i) {
+                int j = this.func_226327_a_(-3, 3);
+                int k = this.func_226327_a_(-1, 1);
+                int l = this.func_226327_a_(-3, 3);
+                boolean flag = this.func_226328_a_(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l);
+                if (flag) {
+                    return;
+                }
+            }
+
+        }
+
+        private boolean func_226328_a_(int posX, int posY, int posZ) {
+            if (Math.abs((double)posX - this.krakenMom.getPosX()) < 2.0D && Math.abs((double)posZ - this.krakenMom.getPosZ()) < 2.0D) {
+                return false;
+            } else if (!this.func_226329_a_(new BlockPos(posX, posY, posZ))) {
+                return false;
+            } else {
+                this.babyKraken.setLocationAndAngles((double)posX + 0.5D, (double)posY, (double)posZ + 0.5D, this.babyKraken.rotationYaw, this.babyKraken.rotationPitch);
+                this.navigator.clearPath();
+                return true;
+            }
+        }
+
+        private boolean func_226329_a_(BlockPos blockPos) {
+            PathNodeType pathnodetype = WalkNodeProcessor.func_237231_a_(this.world, blockPos.func_239590_i_());
+            if (pathnodetype != PathNodeType.WALKABLE) {
+                return false;
+            } else {
+                BlockState blockstate = this.world.getBlockState(blockPos.down());
+                if (blockstate.getBlock() instanceof LeavesBlock) {
+                    return false;
+                } else {
+                    BlockPos blockpos = blockPos.subtract(this.babyKraken.func_233580_cy_());
+                    return this.world.hasNoCollisions(this.babyKraken, this.babyKraken.getBoundingBox().offset(blockpos));
+                }
+            }
+        }
+
+        //rng func
+        private int func_226327_a_(int minBound, int maxBound) {
+            return this.babyKraken.getRNG().nextInt(maxBound - minBound + 1) + minBound;
+        }
+
     }
 
 

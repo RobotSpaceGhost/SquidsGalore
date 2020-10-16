@@ -12,6 +12,7 @@ public class BabyKrakenRenderer extends MobRenderer<BabyKrakenEntity, BabyKraken
     protected static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation(SquidsGalore.MOD_ID, "textures/entity/baby_kraken.png");
     protected static final ResourceLocation TEXTURE_CTHULHU = new ResourceLocation(SquidsGalore.MOD_ID, "textures/entity/baby_kraken_cthulhu.png");
     protected static final ResourceLocation TEXTURE_RSG = new ResourceLocation(SquidsGalore.MOD_ID, "textures/entity/baby_kraken_rsg.png");
+    protected static final ResourceLocation TEXTURE_OLAU = new ResourceLocation(SquidsGalore.MOD_ID, "textures/entity/baby_kraken_olau.png");
 
     public BabyKrakenRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BabyKrakenModel<>(), 0.7f);
@@ -21,12 +22,10 @@ public class BabyKrakenRenderer extends MobRenderer<BabyKrakenEntity, BabyKraken
     public ResourceLocation getEntityTexture(BabyKrakenEntity entity) {
         if (entity.hasCustomName() && entity.getCustomName() != null)
         {
-            switch(entity.getCustomName().getString().toLowerCase().replaceAll("\\s+","")) {
-                case "robotspaceghost":
-                    return TEXTURE_RSG;
-                case "cthulhu":
-                    return TEXTURE_CTHULHU;
-            }
+            String name = entity.getCustomName().getString().toLowerCase().replaceAll("\\s+","");
+            if (name.contains("robotspaceghost")) return TEXTURE_RSG;
+            else if(name.contains("oohlookaunicorn")) return TEXTURE_OLAU;
+            else if(name.contains("cthulhu")) return TEXTURE_CTHULHU;
         }
         return TEXTURE_DEFAULT;
     }

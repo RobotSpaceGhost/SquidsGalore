@@ -19,6 +19,15 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
     private final ModelRenderer ringTentacleLeft;
     private final ModelRenderer pinkieTentacleRight;
     private final ModelRenderer pinkieTentacleLeft;
+    private final ModelRenderer antenae;
+    private final ModelRenderer horn;
+    private final ModelRenderer wingLeft;
+    private final ModelRenderer wingRight;
+    private final ModelRenderer faceTentacle1;
+    private final ModelRenderer faceTentacle2;
+    private final ModelRenderer faceTentacle3;
+    private final ModelRenderer faceTentacle4;
+
     private boolean swimDirection;
 
     public BabyKrakenModel() {
@@ -28,28 +37,64 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
         head = new ModelRenderer(this);
         head.setRotationPoint(0.0F, 16.0F, -1.0F);
         head.setTextureOffset(0, 0).addBox(-4.0F, -6.0F, -3.5F, 8.0F, 8.0F, 8.0F, 0.0F, false);
-        head.setTextureOffset(0, 0).addBox(-3.0F, -8.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(0, 0).addBox(2.0F, -8.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 7).addBox(1.0F, -3.0F, 4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 7).addBox(1.0F, -5.0F, 5.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(43, 7).addBox(2.0F, -6.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(43, 7).addBox(3.0F, -7.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 6).addBox(4.0F, -7.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 6).addBox(5.0F, -6.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(43, 7).addBox(-2.0F, -3.0F, 4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 7).addBox(-2.0F, -5.0F, 5.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 6).addBox(-3.0F, -6.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 8).addBox(-4.0F, -7.0F, 6.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 6).addBox(-5.0F, -7.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(42, 6).addBox(-6.0F, -6.0F, 6.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(32, 8).addBox(-2.0F, -1.0F, -4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(36, 8).addBox(-1.0F, -1.0F, -4.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(32, 7).addBox(0.0F, -1.0F, -4.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(32, 4).addBox(1.0F, -1.0F, -4.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        setRotation(head,0,0,0);
+
+        wingRight = new ModelRenderer(this);
+        wingRight.setRotationPoint(-1.0F, -2.0F, 4.0F);
+        head.addChild(wingRight);
+        wingRight.setTextureOffset(43, 7).addBox(-1.0F, -1.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        wingRight.setTextureOffset(42, 7).addBox(-1.0F, -3.0F, 1.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+        wingRight.setTextureOffset(42, 6).addBox(-2.0F, -4.0F, 2.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        wingRight.setTextureOffset(42, 8).addBox(-3.0F, -5.0F, 2.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        wingRight.setTextureOffset(42, 6).addBox(-4.0F, -5.0F, 2.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+        wingRight.setTextureOffset(42, 6).addBox(-5.0F, -4.0F, 2.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+
+        wingLeft = new ModelRenderer(this);
+        wingLeft.setRotationPoint(1.0F, -2.0F, 4.0F);
+        head.addChild(wingLeft);
+        wingLeft.setTextureOffset(42, 7).addBox(0.0F, -1.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        wingLeft.setTextureOffset(42, 7).addBox(0.0F, -3.0F, 1.0F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+        wingLeft.setTextureOffset(43, 7).addBox(1.0F, -4.0F, 2.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        wingLeft.setTextureOffset(43, 7).addBox(2.0F, -5.0F, 2.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+        wingLeft.setTextureOffset(42, 6).addBox(3.0F, -5.0F, 2.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+        wingLeft.setTextureOffset(42, 6).addBox(4.0F, -4.0F, 2.0F, 1.0F, 6.0F, 1.0F, 0.0F, false);
+
+        faceTentacle1 = new ModelRenderer(this);
+        faceTentacle1.setRotationPoint(-1.5F, -1.0F, -3.5F);
+        head.addChild(faceTentacle1);
+        faceTentacle1.setTextureOffset(32, 8).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+        faceTentacle2 = new ModelRenderer(this);
+        faceTentacle2.setRotationPoint(-0.5F, -1.0F, -3.5F);
+        head.addChild(faceTentacle2);
+        faceTentacle2.setTextureOffset(36, 8).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 4.0F, 1.0F, 0.0F, false);
+
+        faceTentacle3 = new ModelRenderer(this);
+        faceTentacle3.setRotationPoint(0.5F, -1.0F, -3.5F);
+        head.addChild(faceTentacle3);
+        faceTentacle3.setTextureOffset(32, 7).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+
+        faceTentacle4 = new ModelRenderer(this);
+        faceTentacle4.setRotationPoint(1.5F, -1.0F, -3.5F);
+        head.addChild(faceTentacle4);
+        faceTentacle4.setTextureOffset(32, 4).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+        horn = new ModelRenderer(this);
+        horn.setRotationPoint(0.0F, 0.0F, 0.0F);
+        head.addChild(horn);
+        horn.setTextureOffset(47, 1).addBox(-1.0F, -9.0F, -2.0F, 2.0F, 3.0F, 2.0F, 0.0F, false);
+        horn.setTextureOffset(47, 6).addBox(-1.0F, -7.0F, 0.0F, 2.0F, 1.0F, 1.0F, 0.0F, false);
+        horn.setTextureOffset(55, 2).addBox(-1.0F, -12.0F, -2.0F, 2.0F, 3.0F, 1.0F, 0.0F, false);
+
+        antenae = new ModelRenderer(this);
+        antenae.setRotationPoint(0.0F, 0.0F, 0.0F);
+        head.addChild(antenae);
+        antenae.setTextureOffset(0, 0).addBox(-3.0F, -8.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        antenae.setTextureOffset(0, 0).addBox(2.0F, -8.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
         neck = new ModelRenderer(this);
         neck.setRotationPoint(0.0F, 15.0F, 0.5F);
-        neck.setTextureOffset(0, 16).addBox(-3.0F, 1.0F, -4.0F, 6.0F, 3.0F, 6.0F, 0.0F, false);
+        neck.setTextureOffset(0, 16).addBox(-3.0F, 2.0F, -4.0F, 6.0F, 2.0F, 6.0F, 0.0F, false);
 
         indexTentacleRight = new ModelRenderer(this);
         indexTentacleRight.setRotationPoint(-2.0F, 18.0F, -3.0F);
@@ -208,6 +253,7 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
         head.render(matrixStack, buffer, packedLight, packedOverlay);
         neck.render(matrixStack, buffer, packedLight, packedOverlay);
+        neck.render(matrixStack, buffer, packedLight, packedOverlay);
         pinkieTentacleRight.render(matrixStack, buffer, packedLight, packedOverlay);
         pinkieTentacleLeft.render(matrixStack, buffer, packedLight, packedOverlay);
         ringTentacleRight.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -216,6 +262,13 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
         middleTentacleLeft.render(matrixStack, buffer, packedLight, packedOverlay);
         indexTentacleRight.render(matrixStack, buffer, packedLight, packedOverlay);
         indexTentacleLeft.render(matrixStack, buffer, packedLight, packedOverlay);
+    }
+
+    protected void setRotation(ModelRenderer model, float rotX, float rotY, float rotZ)
+    {
+        model.rotateAngleX = (float) Math.toRadians(rotX);
+        model.rotateAngleY = (float) Math.toRadians(rotY);
+        model.rotateAngleZ = (float) Math.toRadians(rotZ);
     }
 
 }
