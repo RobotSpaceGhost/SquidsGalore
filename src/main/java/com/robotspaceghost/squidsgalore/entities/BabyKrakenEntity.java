@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,6 +26,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
 
 
 public class BabyKrakenEntity extends CreatureEntity {
@@ -38,11 +43,11 @@ public class BabyKrakenEntity extends CreatureEntity {
     private static final DataParameter<Boolean> FROM_BUCKET = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
     public static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(ModItems.INK_ON_A_STICK.get());
     protected static final DataParameter<Boolean> KRAKEN_SITTING = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.BOOLEAN);
-    private PlayerEntity owner; //make final
-    private static boolean onOwnerHead;
+    protected static final DataParameter<String> KRAKEN_MOM = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.STRING);
+    protected boolean onOwnerHead;
     public static final Item SQUID_MILK = ModItems.KRAKEN_BREATH.get();
     private static final SoundEvent milkedPass = SoundEvents.ENTITY_CAT_PURREOW;
-    private static final SoundEvent milkedFail = SoundEvents.ENTITY_CAT_HISS;
+    public static final SoundEvent milkedFail = SoundEvents.ENTITY_CAT_HISS;
     private int milkTimer;
     private static final int milkTimerMax = 12000;
     private int availableMilks;
@@ -106,8 +111,9 @@ public class BabyKrakenEntity extends CreatureEntity {
 
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) { return false;}
+
     //--------------------------------------------------
-    //  owner commands
+    //  Movement
     //----------------------------------------------
 
     @Override
@@ -148,8 +154,21 @@ public class BabyKrakenEntity extends CreatureEntity {
     public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
     public void sitOrStand(boolean isKrakenSitting){ this.dataManager.set(KRAKEN_SITTING, isKrakenSitting); }
     //----------------------------------
-    //  end owner commands
+    //  end movement
     //-------------------------------------------
+    //--------------------------------------
+    // owner data
+    //---------------------------------
+    public void setOwnerId(String ownerId) {
+        this.dataManager.set(KRAKEN_MOM, ownerId);
+        System.out.println("Owner id set to: " +  ownerId);
+    }
+    public String getOwnerId() {
+        return this.dataManager.get(KRAKEN_MOM);
+    }
+    //-------------------------------------
+    // end owner data
+    //--------------------------------
     //--------------------------
     // nbt data
     //----------------------
@@ -157,16 +176,20 @@ public class BabyKrakenEntity extends CreatureEntity {
         super.registerData();
         this.dataManager.register(FROM_BUCKET, false);
         this.dataManager.register(KRAKEN_SITTING, false);
+        this.dataManager.register(KRAKEN_MOM, "None");
     }
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putBoolean("FromBucket", this.isFromBucket());
         compound.putBoolean("KrakenSitting", this.isSitting());
+        compound.putString("KrakenMom", this.getOwnerId());
+
     }
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.setFromBucket(compound.getBoolean("FromBucket"));
         this.sitOrStand(compound.getBoolean("KrakenSitting"));
+        this.setOwnerId(compound.getString("KrakenMom"));
 
     }
     //--------------------
@@ -193,7 +216,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     @Override
     public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        if (itemstack.getItem() == Items.WATER_BUCKET && this.isAlive()) {
+        if (itemstack.getItem() == Items.WATER_BUCKET && player.getUniqueID().toString().equals(this.getOwnerId()) && this.isAlive()) {
             this.playSound(SoundEvents.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F);
             itemstack.shrink(1);
             ItemStack bucketType = this.getSquidBucket();
@@ -208,8 +231,8 @@ public class BabyKrakenEntity extends CreatureEntity {
             }
             this.remove();
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        }//short snippet for milking
-        else if(!itemstack.isEmpty() && itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
+        }//short snippet for bucketing
+        else if(!itemstack.isEmpty() &&  itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
             if (!this.world.isRemote) {
                 this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
             }
@@ -218,8 +241,9 @@ public class BabyKrakenEntity extends CreatureEntity {
             }
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
         }//short snippet for feeding
-        else if(itemstack.isEmpty() && this.isAlive()){
-            if (!this.world.isRemote && hand ==  player.getActiveHand()) { // Todo: add owner check here
+        else if(itemstack.isEmpty() && player.getUniqueID().toString().equals(this.getOwnerId()) && this.isAlive()){
+            if (!this.world.isRemote  && hand == player.getActiveHand()) {
+
                 if (!this.isInWater()) {
                     if (this.isSitting()) {
                         this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);

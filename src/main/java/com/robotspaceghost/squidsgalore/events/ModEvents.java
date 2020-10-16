@@ -1,14 +1,17 @@
 package com.robotspaceghost.squidsgalore.events;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
+import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.passive.SquidEntity;
@@ -60,11 +63,14 @@ public class ModEvents {
         ItemStack milk = null;
         if (!event.getWorld().isRemote && event.getHand() == player.getActiveHand()
             && squid.isAlive() && (player.getHeldItemMainhand().getItem() == Items.GLASS_BOTTLE)) {
-            if (squid instanceof BabyKrakenEntity) { milk = ((BabyKrakenEntity) squid).milkSquid();}
+            if (squid instanceof BabyKrakenEntity ) {
+                if(!player.getUniqueID().toString().equals(((BabyKrakenEntity) squid).getOwnerId())) squid.playSound(BabyKrakenEntity.milkedFail, 1.0f, 1.0f);
+                else milk = ((BabyKrakenEntity) squid).milkSquid();
+            }
             //-----------------
             // other squids here
             //---------------
-            if (squid instanceof SquidEntity){milk = new ItemStack(Items.INK_SAC);}
+            if (squid instanceof SquidEntity ){milk = new ItemStack(Items.INK_SAC);}
             player.getHeldItemMainhand().shrink(1);
             if (milk != null){
                 if (!player.addItemStackToInventory(milk)) {
@@ -75,6 +81,23 @@ public class ModEvents {
             }
         }
     }
+    @SubscribeEvent
+    public static void spawnBabyKrakenFromBucket(PlayerInteractEvent event){
+        World worldIn = event.getWorld();
+        PlayerEntity player = event.getPlayer();
+        BlockPos pos = event.getPos();
+        if (!worldIn.isRemote() && player != null && event.getHand() == player.getActiveHand() && (player.getHeldItemMainhand().getItem() == ModItems.BUCKET_OF_BABY_KRAKEN.get())) {
+            Entity entity = ModEntityTypes.BABY_KRAKEN.get().spawn(worldIn, player.getHeldItemMainhand(), (PlayerEntity) null, pos, SpawnReason.BUCKET, true, false);
+            if (entity instanceof BabyKrakenEntity) {
+                ((BabyKrakenEntity) entity).setOwnerId(player.getUniqueID().toString());
+                ((BabyKrakenEntity) entity).setFromBucket(true);
+            }
+            player.getHeldItemMainhand().shrink(1);
+            player.setHeldItem(player.getActiveHand(), new ItemStack(Items.WATER_BUCKET.getItem()));
+
+        }
+    }
+
 
     /*
     @SubscribeEvent
