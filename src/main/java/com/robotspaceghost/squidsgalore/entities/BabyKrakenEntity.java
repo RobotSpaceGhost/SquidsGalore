@@ -151,6 +151,10 @@ public class BabyKrakenEntity extends CreatureEntity {
 
 
     }
+
+    @Override
+    public boolean canBeLeashedTo(PlayerEntity player) { return (player.getUniqueID().toString().equals(this.getOwnerId()) && super.canBeLeashedTo(player)); }
+
     public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
     public void sitOrStand(boolean isKrakenSitting){ this.dataManager.set(KRAKEN_SITTING, isKrakenSitting); }
     //----------------------------------
@@ -295,7 +299,6 @@ public class BabyKrakenEntity extends CreatureEntity {
                 availableMilks = maximumMilks;
             }
         }
-
         super.livingTick();
         
     }
