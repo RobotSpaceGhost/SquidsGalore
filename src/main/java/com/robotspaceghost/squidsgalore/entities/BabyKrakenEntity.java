@@ -3,6 +3,8 @@ import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -19,6 +21,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SChangeGameStatePacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.*;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -215,7 +218,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         }//short snippet for bucketing
         else if(!itemstack.isEmpty() &&  itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
             if (!this.world.isRemote) {
-                if (this.getHealth() < this.getMaxHealth()) {
+                if (this.getHealth() < this.getMaxHealth() && !this.isPotionActive(Effects.REGENERATION)) {
                     this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
                     this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 80, 1));
                 }else{
@@ -295,28 +298,48 @@ public class BabyKrakenEntity extends CreatureEntity {
     //------------------------------------------------
     // on death
     //-----------------------------------------
+//    @Override
+//
+//    protected void updateAITasks() {
+//        super.updateAITasks();
+//        int i = 20;
+//        if ((this.ticksExisted + this.getEntityId()) % i == 0) {
+//            Effect effect = Effects.BLINDNESS;
+//            List<ServerPlayerEntity> list = ((ServerWorld)this.world).getPlayers((player) -> this.getRevengeTarget() == player && player.interactionManager.survivalOrAdventure());
+//            int j = 2;
+//            int k = 200;
+//            int l = 20;
+//
+//            for(ServerPlayerEntity serverplayerentity : list) {
+//                if (!serverplayerentity.isPotionActive(effect) || serverplayerentity.getActivePotionEffect(effect).getAmplifier() < j || serverplayerentity.getActivePotionEffect(effect).getDuration() < l) {
+//                    serverplayerentity.getServerWorld().spawnParticle(serverplayerentity,ParticleTypes.ELDER_GUARDIAN,false, serverplayerentity.getPosX(), serverplayerentity.getPosY(), serverplayerentity.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
+//                    playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
+//                    serverplayerentity.addPotionEffect(new EffectInstance(effect, k, j));
+//                }
+//            }
+//        }
+//
+//    }
+
+
     @Override
-    protected void updateAITasks() {
-        super.updateAITasks();
-        int i = 20;
-        if ((this.ticksExisted + this.getEntityId()) % i == 0) {
-            Effect effect = Effects.BLINDNESS;
-            List<ServerPlayerEntity> list = ((ServerWorld)this.world).getPlayers((player) -> this.getRevengeTarget() == player && player.interactionManager.survivalOrAdventure());
-            int j = 2;
-            int k = 200;
-            int l = 20;
+    public void onDeath(DamageSource cause) {
+        ServerPlayerEntity babyKiller = (ServerPlayerEntity) this.getRevengeTarget();
+        Effect effect = Effects.BLINDNESS;
+        int effectDuration = 200;
+        int effectLevel = 2;
+        if (!this.world.isRemote && babyKiller != null && babyKiller.interactionManager.survivalOrAdventure()){
+            babyKiller.getServerWorld().spawnParticle(babyKiller,ParticleTypes.ELDER_GUARDIAN,false, babyKiller.getPosX(), babyKiller.getPosY(), babyKiller.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
+            playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
+            babyKiller.addPotionEffect(new EffectInstance(effect,effectDuration,effectLevel));
 
-            for(ServerPlayerEntity serverplayerentity : list) {
-                if (!serverplayerentity.isPotionActive(effect) || serverplayerentity.getActivePotionEffect(effect).getAmplifier() < j || serverplayerentity.getActivePotionEffect(effect).getDuration() < l) {
-                    System.out.println("my health is: "+ this.getHealth() + "/" + this.getMaxHealth());
-                    System.out.println("applying effect: " + effect.getName());
-                    serverplayerentity.connection.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.field_241774_k_, this.isSilent() ? 0.0F : 1.0F));
-                    serverplayerentity.addPotionEffect(new EffectInstance(effect, k, j));
-                }
-            }
         }
-
+        if (this.getKrakenMom() != this.getRevengeTarget()){
+            this.getKrakenMom().addItemStackToInventory(new ItemStack(ModItems.BABY_KRAKEN_EGG.get()));
+        }
+        super.onDeath(cause);
     }
+
     //--------------------------------------
     // custom goal
     //------------------------------------
