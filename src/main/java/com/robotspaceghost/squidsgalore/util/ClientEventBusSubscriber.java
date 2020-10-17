@@ -4,10 +4,15 @@ import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.client.render.BabyKrakenRenderer;
 import com.robotspaceghost.squidsgalore.client.render.DomesticSquidRenderer;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
+import com.robotspaceghost.squidsgalore.init.ModParticles;
 import com.robotspaceghost.squidsgalore.items.ModSpawnEggItem;
+import com.robotspaceghost.squidsgalore.particles.KrakenParticle;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +27,10 @@ public class ClientEventBusSubscriber {
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidRenderer::new);
 
     }
-
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void registerParticles(ParticleFactoryRegisterEvent event){
+        Minecraft.getInstance().particles.registerFactory(ModParticles.KRAKEN_PARTICLE.get(), new KrakenParticle.Factory());
+    }
     @SubscribeEvent
     public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
         ModSpawnEggItem.initSpawnEggs();

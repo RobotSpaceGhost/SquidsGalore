@@ -1,5 +1,6 @@
 package com.robotspaceghost.squidsgalore.entities;
 import com.robotspaceghost.squidsgalore.init.ModItems;
+import com.robotspaceghost.squidsgalore.init.ModParticles;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
@@ -30,6 +31,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -325,18 +327,42 @@ public class BabyKrakenEntity extends CreatureEntity {
     @Override
     public void onDeath(DamageSource cause) {
         ServerPlayerEntity babyKiller = (ServerPlayerEntity) this.getRevengeTarget();
-        Effect effect = Effects.BLINDNESS;
-        int effectDuration = 200;
-        int effectLevel = 2;
+        Effect effect = Effects.REGENERATION;
+        Effect aestheticEffect = Effects.BLINDNESS;
+        int effectDuration = 800;
+        int aestheticEffectDuration = 50;
+        int effectLevel = 0;
         if (!this.world.isRemote && babyKiller != null && babyKiller.interactionManager.survivalOrAdventure()){
-            babyKiller.getServerWorld().spawnParticle(babyKiller,ParticleTypes.ELDER_GUARDIAN,false, babyKiller.getPosX(), babyKiller.getPosY(), babyKiller.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
+            babyKiller.getServerWorld().spawnParticle(babyKiller, ModParticles.KRAKEN_PARTICLE.get(),false, babyKiller.getPosX(), babyKiller.getPosY(), babyKiller.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
+            babyKiller.addPotionEffect(new EffectInstance(aestheticEffect,aestheticEffectDuration,effectLevel));
             playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
-            babyKiller.addPotionEffect(new EffectInstance(effect,effectDuration,effectLevel));
-
+            if (babyKiller.isPotionActive(effect)){
+                effectLevel = babyKiller.getActivePotionEffect(effect).getAmplifier() + 1;
+            }
+            if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
+                babyKiller.addPotionEffect(new EffectInstance(effect,effectDuration,effectLevel));
+            }
         }
         if (this.getKrakenMom() != this.getRevengeTarget()){
             this.getKrakenMom().addItemStackToInventory(new ItemStack(ModItems.BABY_KRAKEN_EGG.get()));
         }
+        //----------------
+        /*
+        int i = 1;
+               if (effectinstance1 != null) {
+                  i += effectinstance1.getAmplifier();
+                  playerentity.removeActivePotionEffect(Effects.BAD_OMEN);
+               } else {
+                  --i;
+               }
+
+               i = MathHelper.clamp(i, 0, 4);
+               EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
+               if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
+                  playerentity.addPotionEffect(effectinstance);
+               }
+         */
+        //----------------
         super.onDeath(cause);
     }
 

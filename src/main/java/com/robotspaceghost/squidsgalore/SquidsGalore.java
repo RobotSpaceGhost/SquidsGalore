@@ -1,11 +1,11 @@
 package com.robotspaceghost.squidsgalore;
 
-import com.robotspaceghost.squidsgalore.client.render.DomesticSquidRenderer;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
+import com.robotspaceghost.squidsgalore.init.ModParticles;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -31,6 +31,7 @@ public class SquidsGalore
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems. ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModParticles.PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         MinecraftForge.EVENT_BUS.register(this);
     }
