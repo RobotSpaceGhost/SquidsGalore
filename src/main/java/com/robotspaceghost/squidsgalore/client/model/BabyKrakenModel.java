@@ -131,7 +131,7 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
     @Override
     public void setLivingAnimations(BabyKrakenEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         int sitHeightOffset = 3;
-        if(entityIn.isAlive() && entityIn.isSitting()) {
+        if(entityIn.isSitting()) {
             head.setRotationPoint(head.rotationPointX, 16 + sitHeightOffset, head.rotationPointZ);
             neck.setRotationPoint(neck.rotationPointX, 15 + sitHeightOffset, neck.rotationPointZ);
             indexTentacleRight.setRotationPoint(indexTentacleRight.rotationPointX, 18 + sitHeightOffset, indexTentacleRight.rotationPointZ);
@@ -173,6 +173,28 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
             pinkieTentacleLeft.setRotationPoint(pinkieTentacleLeft.rotationPointX, 18 , pinkieTentacleLeft.rotationPointZ);
             setRotationAngles(entityIn,limbSwing,limbSwingAmount,entityIn.ticksExisted, entityIn.getYaw(partialTick), entityIn.getPitch(partialTick));
         }
+        float wingSpeed = 1f;
+        float wingShift = (entityIn.ticksExisted * wingSpeed) % 90;
+        if (wingShift < 45){
+            this.wingRight.rotateAngleY = - (float) Math.toRadians(wingShift);
+            this.wingLeft.rotateAngleY = (float) Math.toRadians(wingShift);
+        } else{
+            this.wingRight.rotateAngleY = - (float) Math.toRadians(90 - wingShift);
+            this.wingLeft.rotateAngleY = (float) Math.toRadians(90 - wingShift);
+
+        }
+
+        float fTSpeed = 1f;
+        int fTOffset = 4;
+        float fTShift_1 = (entityIn.ticksExisted * fTSpeed + fTOffset) % 60;
+        float fTShift_2 = (entityIn.ticksExisted * fTSpeed + fTOffset * 2) % 60;
+        float fTShift_3 = (entityIn.ticksExisted * fTSpeed + fTOffset * 3) % 60;
+        float fTShift_4 = (entityIn.ticksExisted * fTSpeed + fTOffset * 4) % 60;
+        this.faceTentacle1.rotateAngleX = (fTShift_1 < 30) ? -(float) Math.toRadians(fTShift_1) : -(float) Math.toRadians(60 - fTShift_1);
+        this.faceTentacle2.rotateAngleX = (fTShift_2 < 30) ? -(float) Math.toRadians(fTShift_2) : -(float) Math.toRadians(60 - fTShift_2);
+        this.faceTentacle3.rotateAngleX = (fTShift_3 < 30) ? -(float) Math.toRadians(fTShift_3) : -(float) Math.toRadians(60 - fTShift_3);
+        this.faceTentacle4.rotateAngleX = (fTShift_4 < 30) ? -(float) Math.toRadians(fTShift_4) : -(float) Math.toRadians(60 - fTShift_4);
+
     }
 
     @Override
