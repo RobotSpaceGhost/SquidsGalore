@@ -3,19 +3,13 @@ package com.robotspaceghost.squidsgalore.init;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.blocks.BlockItemBase;
 import com.robotspaceghost.squidsgalore.items.*;
-import com.robotspaceghost.squidsgalore.items.Buckets.SquidBucketItem;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
+import com.robotspaceghost.squidsgalore.items.SquidBucketItem;
+import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.FishBucketItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.function.Supplier;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SquidsGalore.MOD_ID);
@@ -35,7 +29,7 @@ public class ModItems {
     public static final RegistryObject<Item> BUCKET_OF_SALTY_SQUID = ITEMS.register("bucket_of_salty_squid",ItemBase::new);
 
     //Squid Milk
-    public static final RegistryObject<Item> SQUID_INK = ITEMS.register("squid_ink",ItemBase::new);
+    public static final RegistryObject<Item> SQUID_INK = ITEMS.register("squid_ink", SquidInkItem::new);
     public static final RegistryObject<Item> KRAKEN_BREATH = ITEMS.register("kraken_breath",ItemBase::new);
 
     //Food

@@ -1,4 +1,4 @@
-package com.robotspaceghost.squidsgalore.items.Buckets;
+package com.robotspaceghost.squidsgalore.items;
 
 import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
