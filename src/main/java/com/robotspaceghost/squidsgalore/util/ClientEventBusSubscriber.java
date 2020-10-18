@@ -7,10 +7,16 @@ import com.robotspaceghost.squidsgalore.client.render.KrakenRenderer;
 import com.robotspaceghost.squidsgalore.client.render.KrakenTentacleRenderer;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModParticles;
+import com.robotspaceghost.squidsgalore.init.ModPotions_OLD;
 import com.robotspaceghost.squidsgalore.items.ModSpawnEggItem;
 import com.robotspaceghost.squidsgalore.particles.KrakenParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectType;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -34,6 +40,26 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event){
         Minecraft.getInstance().particles.registerFactory(ModParticles.KRAKEN_PARTICLE.get(), new KrakenParticle.Factory());
+    }
+    @SubscribeEvent
+    public static void registerPotions(final RegistryEvent.Register<Potion> event){
+       event.getRegistry().registerAll(
+            ModPotions_OLD.SQUID_INK_POTION = new Potion(new EffectInstance(ModPotions_OLD.SQUID_INK_EFFECT, 180)).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"))
+               //ModPotions_OLD.SQUID_INK_POTION_LONG = new Potion(new EffectInstance(ModPotions_OLD.SQUID_INK_EFFECT, 360)).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"))
+//               ModPotions_OLD.SQUID_INK_POTION_SPLASH = new Potion(new EffectInstance(ModPotions_OLD.SQUID_INK_EFFECT_SPLASH, 3600)).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_potion_splash")),
+//               ModPotions_OLD.SQUID_INK_POTION_LINGERING = new Potion(new EffectInstance(ModPotions_OLD.SQUID_INK_EFFECT_LINGERING, 3600)).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_potion_lingering"))
+
+       );
+    }
+    @SubscribeEvent
+    public static void registerEffects(final RegistryEvent.Register<Effect> event){
+        event.getRegistry().registerAll(
+            ModPotions_OLD.SQUID_INK_EFFECT = new ModPotions_OLD.SquidInkEffect(EffectType.BENEFICIAL, 0xffffff).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"))
+//                ModPotions_OLD.SQUID_INK_EFFECT = new ModPotions_OLD.SquidInkEffect(EffectType.BENEFICIAL, 0xffffff).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"))
+//                ModPotions_OLD.SQUID_INK_EFFECT = new ModPotions_OLD.SquidInkEffect(EffectType.BENEFICIAL, 0xffffff).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect_splash")),
+//                ModPotions_OLD.SQUID_INK_EFFECT = new ModPotions_OLD.SquidInkEffect(EffectType.BENEFICIAL, 0xffffff).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect_lingering"))
+
+        );
     }
     @SubscribeEvent
     public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){

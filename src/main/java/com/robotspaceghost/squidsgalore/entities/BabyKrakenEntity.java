@@ -73,7 +73,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this,1.25D));
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.3D, TEMPTATION_ITEMS, false));
-        this.goalSelector.addGoal(3, new FollowKrakenMom(this, 1.0, 6,2));
+        this.goalSelector.addGoal(3, new FollowKrakenMom(this, 1.0, 6, 2));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.addGoal(5, new LookAtGoal(this, this.getClass(), 5.0f));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
@@ -146,11 +146,16 @@ public class BabyKrakenEntity extends CreatureEntity {
     public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
     public void sitOrStand(boolean isKrakenSitting){
         if(!this.world.isRemote) {
-            if (isKrakenSitting) {
-                if (this.getCustomName() != null && this.getCustomName().getString().toLowerCase().replaceAll("\\s+", "").contains("robotspaceghost"))
-                    this.playSound(SoundEvents.BLOCK_ANVIL_PLACE, 0.075f, 1f);
-                else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
-            }else this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
+            if (!this.isInWater()) {
+                if (isKrakenSitting) {
+                    if (this.getCustomName() != null && this.getCustomName().getString().toLowerCase().replaceAll("\\s+", "").contains("robotspaceghost"))
+                        this.playSound(SoundEvents.BLOCK_ANVIL_PLACE, 0.075f, 1f);
+                    else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
+                } else this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
+            } else {
+                if (this.isSitting()) this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 0.2F, 1.0F);
+                else this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 0.2F, 1.0F);
+            }
             this.dataManager.set(KRAKEN_SITTING, isKrakenSitting);
         }
     }
@@ -228,13 +233,7 @@ public class BabyKrakenEntity extends CreatureEntity {
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
         }//feeding, anyone
         else if(itemstack.isEmpty() && player.getUniqueID().toString().equals(this.getOwnerId()) && this.isAlive()){
-            if (!this.world.isRemote  && hand == player.getActiveHand()) {
-                if (this.isInWater()) {
-                    if (this.isSitting()) this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 0.2F, 1.0F);
-                    else this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 0.2F, 1.0F);
-                }
-                this.sitOrStand(!this.isSitting());
-            }
+            if (!this.world.isRemote  && hand == player.getActiveHand()) { this.sitOrStand(!this.isSitting()); }
             return this.world.isRemote ? ActionResultType.FAIL : ActionResultType.PASS;
         }//sitting, owner only
         return super.func_230254_b_(player, hand);
@@ -258,6 +257,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         }
         return null;
     }
+
     //---------------------------------------------------
     // every tick
     //---------------------------------------------
@@ -302,7 +302,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     //--------------------------------------
     // custom goal
     //------------------------------------
-    public class FollowKrakenMom extends Goal {
+    public static class FollowKrakenMom extends Goal {
         private final BabyKrakenEntity babyKraken;
         private PlayerEntity krakenMom;
         private final double followSpeed;
@@ -323,7 +323,6 @@ public class BabyKrakenEntity extends CreatureEntity {
             this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
             if (!(babyKrakenEntity.getNavigator() instanceof GroundPathNavigator)) throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
-
         public boolean shouldExecute() {
             if(babyKraken.isAlive() && !babyKraken.getEntityWorld().isRemote()) {
                 PlayerEntity owner = babyKraken.getKrakenMom();
@@ -336,33 +335,20 @@ public class BabyKrakenEntity extends CreatureEntity {
             }
             return false;
         }
-
         public boolean shouldContinueExecuting() {
             if (this.navigator.noPath()) return false;
             else return !(this.babyKraken.getDistanceSq(this.krakenMom) <= (double)(this.maxDist * this.maxDist));
         }
-
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
         public void startExecuting() {
             this.timeToRecalcPath = 0;
             this.oldWaterCost = this.babyKraken.getPathPriority(PathNodeType.WATER);
             this.babyKraken.setPathPriority(PathNodeType.WATER, 0.0F);
         }
-
-        /**
-         * Reset the task's internal state. Called when this task is interrupted by another one
-         */
         public void resetTask() {
             this.krakenMom = null;
             this.navigator.clearPath();
             this.babyKraken.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
         }
-
-        /**
-         * Keep ticking a continuous task that has already been started
-         */
         public void tick() {
             this.babyKraken.getLookController().setLookPositionWithEntity(this.krakenMom, 10.0F, (float)this.babyKraken.getVerticalFaceSpeed());
             if (--this.timeToRecalcPath <= 0) {
@@ -373,8 +359,6 @@ public class BabyKrakenEntity extends CreatureEntity {
                 }
             }
         }
-
-        //following three methods teleport func
         private void tryTeleport() {
             BlockPos blockpos = this.krakenMom.func_233580_cy_();
             for(int i = 0; i < 10; ++i) {
@@ -384,7 +368,6 @@ public class BabyKrakenEntity extends CreatureEntity {
                 if (this.teleportPosition(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l)) return;
             }
         }
-
         private boolean teleportPosition(int posX, int posY, int posZ) {
             if (Math.abs((double)posX - this.krakenMom.getPosX()) < 2.0D && Math.abs((double)posZ - this.krakenMom.getPosZ()) < 2.0D) return false;
             else if (!this.positionOpen(new BlockPos(posX, posY, posZ))) return false;
@@ -394,7 +377,6 @@ public class BabyKrakenEntity extends CreatureEntity {
                 return true;
             }
         }
-
         private boolean positionOpen(BlockPos blockPos) {
             PathNodeType pathnodetype = WalkNodeProcessor.func_237231_a_(this.world, blockPos.func_239590_i_());
             if (pathnodetype != PathNodeType.WALKABLE) return false;
@@ -407,34 +389,22 @@ public class BabyKrakenEntity extends CreatureEntity {
                 }
             }
         }
-        //rng func
         private int getRandomInt(int minBound, int maxBound) { return this.babyKraken.getRNG().nextInt(maxBound - minBound + 1) + minBound; }
 
     }
+}
 
 
+    //------------------------
+    // glowsquid glow
+    //----------------------
     /*
-        ------------------------
-        start glowsquid func
-        ----------------------
-         */
-    //public List entities;
-    //public AxisAlignedBB aura;
-    /*
-            aura = new AxisAlignedBB(this.getPosX() - 1, this.getPosY() - 1, this.getPosZ() - 1, this.getPosX() + 2, this.getPosY() + 2, this.getPosZ() + 2);
-            entities = world.getEntitiesWithinAABB(getClass(), aura);
-
-            if (!entities.isEmpty() && (entities.size() >= 2)) {
-                System.out.println("These Entities Are within Range!" + entities + "");
-     }*/
-    /*
-    //change some stuff to !isremote probably
     public BlockPos soulLoc = new BlockPos(0,250,0);
     @Override
     public void livingTick() {
         super.livingTick();
 
-        if (this.isAlive()) {
+        if (!this.world.isRemote) {
             BlockPos newSoulLoc = new BlockPos(this.getPosX(), this.getPosY(), this.getPosZ());
             World worldIn = this.getEntityWorld();
 
@@ -444,12 +414,11 @@ public class BabyKrakenEntity extends CreatureEntity {
                 }
                 soulLoc = new BlockPos(newSoulLoc); //change soul location
                 if ((worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.AIR.getDefaultState()) ||
-                   (worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.WATER.getDefaultState())){
+                    (worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.WATER.getDefaultState())){
                     if ((worldIn.getBlockState(soulLoc).getBlock().getDefaultState() == Blocks.WATER.getDefaultState())) {
                         worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState().with(BlockStateProperties.WATERLOGGED, true));
-                    }else{
-                        worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState());
-                    }
+                    }else worldIn.setBlockState(soulLoc, ModBlocks.GLOW_SQUID_SOUL.get().getDefaultState());
+
                 }
             }
         }
@@ -458,15 +427,9 @@ public class BabyKrakenEntity extends CreatureEntity {
     public void onDeath(DamageSource cause) {
         super.onDeath(cause);
         World worldIn = this.getEntityWorld();
-        if (worldIn.getBlockState(soulLoc).getBlock() instanceof GlowSquidSoul) {
+        if (!worldIn.isRemote && worldIn.getBlockState(soulLoc).getBlock() instanceof GlowSquidSoul) {
             ((GlowSquidSoul) worldIn.getBlockState(soulLoc).getBlock()).clearGlowSquidSoul(worldIn,soulLoc,(worldIn.getFluidState(soulLoc).getFluid() == Fluids.WATER));
         }
     }
     */
-    /*
-    ------------------------
-    end glowsquid func
-    ----------------------
-     */
 
-}

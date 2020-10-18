@@ -18,6 +18,12 @@
   "itemGroup.squidTab": "Squids Galore",
   "entity.squidsg.baby_kraken": "Baby Kraken",
   "entity.squidsg.kraken": "Kraken",
-  "entity.squidsg.kraken_tentacle": "Kraken Tentacle"
+  "entity.squidsg.kraken_tentacle": "Kraken Tentacle",
 
+
+  "effect.squidsg.squid_ink_effect": "Squid Ink Effect",
+  "item.minecraft.potion.effect.squid_ink_effect": "Squid Ink Potion",
+  "item.minecraft.splash_potion.effect.squid_ink_effect": "Splash Squid Ink Potion",
+  "item.minecraft.lingering_potion.effect.squid_ink_effect": "Lingering Squid Ink Potion",
+  "item.minecraft.tipped_arrow.effect.squid_ink_effect": "Squid Ink Tipped Arrow"
 }

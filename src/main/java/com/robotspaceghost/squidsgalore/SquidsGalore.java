@@ -4,10 +4,7 @@ import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenTentacleEntity;
-import com.robotspaceghost.squidsgalore.init.ModBlocks;
-import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
-import com.robotspaceghost.squidsgalore.init.ModItems;
-import com.robotspaceghost.squidsgalore.init.ModParticles;
+import com.robotspaceghost.squidsgalore.init.*;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -35,6 +32,7 @@ public class SquidsGalore
         ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModParticles.PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
+
         MinecraftForge.EVENT_BUS.register(this);
     }
     //func_233813 -> create();
@@ -45,6 +43,7 @@ public class SquidsGalore
             GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN.get(), KrakenEntity.setCustomAttributes().func_233813_a_());
             GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN_TENTACLE.get(), KrakenTentacleEntity.setCustomAttributes().func_233813_a_());
         });
+        ModPotions_OLD.addBrewingRecipes();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) { }
