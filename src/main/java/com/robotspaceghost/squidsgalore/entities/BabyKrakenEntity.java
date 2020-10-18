@@ -4,8 +4,6 @@ import com.robotspaceghost.squidsgalore.init.ModParticles;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -21,8 +19,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SChangeGameStatePacket;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.*;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -34,10 +30,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
 import java.util.EnumSet;
-import java.util.List;
 import java.util.UUID;
 
 public class BabyKrakenEntity extends CreatureEntity {
@@ -60,6 +53,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     private static final int maximumMilks = 1;
     private long worldTimeWhenMilked;
 
+
     public BabyKrakenEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         availableMilks = maximumMilks;
@@ -73,7 +67,6 @@ public class BabyKrakenEntity extends CreatureEntity {
                 .func_233815_a_(Attributes.MOVEMENT_SPEED, 0.25D)
                 .func_233815_a_(Attributes.FOLLOW_RANGE, 10.0F);
     }
-
     @Override
     protected void registerGoals(){
         super.registerGoals();
@@ -84,9 +77,7 @@ public class BabyKrakenEntity extends CreatureEntity {
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.addGoal(5, new LookAtGoal(this, this.getClass(), 5.0f));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
-
     }
-
     @Override
     public boolean canBreatheUnderwater() {
         return true;
@@ -103,10 +94,13 @@ public class BabyKrakenEntity extends CreatureEntity {
     //-----------------------------
     // audio
     //---------------------------
-    protected SoundEvent getAmbientSound(){ return SoundEvents.ENTITY_SQUID_AMBIENT; }
+    protected SoundEvent getAmbientSound(){
+        if (this.getCustomName() != null && this.getCustomName().getString().toLowerCase().replaceAll("\\s+","").contains("oohlookaunicorn"))
+            return SoundEvents.ENTITY_HORSE_AMBIENT;
+        return SoundEvents.ENTITY_SQUID_AMBIENT;}
     protected SoundEvent getDeathSound(){ return SoundEvents.ENTITY_ELDER_GUARDIAN_DEATH_LAND; }
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return SoundEvents.ENTITY_CAT_HURT; }
-    protected void playStepSound(BlockPos pos, BlockState blockIn) { playSound(SoundEvents.ENTITY_ENDERMITE_STEP, 0.15f, 1.0f); }
+    protected void playStepSound(BlockPos pos, BlockState blockIn) { this.playSound(SoundEvents.ENTITY_ENDERMITE_STEP, 0.15f, 1.0f); }
     protected void playSwimSound(float volume) { super.playSwimSound(volume); }
 
     //--------------------------------------------------
@@ -132,7 +126,6 @@ public class BabyKrakenEntity extends CreatureEntity {
         if (this.isSitting()) super.setMoveStrafing(0);
         else super.setMoveStrafing(amount);
     }
-
     @Override
     public void travel(Vector3d moveVec) {
         super.travel(moveVec);
@@ -141,14 +134,26 @@ public class BabyKrakenEntity extends CreatureEntity {
             this.move(MoverType.SELF, this.getMotion());
             this.setMotion(this.getMotion().scale(0.2D));
             this.setMotion(this.getMotion().add(0.0D, -0.005D, 0.0D));
-
         }
     }
-
+    @Override
+    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
+        if (!this.world.isRemote) this.sitOrStand(false);
+        super.damageEntity(damageSrc, damageAmount);
+    }
     @Override
     public boolean canBeLeashedTo(PlayerEntity player) { return (player.getUniqueID().toString().equals(this.getOwnerId()) && super.canBeLeashedTo(player)); }
     public boolean isSitting(){ return this.dataManager.get(KRAKEN_SITTING); }
-    public void sitOrStand(boolean isKrakenSitting){ this.dataManager.set(KRAKEN_SITTING, isKrakenSitting); }
+    public void sitOrStand(boolean isKrakenSitting){
+        if(!this.world.isRemote) {
+            if (isKrakenSitting) {
+                if (this.getCustomName() != null && this.getCustomName().getString().toLowerCase().replaceAll("\\s+", "").contains("robotspaceghost"))
+                    this.playSound(SoundEvents.BLOCK_ANVIL_PLACE, 0.075f, 1f);
+                else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
+            }else this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
+            this.dataManager.set(KRAKEN_SITTING, isKrakenSitting);
+        }
+    }
 
     //--------------------------------------
     // owner data
@@ -157,8 +162,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     public String getOwnerId() { return this.dataManager.get(KRAKEN_MOM); }
     public PlayerEntity getKrakenMom(){
         String owner = getOwnerId();
-        if (owner.equals("None") || owner.equals("")) return null;
-        return this.world.getPlayerByUuid(UUID.fromString(owner));
+        return (owner.equals("None") || owner.equals("")) ? null : this.world.getPlayerByUuid(UUID.fromString(owner));
     }
 
     //---------------------------------------------------------------------
@@ -167,11 +171,8 @@ public class BabyKrakenEntity extends CreatureEntity {
     private boolean isFromBucket() { return this.dataManager.get(FROM_BUCKET); }
     public void setFromBucket(boolean p_203706_1_) { this.dataManager.set(FROM_BUCKET, p_203706_1_); }
     protected ItemStack getSquidBucket() { return new ItemStack(ModItems.BUCKET_OF_BABY_KRAKEN.get()); }
-    protected void setBucketData(ItemStack bucket) {
-        if (this.hasCustomName()) {
-            bucket.setDisplayName(this.getCustomName());
-        }
-    }
+    protected void setBucketData(ItemStack bucket) { if (this.hasCustomName()) bucket.setDisplayName(this.getCustomName()); }
+
     //--------------------------
     // nbt data
     //----------------------
@@ -186,14 +187,12 @@ public class BabyKrakenEntity extends CreatureEntity {
         compound.putBoolean("FromBucket", this.isFromBucket());
         compound.putBoolean("KrakenSitting", this.isSitting());
         compound.putString("KrakenMom", this.getOwnerId());
-
     }
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.setFromBucket(compound.getBoolean("FromBucket"));
         this.sitOrStand(compound.getBoolean("KrakenSitting"));
         this.setOwnerId(compound.getString("KrakenMom"));
-
     }
 
     //---------------------------------------------------------------------------
@@ -207,53 +206,37 @@ public class BabyKrakenEntity extends CreatureEntity {
             itemstack.shrink(1);
             ItemStack bucketType = this.getSquidBucket();
             this.setBucketData(bucketType);
-            if (!this.world.isRemote) {
-                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity)player, bucketType);
-            }
-            if (itemstack.isEmpty()) {
-                player.setHeldItem(hand, bucketType);
-            } else if (!player.inventory.addItemStackToInventory(bucketType)) {
-                player.dropItem(bucketType, false);
-            }
+            if (!this.world.isRemote) CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity)player, bucketType);
+            if (itemstack.isEmpty()) player.setHeldItem(hand, bucketType);
+            else if (!player.inventory.addItemStackToInventory(bucketType)) player.dropItem(bucketType, false);
             this.remove();
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        }//short snippet for bucketing
+        }//bucketing, owner only
         else if(!itemstack.isEmpty() &&  itemstack.getItem().isIn(ItemTags.FISHES) && this.isAlive()){
             if (!this.world.isRemote) {
                 if (this.getHealth() < this.getMaxHealth() && !this.isPotionActive(Effects.REGENERATION)) {
-                    this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
+                    if (this.getCustomName() != null && this.getCustomName().getString().toLowerCase().replaceAll("\\s+", "").contains("robotspaceghost"))
+                        this.playSound(SoundEvents.BLOCK_ANVIL_USE, 0.075f, 1f);
+                    else this.playSound(SoundEvents.ENTITY_STRIDER_EAT, 1.0F, 1.0F);
                     this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 80, 1));
                 }else{
                     InventoryHelper.spawnItemStack(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), new ItemStack(itemstack.getItem()));
                     this.playSound(SoundEvents.ENTITY_FOX_SPIT, 1.0F, 1.0F);
                 }
-                if (!player.abilities.isCreativeMode) {
-                    itemstack.shrink(1);
-                }
+                if (!player.abilities.isCreativeMode) itemstack.shrink(1);
             }
-
             return this.world.isRemote ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
-        }//short snippet for feeding
+        }//feeding, anyone
         else if(itemstack.isEmpty() && player.getUniqueID().toString().equals(this.getOwnerId()) && this.isAlive()){
             if (!this.world.isRemote  && hand == player.getActiveHand()) {
-
-                if (!this.isInWater()) {
-                    if (this.isSitting()) {
-                        this.playSound(SoundEvents.ENTITY_BAT_TAKEOFF, 0.2F, 1.0F);
-                    } else this.playSound(SoundEvents.ENTITY_SLIME_SQUISH, 0.2F, 1.0F);
-                } else {
-                    if (this.isSitting()) {
-                        this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 0.2F, 1.0F);
-
-                    }else{
-                        this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 0.2F, 1.0F);
-
-                    }
+                if (this.isInWater()) {
+                    if (this.isSitting()) this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 0.2F, 1.0F);
+                    else this.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 0.2F, 1.0F);
                 }
                 this.sitOrStand(!this.isSitting());
             }
             return this.world.isRemote ? ActionResultType.FAIL : ActionResultType.PASS;
-        }//short snippet for sitting
+        }//sitting, owner only
         return super.func_230254_b_(player, hand);
     }
 
@@ -270,9 +253,8 @@ public class BabyKrakenEntity extends CreatureEntity {
                 }
                 playSound(milkedPass, 1.0f, 1.0f);
                 return new ItemStack(SQUID_MILK);
-            }else{
-                playSound(milkedFail, 1.0f, 1.0f);
             }
+            else playSound(milkedFail, 1.0f, 1.0f);
         }
         return null;
     }
@@ -290,40 +272,14 @@ public class BabyKrakenEntity extends CreatureEntity {
                 }
                 else milkTimer++;
             }
-            if (milkTimer == milkTimerMax && (availableMilks != maximumMilks)){
-                availableMilks = maximumMilks;
-            }
+            if (milkTimer == milkTimerMax && (availableMilks != maximumMilks)) availableMilks = maximumMilks;
         }
         super.livingTick();
-
     }
+
     //------------------------------------------------
     // on death
     //-----------------------------------------
-//    @Override
-//
-//    protected void updateAITasks() {
-//        super.updateAITasks();
-//        int i = 20;
-//        if ((this.ticksExisted + this.getEntityId()) % i == 0) {
-//            Effect effect = Effects.BLINDNESS;
-//            List<ServerPlayerEntity> list = ((ServerWorld)this.world).getPlayers((player) -> this.getRevengeTarget() == player && player.interactionManager.survivalOrAdventure());
-//            int j = 2;
-//            int k = 200;
-//            int l = 20;
-//
-//            for(ServerPlayerEntity serverplayerentity : list) {
-//                if (!serverplayerentity.isPotionActive(effect) || serverplayerentity.getActivePotionEffect(effect).getAmplifier() < j || serverplayerentity.getActivePotionEffect(effect).getDuration() < l) {
-//                    serverplayerentity.getServerWorld().spawnParticle(serverplayerentity,ParticleTypes.ELDER_GUARDIAN,false, serverplayerentity.getPosX(), serverplayerentity.getPosY(), serverplayerentity.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
-//                    playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
-//                    serverplayerentity.addPotionEffect(new EffectInstance(effect, k, j));
-//                }
-//            }
-//        }
-//
-//    }
-
-
     @Override
     public void onDeath(DamageSource cause) {
         ServerPlayerEntity babyKiller = (ServerPlayerEntity) this.getRevengeTarget();
@@ -335,34 +291,11 @@ public class BabyKrakenEntity extends CreatureEntity {
         if (!this.world.isRemote && babyKiller != null && babyKiller.interactionManager.survivalOrAdventure()){
             babyKiller.getServerWorld().spawnParticle(babyKiller, ModParticles.KRAKEN_PARTICLE.get(),false, babyKiller.getPosX(), babyKiller.getPosY(), babyKiller.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
             babyKiller.addPotionEffect(new EffectInstance(aestheticEffect,aestheticEffectDuration,effectLevel));
-            playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
-            if (babyKiller.isPotionActive(effect)){
-                effectLevel = babyKiller.getActivePotionEffect(effect).getAmplifier() + 1;
-            }
-            if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
-                babyKiller.addPotionEffect(new EffectInstance(effect,effectDuration,effectLevel));
-            }
+            this.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
+            if (babyKiller.isPotionActive(effect)) effectLevel = babyKiller.getActivePotionEffect(effect).getAmplifier() + 1;
+            if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) babyKiller.addPotionEffect(new EffectInstance(effect,effectDuration,effectLevel));
         }
-        if (this.getKrakenMom() != this.getRevengeTarget()){
-            this.getKrakenMom().addItemStackToInventory(new ItemStack(ModItems.BABY_KRAKEN_EGG.get()));
-        }
-        //----------------
-        /*
-        int i = 1;
-               if (effectinstance1 != null) {
-                  i += effectinstance1.getAmplifier();
-                  playerentity.removeActivePotionEffect(Effects.BAD_OMEN);
-               } else {
-                  --i;
-               }
-
-               i = MathHelper.clamp(i, 0, 4);
-               EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
-               if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
-                  playerentity.addPotionEffect(effectinstance);
-               }
-         */
-        //----------------
+        if (this.getKrakenMom() != this.getRevengeTarget()) this.getKrakenMom().addItemStackToInventory(new ItemStack(ModItems.BABY_KRAKEN_EGG.get()));
         super.onDeath(cause);
     }
 
@@ -388,21 +321,13 @@ public class BabyKrakenEntity extends CreatureEntity {
             this.minDist = minimumDist;
             this.maxDist = maximumDist;
             this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-            if (!(babyKrakenEntity.getNavigator() instanceof GroundPathNavigator)) {
-                throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
-            }
+            if (!(babyKrakenEntity.getNavigator() instanceof GroundPathNavigator)) throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
 
         public boolean shouldExecute() {
             if(babyKraken.isAlive() && !babyKraken.getEntityWorld().isRemote()) {
                 PlayerEntity owner = babyKraken.getKrakenMom();
-                if (owner == null) {
-                    return false;
-                } else if (owner.isSpectator()) {
-                    return false;
-                }else if(babyKraken.isSitting()){
-                    return false;
-                } else if (this.babyKraken.getDistanceSq(owner) < (double)(this.minDist * this.minDist)) {
+                if (owner == null || owner.isSpectator() || babyKraken.isSitting() || this.babyKraken.getDistanceSq(owner) < (double)(this.minDist * this.minDist)) {
                     return false;
                 } else {
                     this.krakenMom = owner;
@@ -413,11 +338,8 @@ public class BabyKrakenEntity extends CreatureEntity {
         }
 
         public boolean shouldContinueExecuting() {
-            if (this.navigator.noPath()) {
-                return false;
-            } else {
-                return !(this.babyKraken.getDistanceSq(this.krakenMom) <= (double)(this.maxDist * this.maxDist));
-            }
+            if (this.navigator.noPath()) return false;
+            else return !(this.babyKraken.getDistanceSq(this.krakenMom) <= (double)(this.maxDist * this.maxDist));
         }
 
         /**
@@ -446,63 +368,47 @@ public class BabyKrakenEntity extends CreatureEntity {
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = 10;
                 if (!this.babyKraken.getLeashed() && !this.babyKraken.isPassenger()) {
-                    if (this.babyKraken.getDistanceSq(this.krakenMom) >= 144.0D) {
-                        this.func_226330_g_();
-                    } else {
-                        this.navigator.tryMoveToEntityLiving(this.krakenMom, this.followSpeed);
-                    }
-
+                    if (this.babyKraken.getDistanceSq(this.krakenMom) >= 144.0D) this.tryTeleport();
+                    else this.navigator.tryMoveToEntityLiving(this.krakenMom, this.followSpeed);
                 }
             }
         }
 
         //following three methods teleport func
-        private void func_226330_g_() {
+        private void tryTeleport() {
             BlockPos blockpos = this.krakenMom.func_233580_cy_();
-
             for(int i = 0; i < 10; ++i) {
-                int j = this.func_226327_a_(-3, 3);
-                int k = this.func_226327_a_(-1, 1);
-                int l = this.func_226327_a_(-3, 3);
-                boolean flag = this.func_226328_a_(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l);
-                if (flag) {
-                    return;
-                }
+                int j = this.getRandomInt(-3, 3);
+                int k = this.getRandomInt(-1, 1);
+                int l = this.getRandomInt(-3, 3);
+                if (this.teleportPosition(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l)) return;
             }
-
         }
 
-        private boolean func_226328_a_(int posX, int posY, int posZ) {
-            if (Math.abs((double)posX - this.krakenMom.getPosX()) < 2.0D && Math.abs((double)posZ - this.krakenMom.getPosZ()) < 2.0D) {
-                return false;
-            } else if (!this.func_226329_a_(new BlockPos(posX, posY, posZ))) {
-                return false;
-            } else {
+        private boolean teleportPosition(int posX, int posY, int posZ) {
+            if (Math.abs((double)posX - this.krakenMom.getPosX()) < 2.0D && Math.abs((double)posZ - this.krakenMom.getPosZ()) < 2.0D) return false;
+            else if (!this.positionOpen(new BlockPos(posX, posY, posZ))) return false;
+            else {
                 this.babyKraken.setLocationAndAngles((double)posX + 0.5D, (double)posY, (double)posZ + 0.5D, this.babyKraken.rotationYaw, this.babyKraken.rotationPitch);
                 this.navigator.clearPath();
                 return true;
             }
         }
 
-        private boolean func_226329_a_(BlockPos blockPos) {
+        private boolean positionOpen(BlockPos blockPos) {
             PathNodeType pathnodetype = WalkNodeProcessor.func_237231_a_(this.world, blockPos.func_239590_i_());
-            if (pathnodetype != PathNodeType.WALKABLE) {
-                return false;
-            } else {
+            if (pathnodetype != PathNodeType.WALKABLE) return false;
+            else {
                 BlockState blockstate = this.world.getBlockState(blockPos.down());
-                if (blockstate.getBlock() instanceof LeavesBlock) {
-                    return false;
-                } else {
+                if (blockstate.getBlock() instanceof LeavesBlock) return false;
+                else {
                     BlockPos blockpos = blockPos.subtract(this.babyKraken.func_233580_cy_());
                     return this.world.hasNoCollisions(this.babyKraken, this.babyKraken.getBoundingBox().offset(blockpos));
                 }
             }
         }
-
         //rng func
-        private int func_226327_a_(int minBound, int maxBound) {
-            return this.babyKraken.getRNG().nextInt(maxBound - minBound + 1) + minBound;
-        }
+        private int getRandomInt(int minBound, int maxBound) { return this.babyKraken.getRNG().nextInt(maxBound - minBound + 1) + minBound; }
 
     }
 
