@@ -28,7 +28,6 @@ public class BabyKrakenModel<T extends BabyKrakenEntity> extends EntityModel<T> 
     private final ModelRenderer faceTentacle3;
     private final ModelRenderer faceTentacle4;
 
-    private boolean swimDirection;
 
     public BabyKrakenModel() {
         textureWidth = 64;

@@ -2,6 +2,8 @@ package com.robotspaceghost.squidsgalore;
 
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
+import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
+import com.robotspaceghost.squidsgalore.entities.KrakenTentacleEntity;
 import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
@@ -40,6 +42,8 @@ public class SquidsGalore
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(ModEntityTypes.BABY_KRAKEN.get(), BabyKrakenEntity.setCustomAttributes().func_233813_a_());
             GlobalEntityTypeAttributes.put(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidEntity.setCustomAttributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN.get(), KrakenEntity.setCustomAttributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN_TENTACLE.get(), KrakenTentacleEntity.setCustomAttributes().func_233813_a_());
         });
     }
 

@@ -3,6 +3,8 @@ package com.robotspaceghost.squidsgalore.util;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.client.render.BabyKrakenRenderer;
 import com.robotspaceghost.squidsgalore.client.render.DomesticSquidRenderer;
+import com.robotspaceghost.squidsgalore.client.render.KrakenRenderer;
+import com.robotspaceghost.squidsgalore.client.render.KrakenTentacleRenderer;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModParticles;
 import com.robotspaceghost.squidsgalore.items.ModSpawnEggItem;
@@ -25,6 +27,8 @@ public class ClientEventBusSubscriber {
     public static void onClientSetup(FMLClientSetupEvent event){
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.BABY_KRAKEN.get(), BabyKrakenRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.KRAKEN.get(), KrakenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.KRAKEN_TENTACLE.get(), KrakenTentacleRenderer::new);
 
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
