@@ -8,7 +8,10 @@ import com.robotspaceghost.squidsgalore.init.*;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -32,7 +35,6 @@ public class SquidsGalore
         ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModParticles.PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
-
         MinecraftForge.EVENT_BUS.register(this);
     }
     //func_233813 -> create();
@@ -42,8 +44,17 @@ public class SquidsGalore
             GlobalEntityTypeAttributes.put(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidEntity.setCustomAttributes().func_233813_a_());
             GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN.get(), KrakenEntity.setCustomAttributes().func_233813_a_());
             GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN_TENTACLE.get(), KrakenTentacleEntity.setCustomAttributes().func_233813_a_());
+
+            //--------------------------
+            // Squid ink brewing recipes
+            //-------------------------
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.SQUID_INK.get()),Ingredient.fromItems(Items.REDSTONE),new ItemStack(ModItems.SQUID_INK_LONG.get()));
+
+            //--------------------------
+            // Krakens Breath brewing recipes
+            //-------------------------
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.KRAKEN_BREATH.get()),Ingredient.fromItems(Items.REDSTONE),new ItemStack(ModItems.KRAKEN_BREATH_LONG.get()));
         });
-        ModPotions_OLD.addBrewingRecipes();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) { }

@@ -1,7 +1,6 @@
 package com.robotspaceghost.squidsgalore.items.SquidMilk;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
-import com.robotspaceghost.squidsgalore.init.ModEffects;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,15 +23,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SquidInkItem extends Item {
-    public final Effect MILK_EFFECT = Effects.BLINDNESS;
-    public final int MILK_EFFECT_DURATION = 200;
-    public final int LONG_MILK_EFFECT_DURATION = 400;
+public class KrakenBreathItem extends Item {
+    public final Effect MILK_EFFECT = null;
+    public final int MILK_EFFECT_DURATION = 0;
+    public final int LONG_MILK_EFFECT_DURATION = 0;
     public final int MILK_EFFECT_LEVEL = 0;
     public boolean isLong;
 
-    public SquidInkItem() { this(false); }
-    public SquidInkItem(boolean Long){
+    public KrakenBreathItem() {
+        this(false);
+    }
+    public KrakenBreathItem(boolean Long){
         super(new Item.Properties().group(SquidsGalore.TAB).maxStackSize(1));
         this.isLong = Long;
     }
@@ -40,7 +41,8 @@ public class SquidInkItem extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!worldIn.isRemote) {
-            entityLiving.addPotionEffect(new EffectInstance(this.MILK_EFFECT,  ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION) , this.MILK_EFFECT_LEVEL));
+            //entityLiving.addPotionEffect(new EffectInstance(this.MILK_EFFECT,  ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION) , this.MILK_EFFECT_LEVEL));
+            // EFFECTS APPLIED HERE
         }
         if (stack.isEmpty()) return new ItemStack(Items.GLASS_BOTTLE);
         else {
@@ -56,7 +58,9 @@ public class SquidInkItem extends Item {
     @Override
     public int getUseDuration(ItemStack stack) { return 32; }
     @Override
-    public UseAction getUseAction(ItemStack stack) { return UseAction.DRINK; }
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.DRINK;
+    }
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         playerIn.setActiveHand(handIn);
@@ -65,6 +69,6 @@ public class SquidInkItem extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
+        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Tooltip, baby!" ));
     }
 }

@@ -1,29 +1,33 @@
 {
+  "itemGroup.squidTab": "Squids Galore",
+
   "item.squidsg.ink_on_a_stick": "Ink on a Stick",
   "item.squidsg.squidictionary": "Squidictionary",
   "item.squidsg.raw_squid_beef": "Raw Squid Beef",
   "item.squidsg.raw_squidchop": "Raw Squidchop",
   "item.squidsg.squid_beef": "Squid Steak",
   "item.squidsg.squidchop": "Squidchop",
+
+  "block.squidsg.kraken_glass": "Kraken Glass",
+  "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
+  "block.squidsg.glow_squid_soul" : "Glow Squid Soul (Creative Mode Only)",
+
   "item.squidsg.bucket_of_squid": "Domestic Squid in a Bucket",
   "item.squidsg.bucket_of_salty_squid": "Salty Squid in a Bucket",
   "item.squidsg.bucket_of_baby_kraken": "Baby Kraken in a Bucket",
   "item.squidsg.baby_kraken_egg" : "Baby Kraken Egg",
   "item.squidsg.domestic_squid_egg": "Domestic Squid Egg",
-  "item.squidsg.squid_ink": "Bottle of Squid Ink",
-  "item.squidsg.kraken_breath" : "Kraken's Breath",
-  "block.squidsg.kraken_glass": "Kraken Glass",
-  "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
-  "block.squidsg.glow_squid_soul" : "Glow Squid Soul (Creative Mode Only)",
-  "itemGroup.squidTab": "Squids Galore",
+
   "entity.squidsg.baby_kraken": "Baby Kraken",
   "entity.squidsg.kraken": "Kraken",
   "entity.squidsg.kraken_tentacle": "Kraken Tentacle",
 
 
-  "effect.squidsg.squid_ink_effect": "Squid Ink Effect",
-  "item.minecraft.potion.effect.squid_ink_effect": "Squid Ink Potion",
-  "item.minecraft.splash_potion.effect.squid_ink_effect": "Splash Squid Ink Potion",
-  "item.minecraft.lingering_potion.effect.squid_ink_effect": "Lingering Squid Ink Potion",
-  "item.minecraft.tipped_arrow.effect.squid_ink_effect": "Squid Ink Tipped Arrow"
+  "item.squidsg.squid_ink": "Bottle of Squid Ink",
+  "item.squidsg.squid_ink_long": "Extended Bottle of Squid Ink",
+
+  "item.squidsg.kraken_breath" : "Kraken's Breath",
+  "item.squidsg.kraken_breath_long" : "Extended Kraken's Breath",
+
+  "effect.squidsg.squid_ink_effect": "Squid Ink Effect"
 }

@@ -4,8 +4,10 @@ import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.blocks.BlockItemBase;
 import com.robotspaceghost.squidsgalore.items.*;
 import com.robotspaceghost.squidsgalore.items.SquidBucketItem;
+import com.robotspaceghost.squidsgalore.items.SquidMilk.KrakenBreathItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,8 +31,13 @@ public class ModItems {
     public static final RegistryObject<Item> BUCKET_OF_SALTY_SQUID = ITEMS.register("bucket_of_salty_squid",ItemBase::new);
 
     //Squid Milk
-    public static final RegistryObject<Item> SQUID_INK = ITEMS.register("squid_ink", SquidInkItem::new);
-    public static final RegistryObject<Item> KRAKEN_BREATH = ITEMS.register("kraken_breath",ItemBase::new);
+    public static final RegistryObject<SquidInkItem> SQUID_INK = ITEMS.register("squid_ink", SquidInkItem::new);
+    public static final RegistryObject<SquidInkItem> SQUID_INK_LONG = ITEMS.register("squid_ink_long",
+            () -> new SquidInkItem(true));
+
+    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH = ITEMS.register("kraken_breath", KrakenBreathItem::new);
+    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_LONG = ITEMS.register("kraken_breath_long",
+            () -> new KrakenBreathItem(true));
 
     //Food
     public static final RegistryObject<RawSquidMeat> RAW_SQUID_BEEF = ITEMS.register("raw_squid_beef", RawSquidMeat::new);
@@ -54,4 +61,19 @@ public class ModItems {
     public static final RegistryObject<Item> GLOW_SQUID_SOUL_ITEM = ITEMS.register("glow_squid_soul",
             () -> new BlockItemBase(ModBlocks.GLOW_SQUID_SOUL.get()));
 
+    public static class ItemBase extends Item {
+        public ItemBase(){
+            super(new Item.Properties().group(SquidsGalore.TAB));
+        }
+    }
+    public static class RawSquidMeat extends Item {
+        public RawSquidMeat() {
+            super(new Item.Properties().group(SquidsGalore.TAB).food(new Food.Builder().hunger(3).saturation(1.8f).meat().build()));
+        }
+    }
+    public static class SquidMeat extends Item {
+        public SquidMeat() {
+            super(new Item.Properties().group(SquidsGalore.TAB).food(new Food.Builder().hunger(8).saturation(12.8f).meat().build()));
+        }
+    }
 }
