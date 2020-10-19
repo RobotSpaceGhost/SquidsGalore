@@ -23,24 +23,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SquidMilkTemplate extends Item {
-    public final Effect MILK_EFFECT = Effects.BLINDNESS;
-    public final int MILK_EFFECT_DURATION = 200;
-    public final int LONG_MILK_EFFECT_DURATION = 400;
-    public final int MILK_EFFECT_LEVEL = 0;
-    public boolean isLong;
+public abstract class AbstractMilkItem extends Item {
 
-    public SquidMilkTemplate() { this(false); }
-    public SquidMilkTemplate(boolean Long){
+    public AbstractMilkItem(){
         super(new Item.Properties().group(SquidsGalore.TAB).maxStackSize(1));
-        this.isLong = Long;
     }
 
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (!worldIn.isRemote) {
-            entityLiving.addPotionEffect(new EffectInstance(this.MILK_EFFECT,  ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION) , this.MILK_EFFECT_LEVEL));
-        }
+        stack.shrink(1);
         if (stack.isEmpty()) return new ItemStack(Items.GLASS_BOTTLE);
         else {
             if (entityLiving instanceof PlayerEntity && !((PlayerEntity)entityLiving).abilities.isCreativeMode) {
@@ -61,9 +52,5 @@ public class SquidMilkTemplate extends Item {
         playerIn.setActiveHand(handIn);
         return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
     }
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
-    }
+
 }

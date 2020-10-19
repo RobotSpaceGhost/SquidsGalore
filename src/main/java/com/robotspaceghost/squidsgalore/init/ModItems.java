@@ -61,6 +61,9 @@ public class ModItems {
     public static final RegistryObject<Item> GLOW_SQUID_SOUL_ITEM = ITEMS.register("glow_squid_soul",
             () -> new BlockItemBase(ModBlocks.GLOW_SQUID_SOUL.get()));
 
+    //------------------------------------------
+    // base classes
+    //---------------------------------------
     public static class ItemBase extends Item {
         public ItemBase(){
             super(new Item.Properties().group(SquidsGalore.TAB));

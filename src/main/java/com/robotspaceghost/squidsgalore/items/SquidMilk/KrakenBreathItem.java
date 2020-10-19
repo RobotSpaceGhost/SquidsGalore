@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class KrakenBreathItem extends Item {
+public class KrakenBreathItem extends AbstractMilkItem {
     public final Effect MILK_EFFECT = null;
     public final int MILK_EFFECT_DURATION = 0;
     public final int LONG_MILK_EFFECT_DURATION = 0;
@@ -34,7 +34,7 @@ public class KrakenBreathItem extends Item {
         this(false);
     }
     public KrakenBreathItem(boolean Long){
-        super(new Item.Properties().group(SquidsGalore.TAB).maxStackSize(1));
+        super();
         this.isLong = Long;
     }
 
@@ -42,33 +42,13 @@ public class KrakenBreathItem extends Item {
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!worldIn.isRemote) {
             //entityLiving.addPotionEffect(new EffectInstance(this.MILK_EFFECT,  ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION) , this.MILK_EFFECT_LEVEL));
-            // EFFECTS APPLIED HERE
         }
-        if (stack.isEmpty()) return new ItemStack(Items.GLASS_BOTTLE);
-        else {
-            if (entityLiving instanceof PlayerEntity && !((PlayerEntity)entityLiving).abilities.isCreativeMode) {
-                ItemStack itemstack = new ItemStack(Items.GLASS_BOTTLE);
-                PlayerEntity playerentity = (PlayerEntity)entityLiving;
-                if (!playerentity.inventory.addItemStackToInventory(itemstack)) playerentity.dropItem(itemstack, false);
-            }
-            return stack;
-        }
+        return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
 
-    @Override
-    public int getUseDuration(ItemStack stack) { return 32; }
-    @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.DRINK;
-    }
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        playerIn.setActiveHand(handIn);
-        return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
-    }
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Tooltip, baby!" ));
+        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY + "Smells like salty mint" ));
     }
 }
