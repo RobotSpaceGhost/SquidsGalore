@@ -30,15 +30,26 @@ public class ModItems {
 
     public static final RegistryObject<Item> BUCKET_OF_SALTY_SQUID = ITEMS.register("bucket_of_salty_squid",ItemBase::new);
 
-    //Squid Milk
+    //Squid Milk Drinkable
     public static final RegistryObject<SquidInkItem> SQUID_INK = ITEMS.register("squid_ink", SquidInkItem::new);
     public static final RegistryObject<SquidInkItem> SQUID_INK_LONG = ITEMS.register("squid_ink_long",
-            () -> new SquidInkItem(true));
+            () -> new SquidInkItem(1));
+    public static final RegistryObject<SquidInkItem> SQUID_INK_THICK = ITEMS.register("squid_ink_thick",
+            () -> new SquidInkItem(2));
+    public static final RegistryObject<SquidInkItem> SQUID_INK_CORRUPT = ITEMS.register("squid_ink_corrupt",
+            () -> new SquidInkItem(3));
 
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH = ITEMS.register("kraken_breath", KrakenBreathItem::new);
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_LONG = ITEMS.register("kraken_breath_long",
-            () -> new KrakenBreathItem(true));
+            () -> new KrakenBreathItem(1));
+    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_THICK = ITEMS.register("kraken_breath_thick",
+            () -> new KrakenBreathItem(2));
+    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_CORRUPT = ITEMS.register("kraken_breath_corrupt",
+            () -> new KrakenBreathItem(3));
 
+    //Squid Milk Splash
+    //Squid Milk Lingering
+    //Squid Milk Arrow
     //Food
     public static final RegistryObject<RawSquidMeat> RAW_SQUID_BEEF = ITEMS.register("raw_squid_beef", RawSquidMeat::new);
     public static final RegistryObject<SquidMeat> SQUID_BEEF = ITEMS.register("squid_beef", SquidMeat::new);

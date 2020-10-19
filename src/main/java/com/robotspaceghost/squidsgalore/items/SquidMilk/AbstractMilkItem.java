@@ -25,8 +25,8 @@ import java.util.List;
 
 public abstract class AbstractMilkItem extends Item {
 
-    public AbstractMilkItem(){
-        super(new Item.Properties().group(SquidsGalore.TAB).maxStackSize(1));
+    public AbstractMilkItem(Item.Properties properties){
+        super(properties);
     }
 
     @Override

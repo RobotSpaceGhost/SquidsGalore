@@ -5,6 +5,7 @@ import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenTentacleEntity;
 import com.robotspaceghost.squidsgalore.init.*;
+import com.robotspaceghost.squidsgalore.items.SquidMilk.KrakenBreathItem;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -49,11 +50,15 @@ public class SquidsGalore
             // Squid ink brewing recipes
             //-------------------------
             BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.SQUID_INK.get()),Ingredient.fromItems(Items.REDSTONE),new ItemStack(ModItems.SQUID_INK_LONG.get()));
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.SQUID_INK.get()),Ingredient.fromItems(Items.GLOWSTONE_DUST),new ItemStack(ModItems.SQUID_INK_THICK.get()));
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.SQUID_INK.get()),Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE),new ItemStack(ModItems.SQUID_INK_CORRUPT.get()));
 
             //--------------------------
             // Krakens Breath brewing recipes
             //-------------------------
-            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.KRAKEN_BREATH.get()),Ingredient.fromItems(Items.REDSTONE),new ItemStack(ModItems.KRAKEN_BREATH_LONG.get()));
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.KRAKEN_BREATH.get()),Ingredient.fromItems(Items.REDSTONE), new ItemStack(ModItems.KRAKEN_BREATH_LONG.get()));
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.KRAKEN_BREATH.get()),Ingredient.fromItems(Items.GLOWSTONE_DUST), new ItemStack(ModItems.KRAKEN_BREATH_THICK.get()));
+            BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.KRAKEN_BREATH.get()),Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE), new ItemStack(ModItems.KRAKEN_BREATH_CORRUPT.get()));
         });
     }
 

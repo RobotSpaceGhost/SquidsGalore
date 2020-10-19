@@ -29,12 +29,26 @@ public class SquidInkItem extends AbstractMilkItem{
     public final int MILK_EFFECT_DURATION = 200;
     public final int LONG_MILK_EFFECT_DURATION = 400;
     public final int MILK_EFFECT_LEVEL = 0;
-    public boolean isLong;
+    public final boolean isLong;
+    public final boolean isThick;
+    public final boolean isCorrupted;
 
-    public SquidInkItem() { this(false); }
-    public SquidInkItem(boolean Long){
-        super();
-        this.isLong = Long;
+
+    public SquidInkItem(int variant){
+        super(new Item.Properties().maxStackSize(1));
+        this.isLong = variant == 1;
+        this.isThick = variant == 2;
+        this.isCorrupted = variant == 3;
+    }
+    public SquidInkItem(){
+        super(new Item.Properties().group(SquidsGalore.TAB).maxStackSize(1));
+        this.isLong = false;
+        this.isThick = false;
+        this.isCorrupted = false;
+    }
+    @Override
+    public boolean hasEffect(ItemStack stack) {
+        return this.isLong||this.isThick||this.isCorrupted;
     }
 
     @Override
@@ -48,6 +62,16 @@ public class SquidInkItem extends AbstractMilkItem{
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        String defaultDisplayName = stack.getDisplayName().getString();
+        if (this.isLong && !defaultDisplayName.contains("Extended")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.RED + "Extended " + defaultDisplayName));
+        }
+        else if (this.isThick && !defaultDisplayName.contains("Thickened")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Thickened " + defaultDisplayName));
+        }
+        else if (this.isCorrupted && !defaultDisplayName.contains("Corrupted")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.DARK_PURPLE + "Corrupted " + defaultDisplayName));
+        }
         tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
     }
 }

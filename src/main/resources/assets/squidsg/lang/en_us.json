@@ -22,12 +22,17 @@
   "entity.squidsg.kraken": "Kraken",
   "entity.squidsg.kraken_tentacle": "Kraken Tentacle",
 
+  "particle.squidsg.kraken_particle": "Kraken Particle",
 
   "item.squidsg.squid_ink": "Bottle of Squid Ink",
-  "item.squidsg.squid_ink_long": "Extended Bottle of Squid Ink",
+  "item.squidsg.squid_ink_long": "Bottle of Squid Ink",
+  "item.squidsg.squid_ink_thick": "Bottle of Squid Ink",
+  "item.squidsg.squid_ink_corrupt": "Bottle of Squid Ink",
 
   "item.squidsg.kraken_breath" : "Kraken's Breath",
-  "item.squidsg.kraken_breath_long" : "Extended Kraken's Breath",
+  "item.squidsg.kraken_breath_long" : "Kraken's Breath",
+  "item.squidsg.kraken_breath_thick" : "Kraken's Breath",
+  "item.squidsg.kraken_breath_corrupt" : "Kraken's Breath",
 
   "effect.squidsg.squid_ink_effect": "Squid Ink Effect"
 }
