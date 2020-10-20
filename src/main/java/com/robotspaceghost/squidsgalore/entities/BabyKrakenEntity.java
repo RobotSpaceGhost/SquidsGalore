@@ -32,6 +32,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.UUID;
 
 public class BabyKrakenEntity extends CreatureEntity {
@@ -286,14 +287,14 @@ public class BabyKrakenEntity extends CreatureEntity {
         ServerPlayerEntity babyKiller = (ServerPlayerEntity) this.getRevengeTarget();
         Effect effect = ModEffects.OMEN_OF_THE_SEAS;
         Effect aestheticEffect = Effects.BLINDNESS;
-        int effectDuration = 20*60*60;
+        int effectDuration = 60*60*20 + 40*60*20;
         int aestheticEffectDuration = 50;
         int effectLevel = 0;
         if (!this.world.isRemote && babyKiller != null && babyKiller.interactionManager.survivalOrAdventure()){
             babyKiller.getServerWorld().spawnParticle(babyKiller, ModParticles.KRAKEN_PARTICLE.get(),false, babyKiller.getPosX(), babyKiller.getPosY(), babyKiller.getPosZ(),1, 0.0D, 0.0D, 0.0D, 0);
             babyKiller.addPotionEffect(new EffectInstance(aestheticEffect,aestheticEffectDuration,effectLevel));
             this.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
-            if (babyKiller.isPotionActive(effect)) effectLevel = babyKiller.getActivePotionEffect(effect).getAmplifier() + 1;
+            if (babyKiller.isPotionActive(effect)) effectLevel = Objects.requireNonNull(babyKiller.getActivePotionEffect(effect)).getAmplifier() + 1;
             if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) babyKiller.addPotionEffect(new EffectInstance(effect,effectDuration,effectLevel));
         }
         if (this.getKrakenMom() != this.getRevengeTarget()) this.getKrakenMom().addItemStackToInventory(new ItemStack(ModItems.BABY_KRAKEN_EGG.get()));
@@ -373,7 +374,7 @@ public class BabyKrakenEntity extends CreatureEntity {
             if (Math.abs((double)posX - this.krakenMom.getPosX()) < 2.0D && Math.abs((double)posZ - this.krakenMom.getPosZ()) < 2.0D) return false;
             else if (!this.positionOpen(new BlockPos(posX, posY, posZ))) return false;
             else {
-                this.babyKraken.setLocationAndAngles((double)posX + 0.5D, (double)posY, (double)posZ + 0.5D, this.babyKraken.rotationYaw, this.babyKraken.rotationPitch);
+                this.babyKraken.setLocationAndAngles((double)posX + 0.5D, posY, (double)posZ + 0.5D, this.babyKraken.rotationYaw, this.babyKraken.rotationPitch);
                 this.navigator.clearPath();
                 return true;
             }

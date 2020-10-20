@@ -2,11 +2,9 @@ package com.robotspaceghost.squidsgalore.client.model;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 
 public class KrakenModel<T extends KrakenEntity> extends EntityModel<T> {
     private final ModelRenderer body;

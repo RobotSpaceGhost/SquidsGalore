@@ -2,14 +2,10 @@ package com.robotspaceghost.squidsgalore.client.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
-import com.robotspaceghost.squidsgalore.client.model.BabyKrakenModel;
 import com.robotspaceghost.squidsgalore.client.model.DomesticSquidModel;
-import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.entity.passive.SquidEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -32,7 +28,7 @@ public class DomesticSquidRenderer extends MobRenderer<DomesticSquidEntity, Dome
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(f));
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f1));
-        matrixStackIn.translate(0.0D, (double)-1.2F, 0.0D);
+        matrixStackIn.translate(0.0D, -1.2F, 0.0D);
     }
 
     /**

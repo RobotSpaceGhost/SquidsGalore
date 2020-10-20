@@ -1,39 +1,24 @@
 package com.robotspaceghost.squidsgalore.events;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
-import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
 import com.robotspaceghost.squidsgalore.init.ModBlocks;
 import com.robotspaceghost.squidsgalore.init.ModEntityTypes;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -61,33 +46,33 @@ public class ModEvents {
         PlayerEntity player = event.getPlayer();
         World worldIn = event.getWorld();
         ItemStack milk = null;
-        if (!event.getWorld().isRemote && event.getHand() == player.getActiveHand()
-            && squid.isAlive() && (player.getHeldItemMainhand().getItem() == Items.GLASS_BOTTLE)) {
-            if (squid instanceof BabyKrakenEntity ) {
-                if(!player.getUniqueID().toString().equals(((BabyKrakenEntity) squid).getOwnerId())) squid.playSound(BabyKrakenEntity.milkedFail, 1.0f, 1.0f);
-                else milk = ((BabyKrakenEntity) squid).milkSquid();
-            }
-            //-----------------
-            // other squids here
-            //---------------
-            if (squid instanceof SquidEntity ){milk = new ItemStack(Items.INK_SAC);}
-            player.getHeldItemMainhand().shrink(1);
-            if (milk != null){
-                if (!player.addItemStackToInventory(milk)) {
-                    InventoryHelper.spawnItemStack(worldIn, player.getPosX(), player.getPosY(), player.getPosZ(), milk);
+        ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
+        ItemStack inkSac = new ItemStack(Items.INK_SAC);
+        if (!event.getWorld().isRemote && squid.isAlive() && event.getHand() == player.getActiveHand()){
+            if ((player.getHeldItemMainhand().getItem() == bottle.getItem())) {
+                if (squid instanceof BabyKrakenEntity ) {
+                    if(!player.getUniqueID().toString().equals(((BabyKrakenEntity) squid).getOwnerId())) squid.playSound(BabyKrakenEntity.milkedFail, 1.0f, 1.0f);
+                    else milk = ((BabyKrakenEntity) squid).milkSquid();
+                    if (milk == null && player.abilities.isCreativeMode) { milk = new ItemStack(BabyKrakenEntity.SQUID_MILK);}
                 }
-            }else{
-                InventoryHelper.spawnItemStack(worldIn, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(Items.GLASS_BOTTLE));
-            }
+                //-----------------
+                // other squids here
+                //---------------
+                if (milk != null){
+                    if(!player.abilities.isCreativeMode) player.getHeldItemMainhand().shrink(1);
+                    if (!player.addItemStackToInventory(milk)) player.dropItem(milk, false);
+                }
+            } else if (squid instanceof SquidEntity && !player.addItemStackToInventory(inkSac)) player.dropItem(inkSac, false);
         }
     }
+    //InventoryHelper.spawnItemStack(worldIn, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(Items.GLASS_BOTTLE)); //useful for later
     @SubscribeEvent
     public static void spawnBabyKrakenFromBucket(PlayerInteractEvent event){
         World worldIn = event.getWorld();
         PlayerEntity player = event.getPlayer();
         BlockPos pos = event.getPos();
         if (!worldIn.isRemote() && player != null && event.getHand() == player.getActiveHand() && (player.getHeldItemMainhand().getItem() == ModItems.BUCKET_OF_BABY_KRAKEN.get())) {
-            Entity entity = ModEntityTypes.BABY_KRAKEN.get().spawn(worldIn, player.getHeldItemMainhand(), (PlayerEntity) null, pos, SpawnReason.BUCKET, true, false);
+            Entity entity = ModEntityTypes.BABY_KRAKEN.get().spawn(worldIn, player.getHeldItemMainhand(), null, pos, SpawnReason.BUCKET, true, false);
             if (entity instanceof BabyKrakenEntity) {
                 ((BabyKrakenEntity) entity).setOwnerId(player.getUniqueID().toString());
                 ((BabyKrakenEntity) entity).setFromBucket(true);
@@ -97,18 +82,4 @@ public class ModEvents {
 
         }
     }
-
-    /*
-    @SubscribeEvent
-    public static void burnImmunity(LivingAttackEvent event){
-        if (event.isCancelable()){
-            if ((event.getEntity() instanceof ENTITYNAMEHERE) && (event.getSource() == DamageSource.LAVA || event.getSource() == DamageSource.HOT_FLOOR ||
-                event.getSource() == DamageSource.IN_FIRE || event.getSource() == DamageSource.ON_FIRE)) {
-                event.setCanceled(true);
-            }
-        }
-
-    }
-    */
-
 }

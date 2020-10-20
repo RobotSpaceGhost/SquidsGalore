@@ -1,32 +1,24 @@
 package com.robotspaceghost.squidsgalore.entities;
 
 import com.robotspaceghost.squidsgalore.entities.goals.SquidTemptGoal;
-import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.potion.Effects;
@@ -40,9 +32,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
 
-import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Random;
 
 public abstract class ModWaterSquidEntity extends WaterMobEntity {
@@ -180,7 +171,7 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
             }
 
             if (!this.world.isRemote) {
-                this.setMotion((double)(this.MotionVecX * this.MotionSpeed), (double)(this.MotionVecY * this.MotionSpeed), (double)(this.MotionVecZ * this.MotionSpeed));
+                this.setMotion((this.MotionVecX * this.MotionSpeed), (this.MotionVecY * this.MotionSpeed), (this.MotionVecZ * this.MotionSpeed));
             }
 
             Vector3d vector3d = this.getMotion();
@@ -191,14 +182,14 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
                 System.out.println("Squid being tempted");
             }
             this.squidYaw = (float)((double)this.squidYaw + Math.PI * (double)this.rotateSpeed * 1.5D);
-            this.squidPitch += (-((float)MathHelper.atan2((double)f1, vector3d.y)) * (180F / (float)Math.PI) - this.squidPitch) * 0.1F;
+            this.squidPitch += (-((float)MathHelper.atan2(f1, vector3d.y)) * (180F / (float)Math.PI) - this.squidPitch) * 0.1F;
 
         } else {
             this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.squidRotation)) * (float) Math.PI * 0.25F;
             if (!this.world.isRemote) {
                 double d0 = this.getMotion().y;
                 if (this.isPotionActive(Effects.LEVITATION)) {
-                    d0 = 0.05D * (double) (this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1);
+                    d0 = 0.05D * (double) (Objects.requireNonNull(this.getActivePotionEffect(Effects.LEVITATION)).getAmplifier() + 1);
                 } else if (!this.hasNoGravity()) {
                     d0 -= 0.08D;
                 }
@@ -264,7 +255,7 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
         for(int i = 0; i < 30; ++i) {
             Vector3d vector3d1 = this.func_207400_b(new Vector3d((double)this.rand.nextFloat() * 0.6D - 0.3D, -1.0D, (double)this.rand.nextFloat() * 0.6D - 0.3D));
             Vector3d vector3d2 = vector3d1.scale(0.3D + (double)(this.rand.nextFloat() * 2.0F));
-            ((ServerWorld)this.world).spawnParticle(ParticleTypes.SQUID_INK, vector3d.x, vector3d.y + 0.5D, vector3d.z, 0, vector3d2.x, vector3d2.y, vector3d2.z, (double)0.1F);
+            ((ServerWorld)this.world).spawnParticle(ParticleTypes.SQUID_INK, vector3d.x, vector3d.y + 0.5D, vector3d.z, 0, vector3d2.x, vector3d2.y, vector3d2.z, 0.1F);
         }
 
     }
@@ -409,7 +400,7 @@ public abstract class ModWaterSquidEntity extends WaterMobEntity {
                         }
 
                         if (f > 0.0F) {
-                            vector3d = vector3d.scale((double)f);
+                            vector3d = vector3d.scale(f);
                         }
                     }
 

@@ -36,16 +36,12 @@ public class ModItems {
             () -> new SquidInkItem(1));
     public static final RegistryObject<SquidInkItem> SQUID_INK_THICK = ITEMS.register("milk/squid_ink_thick",
             () -> new SquidInkItem(2));
-    public static final RegistryObject<SquidInkItem> SQUID_INK_CORRUPT = ITEMS.register("milk/squid_ink_corrupt",
-            () -> new SquidInkItem(3));
 
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH = ITEMS.register("milk/kraken_breath", KrakenBreathItem::new);
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_LONG = ITEMS.register("milk/kraken_breath_long",
             () -> new KrakenBreathItem(1));
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_THICK = ITEMS.register("milk/kraken_breath_thick",
             () -> new KrakenBreathItem(2));
-    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_CORRUPT = ITEMS.register("milk/kraken_breath_corrupt",
-            () -> new KrakenBreathItem(3));
 
     //Food
     public static final RegistryObject<RawSquidMeat> RAW_SQUID_BEEF = ITEMS.register("raw_squid_beef", RawSquidMeat::new);
