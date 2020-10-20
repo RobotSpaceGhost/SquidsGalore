@@ -43,11 +43,19 @@ public class ClientEventBusSubscriber {
     public static void registerParticles(ParticleFactoryRegisterEvent event){
         Minecraft.getInstance().particles.registerFactory(ModParticles.KRAKEN_PARTICLE.get(), new KrakenParticle.Factory());
     }
-
+    @SubscribeEvent
+    public static void registerSpecialPotions(final RegistryEvent.Register<Potion> event){
+        event.getRegistry().registerAll(
+                ModSpecialPotions.SQUID_INK_POTION,
+                ModSpecialPotions.KRAKEN_BREATH_POTION
+        );
+    }
     @SubscribeEvent
     public static void registerEffects(final RegistryEvent.Register<Effect> event){
         event.getRegistry().registerAll(
-                ModEffects.SQUID_INK_EFFECT
+                ModEffects.SQUID_INK_EFFECT,
+                ModEffects.KRAKEN_BREATH_EFFECT,
+                ModEffects.OMEN_OF_THE_SEAS
         );
     }
     @SubscribeEvent

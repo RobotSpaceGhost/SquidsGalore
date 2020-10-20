@@ -1,4 +1,5 @@
 package com.robotspaceghost.squidsgalore.entities;
+import com.robotspaceghost.squidsgalore.init.ModEffects;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import com.robotspaceghost.squidsgalore.init.ModParticles;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -283,9 +284,9 @@ public class BabyKrakenEntity extends CreatureEntity {
     @Override
     public void onDeath(DamageSource cause) {
         ServerPlayerEntity babyKiller = (ServerPlayerEntity) this.getRevengeTarget();
-        Effect effect = Effects.REGENERATION;
+        Effect effect = ModEffects.OMEN_OF_THE_SEAS;
         Effect aestheticEffect = Effects.BLINDNESS;
-        int effectDuration = 800;
+        int effectDuration = 20*60*60;
         int aestheticEffectDuration = 50;
         int effectLevel = 0;
         if (!this.world.isRemote && babyKiller != null && babyKiller.interactionManager.survivalOrAdventure()){

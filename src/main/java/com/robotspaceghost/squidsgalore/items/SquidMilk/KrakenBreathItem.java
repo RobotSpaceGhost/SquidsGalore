@@ -1,6 +1,7 @@
 package com.robotspaceghost.squidsgalore.items.SquidMilk;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
+import com.robotspaceghost.squidsgalore.init.ModEffects;
 import com.robotspaceghost.squidsgalore.init.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -25,9 +26,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class KrakenBreathItem extends AbstractMilkItem {
-    public final Effect MILK_EFFECT = null;
-    public final int MILK_EFFECT_DURATION = 0;
-    public final int LONG_MILK_EFFECT_DURATION = 0;
+    public final Effect MILK_EFFECT = ModEffects.KRAKEN_BREATH_EFFECT;
+    public final int MILK_EFFECT_DURATION = 200;
+    public final int LONG_MILK_EFFECT_DURATION = 400;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;
@@ -55,7 +56,7 @@ public class KrakenBreathItem extends AbstractMilkItem {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!worldIn.isRemote) {
-            //entityLiving.addPotionEffect(new EffectInstance(this.MILK_EFFECT,  ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION) , this.MILK_EFFECT_LEVEL));
+            entityLiving.addPotionEffect(new EffectInstance(this.MILK_EFFECT,  ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION) , this.MILK_EFFECT_LEVEL));
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }

@@ -28,11 +28,22 @@
   "item.squidsg.squid_ink_long": "Bottle of Squid Ink",
   "item.squidsg.squid_ink_thick": "Bottle of Squid Ink",
   "item.squidsg.squid_ink_corrupt": "Bottle of Squid Ink",
+  "effect.squidsg.squid_ink_effect": "Squid Inked",
+  "item.minecraft.potion.effect.squid_ink_effect" : "Squid Ink Potion (Creative Mode Only)",
+  "item.minecraft.splash_potion.effect.squid_ink_effect" : "Splash Squid Ink",
+  "item.minecraft.tipped_arrow.effect.squid_ink_effect" : "Squid Ink Tipped Arrow",
+  "item.minecraft.lingering_potion.effect.squid_ink_effect" : "Lingering Squid Ink",
+
 
   "item.squidsg.kraken_breath" : "Kraken's Breath",
   "item.squidsg.kraken_breath_long" : "Kraken's Breath",
   "item.squidsg.kraken_breath_thick" : "Kraken's Breath",
   "item.squidsg.kraken_breath_corrupt" : "Kraken's Breath",
+  "effect.squidsg.kraken_breath_effect": "Kraken's Grace",
+  "item.minecraft.potion.effect.kraken_breath_effect" : "Kraken's Breath Potion (Creative Mode Only)",
+  "item.minecraft.splash_potion.effect.kraken_breath_effect" : "Splash Kraken's Breath",
+  "item.minecraft.tipped_arrow.effect.kraken_breath_effect" : "Kraken's Breath Tipped Arrow",
+  "item.minecraft.lingering_potion.effect.kraken_breath_effect" : "Lingering Kraken's Breath",
 
-  "effect.squidsg.squid_ink_effect": "Squid Ink Effect"
+  "effect.squidsg.omen_of_the_seas_effect": "Omen of the Seas"
 }
