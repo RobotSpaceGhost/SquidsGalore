@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "squidsg:squid_ink"
+      "item": "squidsg:milk/squid_ink"
     }
   ],
   "result":

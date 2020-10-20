@@ -20,12 +20,12 @@
     },
     "b":
     {
-      "item": "squidsg:bucket_of_squid"
+      "item": "squidsg:buckets/bucket_of_squid"
     }
   },
   "result":
   {
-    "item": "squidsg:bucket_of_salty_squid",
+    "item": "squidsg:buckets/bucket_of_salty_squid",
     "count": 1
   }
 }
