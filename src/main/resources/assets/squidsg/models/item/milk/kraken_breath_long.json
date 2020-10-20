@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "squidsg:items/bucket_of_squid"
+    "layer0": "squidsg:items/milk/kraken_breath"
   }
 }
