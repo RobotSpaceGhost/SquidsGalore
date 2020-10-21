@@ -2,21 +2,33 @@ package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
+import com.robotspaceghost.squidsgalore.util.BounceHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ElderGuardianEntity;
 import net.minecraft.entity.monster.GuardianEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.*;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -112,7 +124,16 @@ public class ModEffects {
                 }
             }
         }
-
+        @SubscribeEvent
+        public static void onPotionActive(TickEvent.PlayerTickEvent event){
+            World worldIn = event.player.world;
+            if (!worldIn.isRemote) {
+                PlayerEntity player = event.player;
+                if (player.isPotionActive(ModEffects.SQUID_INK_EFFECT)){
+                    //do stuff
+                }
+            }
+        }
         @SubscribeEvent
         public static void onPotionImpact(ProjectileImpactEvent.Throwable event){
             World worldIn = event.getThrowable().world;
@@ -125,6 +146,42 @@ public class ModEffects {
 //                        worldIn.createExplosion(thrownObject,thrownObject.getPosX(),thrownObject.getPosY(),thrownObject.getPosZ(),2.5f, Explosion.Mode.BREAK);
 //                    }
                 }
+            }
+        }
+//        @SubscribeEvent
+//        public static void bouncyEffect(LivingAttackEvent event){
+//            World worldIn = event.getEntityLiving().world;
+//            if (!worldIn.isRemote && event.getSource() == DamageSource.FALL && event.isCancelable()){
+//                LivingEntity entity = event.getEntityLiving();
+//                if (entity.isPotionActive(ModEffects.KRAKEN_BREATH_EFFECT)){
+//                    event.setCanceled(true);
+//                }
+//            }
+//        }
+        @SubscribeEvent
+        public static void bouncyEffect(LivingFallEvent event){
+            World worldIn = event.getEntityLiving().world;
+            LivingEntity entity = event.getEntityLiving();
+            if (entity.isPotionActive(ModEffects.KRAKEN_BREATH_EFFECT)) {
+                if (!entity.isSneaking() && event.getDistance() > 2.0F) {
+                    event.setDamageMultiplier(0.0F);
+                    entity.fallDistance = 0.0F;
+                    if (entity.world.isRemote) {
+                        entity.setMotion(entity.getMotion().x, entity.getMotion().y * -0.9D, entity.getMotion().z);
+                        entity.isAirBorne = true;
+                        entity.func_230245_c_(false);
+                        double f = 0.9500000000000001D;
+                        entity.setMotion(entity.getMotion().x / f, entity.getMotion().y, entity.getMotion().z / f);
+                    } else {
+                        event.setCanceled(true);
+                    }
+
+                    entity.playSound(SoundEvents.ENTITY_SLIME_JUMP, 1.0F, 1.0F);
+                    BounceHandler.addBounceHandler(entity, entity.getMotion().y);
+                } else if (!entity.world.isRemote && entity.isSneaking()) {
+                    event.setDamageMultiplier(0.2F);
+                }
+
             }
         }
     }

@@ -5,6 +5,7 @@ import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
 import com.robotspaceghost.squidsgalore.entities.KrakenTentacleEntity;
 import com.robotspaceghost.squidsgalore.init.*;
+import com.robotspaceghost.squidsgalore.util.BounceHandler;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public class SquidsGalore
         ModItems. ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModParticles.PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
-
+        MinecraftForge.EVENT_BUS.register(BounceHandler.class);
         MinecraftForge.EVENT_BUS.register(this);
     }
     //func_233813 -> create();
