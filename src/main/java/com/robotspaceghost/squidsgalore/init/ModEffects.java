@@ -148,22 +148,20 @@ public class ModEffects {
                 }
             }
         }
-//        @SubscribeEvent
-//        public static void bouncyEffect(LivingAttackEvent event){
-//            World worldIn = event.getEntityLiving().world;
-//            if (!worldIn.isRemote && event.getSource() == DamageSource.FALL && event.isCancelable()){
-//                LivingEntity entity = event.getEntityLiving();
-//                if (entity.isPotionActive(ModEffects.KRAKEN_BREATH_EFFECT)){
-//                    event.setCanceled(true);
-//                }
-//            }
-//        }
         @SubscribeEvent
         public static void bouncyEffect(LivingFallEvent event){
-            World worldIn = event.getEntityLiving().world;
             LivingEntity entity = event.getEntityLiving();
             if (entity.isPotionActive(ModEffects.KRAKEN_BREATH_EFFECT)) {
-                if (!entity.isSneaking() && event.getDistance() > 2.0F) {
+                if (!(entity instanceof PlayerEntity) && event.getDistance() > 2.0F) {
+                    event.setDamageMultiplier(0.0F);
+                    if (!entity.isAirBorne){
+                        entity.addVelocity(0, (event.getDistance() * .8) - entity.getMotion().y, 0);
+                        entity.velocityChanged = true;
+                        entity.tick();
+                        entity.playSound(SoundEvents.ENTITY_SLIME_JUMP, 1.0F, 1.0F);
+                    }
+                }
+                else if (!entity.isSneaking() && event.getDistance() > 2.0F) {
                     event.setDamageMultiplier(0.0F);
                     entity.fallDistance = 0.0F;
                     if (entity.world.isRemote) {
@@ -178,10 +176,10 @@ public class ModEffects {
 
                     entity.playSound(SoundEvents.ENTITY_SLIME_JUMP, 1.0F, 1.0F);
                     BounceHandler.addBounceHandler(entity, entity.getMotion().y);
+
                 } else if (!entity.world.isRemote && entity.isSneaking()) {
                     event.setDamageMultiplier(0.2F);
                 }
-
             }
         }
     }
