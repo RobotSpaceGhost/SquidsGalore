@@ -1,6 +1,7 @@
 package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
+import com.robotspaceghost.squidsgalore.items.SquidMilk.MilkBottleItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
 import net.minecraft.entity.LivingEntity;
@@ -17,6 +18,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.Explosion;
@@ -30,13 +32,18 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 public class ModEffects {
     public static Effect SQUID_INK_EFFECT =  new EffectBase(EffectType.HARMFUL, 0x0A0219).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"));
-    public static Effect MILK_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect MILK_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "milk_bottle_effect"));
     public static Effect BEARD_OIL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect SQUID_AIR_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
@@ -85,6 +92,7 @@ public class ModEffects {
         public static void registerEffects(final RegistryEvent.Register<Effect> event) {
             event.getRegistry().registerAll(
                     ModEffects.SQUID_INK_EFFECT,
+                    ModEffects.MILK_BOTTLE_EFFECT,
                     ModEffects.KRAKEN_BREATH_EFFECT,
                     ModEffects.OMEN_OF_THE_SEAS
             );
@@ -97,8 +105,24 @@ public class ModEffects {
             if (!event.getEntity().world.isRemote) {
                 LivingEntity targetEntity = event.getEntityLiving();
                 EffectInstance potionEffect = event.getPotionEffect();
+                int effectDuration = potionEffect.getDuration();
+
                 if (potionEffect.getPotion() == ModEffects.SQUID_INK_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.MILK_BOTTLE_EFFECT) {
+                    targetEntity.clearActivePotions();
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.STRENGTH, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.ACTIVATED_CHARCOAL_EFFECT) {
+                    //int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
+                    int defaultDuration = 200; //remove when made
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2){
+                        Collection<EffectInstance> activeEffects = targetEntity.getActivePotionEffects();
+                        List<Effect> activeBuffs = new ArrayList<>();
+                        for (EffectInstance effect : activeEffects) if (effect.getPotion().isBeneficial()) activeBuffs.add(effect.getPotion());
+                        for (Effect buff : activeBuffs) if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
+                    }
                 }
                 if (potionEffect.getPotion() == ModEffects.KRAKEN_BREATH_EFFECT) {
                     if (targetEntity instanceof ElderGuardianEntity)
@@ -130,6 +154,15 @@ public class ModEffects {
                 Potion potion = (thrownObject instanceof PotionEntity) ? PotionUtils.getPotionFromItem(((PotionEntity) thrownObject).getItem()) : null;
                 EffectInstance potionEI = (potion != null && !potion.getEffects().isEmpty()) ? potion.getEffects().get(0) : null;
                 if (potionEI != null) {
+                    double PR = 4.25;
+                    AxisAlignedBB PotionRadiusBB = new AxisAlignedBB(
+                            thrownObject.getPosX()-PR,
+                            thrownObject.getPosY()-PR,
+                            0,
+                            thrownObject.getPosX()+PR,
+                            thrownObject.getPosY()+PR,
+                            thrownObject.getPosZ()+PR
+                    ); //might not need
                     if (potionEI.getPotion() == ModEffects.NITRO_EFFECT) {
                         worldIn.createExplosion(thrownObject,thrownObject.getPosX(),thrownObject.getPosY(),thrownObject.getPosZ(),2.5f, Explosion.Mode.BREAK);
                     }

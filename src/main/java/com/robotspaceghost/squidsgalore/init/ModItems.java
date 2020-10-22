@@ -5,6 +5,7 @@ import com.robotspaceghost.squidsgalore.blocks.BlockItemBase;
 import com.robotspaceghost.squidsgalore.items.*;
 import com.robotspaceghost.squidsgalore.items.SquidBucketItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.KrakenBreathItem;
+import com.robotspaceghost.squidsgalore.items.SquidMilk.MilkBottleItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Food;
@@ -36,6 +37,12 @@ public class ModItems {
             () -> new SquidInkItem(1));
     public static final RegistryObject<SquidInkItem> SQUID_INK_THICK = ITEMS.register("milk/squid_ink_thick",
             () -> new SquidInkItem(2));
+
+    public static final RegistryObject<MilkBottleItem> MILK_BOTTLE = ITEMS.register("milk/milk_bottle", MilkBottleItem::new);
+    public static final RegistryObject<MilkBottleItem> MILK_BOTTLE_LONG = ITEMS.register("milk/milk_bottle_long",
+            () -> new MilkBottleItem(1));
+    public static final RegistryObject<MilkBottleItem> MILK_BOTTLE_THICK = ITEMS.register("milk/milk_bottle_thick",
+            () -> new MilkBottleItem(2));
 
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH = ITEMS.register("milk/kraken_breath", KrakenBreathItem::new);
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_LONG = ITEMS.register("milk/kraken_breath_long",

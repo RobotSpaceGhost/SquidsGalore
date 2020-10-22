@@ -20,7 +20,6 @@ import java.util.List;
 public class KrakenBreathItem extends AbstractMilkItem {
     public final Effect MILK_EFFECT = ModEffects.KRAKEN_BREATH_EFFECT;
     public final int MILK_EFFECT_DURATION = 5 * 60 * 20;
-    public final int LONG_MILK_EFFECT_DURATION = 2 * MILK_EFFECT_DURATION;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;
@@ -47,7 +46,7 @@ public class KrakenBreathItem extends AbstractMilkItem {
         if (!worldIn.isRemote) {
             entityLiving.addPotionEffect(new EffectInstance(
                     this.MILK_EFFECT,
-                    ((this.isLong) ? this.LONG_MILK_EFFECT_DURATION : this.MILK_EFFECT_DURATION),
+                    ((this.isLong) ? this.MILK_EFFECT_DURATION * 2: this.MILK_EFFECT_DURATION),
                     ((this.isThick) ? this.MILK_EFFECT_LEVEL + 1 : this.MILK_EFFECT_LEVEL)
             ));
         }

@@ -4,7 +4,6 @@ import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.init.ModEffects;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -17,21 +16,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SquidInkItem extends AbstractMilkItem{
-    public final Effect MILK_EFFECT = ModEffects.SQUID_INK_EFFECT;
+public class MilkBottleItem extends AbstractMilkItem{
+    public final Effect MILK_EFFECT = ModEffects.MILK_BOTTLE_EFFECT;
     public final int MILK_EFFECT_DURATION =  10 * 20;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;
 
 
-    public SquidInkItem(int variant){
-        super(new Item.Properties().maxStackSize(1));
+    public MilkBottleItem(int variant){
+        super(new Properties().maxStackSize(1));
         this.isLong = variant == 1;
         this.isThick = variant == 2;
     }
-    public SquidInkItem(){
-        super(new Item.Properties().group(SquidsGalore.TAB).maxStackSize(1));
+    public MilkBottleItem(){
+        super(new Properties().group(SquidsGalore.TAB).maxStackSize(1));
         this.isLong = false;
         this.isThick = false;
     }
@@ -62,6 +61,6 @@ public class SquidInkItem extends AbstractMilkItem{
         else if (this.isThick && !defaultDisplayName.contains("Thickened")) {
             stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Thickened " + defaultDisplayName));
         }
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
+        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Got squid?" ));
     }
 }
