@@ -36,52 +36,40 @@ import net.minecraftforge.fml.common.Mod;
 
 public class ModEffects {
     public static Effect SQUID_INK_EFFECT =  new EffectBase(EffectType.HARMFUL, 0x0A0219).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"));
-    public static Effect MILK_EFFECT = null;
-    public static Effect BEARD_OIL_EFFECT = null;
-    public static Effect SQUID_AIR_EFFECT = null;
-    public static Effect BACON_GREASE_EFFECT = null;
-    public static Effect BACON_GREASE_SPLASH_EFFECT = null;
-    public static Effect HONEY_EFFECT = null;
-    public static Effect HONEY_SPLASH_EFFECT = null;
-    public static Effect EDV_EFFECT = null;
-    public static Effect EDV_SPLASH_EFFECT = null;
-    public static Effect SLIME_EFFECT = null;
-    public static Effect GLUE_EFFECT = null;
-    public static Effect MUTAGEN_EFFECT = null;
-    public static Effect MUTAGEN_SPLASH_EFFECT = null;
-    public static Effect BHJ_EFFECT = null;
-    public static Effect INSTABILITY_EFFECT = null;
-    public static Effect NITRO_EFFECT = null;
-    public static Effect DOOM_EFFECT = null;
-    public static Effect FLOWERING_EFFECT = null;
-    public static Effect FLOWERING_SPLASH_EFFECT = null;
-    public static Effect DMT_EFFECT = null;
-    public static Effect DMT_SPLASH_EFFECT = null;
-    public static Effect NOTAVIBE_EFFECT = null;
-    public static Effect CLOVER_EFFECT = null;
-    public static Effect CLOVER_SPLASH_EFFECT = null;
-    public static Effect HOT_SAUCE_EFFECT = null;
-    public static Effect HOT_SAUCE_SPLASH_EFFECT = null;
-    public static Effect COFFEE_EFFECT = null;
-    public static Effect COFFEE_SPLASH_EFFECT = null;
-    public static Effect SLUSHY_EFFECT = null;
-    public static Effect SLUSHY_SPLASH_EFFECT = null;
-    public static Effect REDSTONE_EFFECT = null;
-    public static Effect REDSTONE_SPLASH_EFFECT = null;
-    public static Effect GLOWSTONE_EFFECT = null;
-    public static Effect INVISIBLE_INK_EFFECT = null;
-    public static Effect PETRIFIED_EFFECT = null;
-    public static Effect ACTIVATED_CHARCOAL_EFFECT = null;
-    public static Effect ACTIVATED_CHARCOAL_SPLASH_EFFECT = null;
-    public static Effect MINERS_DELIGHT_EFFECT = null;
-    public static Effect MINERS_DELIGHT_SPLASH_EFFECT = null;
-    public static Effect GEM_EFFECT = null;
-    public static Effect GEM_SPLASH_EFFECT = null;
-    public static Effect SALT_EFFECT = null;
-    public static Effect SALT_SPLASH_EFFECT = null;
-    public static Effect XP_BOOST_EFFECT = null;
-    public static Effect HOUR_GLASS_EFFECT = null;
-    public static Effect HOUR_GLASS_SPLASH_EFFECT = null;
+    public static Effect MILK_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect BEARD_OIL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect SQUID_AIR_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect EDV_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect SLIME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect GLUE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect BHJ_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect INSTABILITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect NITRO_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect DOOM_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect FLOWERING_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect DMT_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect NOTAVIBE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect CLOVER_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect CLOVER_SPLASH_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect HOT_SAUCE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect COFFEE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect SLUSHY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect REDSTONE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect GLOWSTONE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect INVISIBLE_INK_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect PETRIFIED_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect ACTIVATED_CHARCOAL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect MINERS_DELIGHT_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect GEM_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect GEM_SPLASH_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect SALT_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect SALT_SPLASH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect HOUR_GLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect HOUR_GLASS_SPLASH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
     public static Effect KRAKEN_BREATH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_breath_effect"));
     public static Effect OMEN_OF_THE_SEAS = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
 
@@ -142,16 +130,16 @@ public class ModEffects {
                 Potion potion = (thrownObject instanceof PotionEntity) ? PotionUtils.getPotionFromItem(((PotionEntity) thrownObject).getItem()) : null;
                 EffectInstance potionEI = (potion != null && !potion.getEffects().isEmpty()) ? potion.getEffects().get(0) : null;
                 if (potionEI != null) {
-//                    if (potionEI.getPotion() == ModEffects.NITRO_EFFECT) {
-//                        worldIn.createExplosion(thrownObject,thrownObject.getPosX(),thrownObject.getPosY(),thrownObject.getPosZ(),2.5f, Explosion.Mode.BREAK);
-//                    }
+                    if (potionEI.getPotion() == ModEffects.NITRO_EFFECT) {
+                        worldIn.createExplosion(thrownObject,thrownObject.getPosX(),thrownObject.getPosY(),thrownObject.getPosZ(),2.5f, Explosion.Mode.BREAK);
+                    }
                 }
             }
         }
         @SubscribeEvent
-        public static void bouncyEffect(LivingFallEvent event){
+        public static void slimeEffect(LivingFallEvent event){
             LivingEntity entity = event.getEntityLiving();
-            if (entity.isPotionActive(ModEffects.KRAKEN_BREATH_EFFECT)) {
+            if (entity.isPotionActive(ModEffects.SLIME_EFFECT)) {
                 if (!(entity instanceof PlayerEntity) && event.getDistance() > 2.0F) {
                     event.setDamageMultiplier(0.0F);
                     if (!entity.isAirBorne){
@@ -170,16 +158,10 @@ public class ModEffects {
                         entity.func_230245_c_(false);
                         double f = 0.9500000000000001D;
                         entity.setMotion(entity.getMotion().x / f, entity.getMotion().y, entity.getMotion().z / f);
-                    } else {
-                        event.setCanceled(true);
-                    }
-
+                    } else event.setCanceled(true);
                     entity.playSound(SoundEvents.ENTITY_SLIME_JUMP, 1.0F, 1.0F);
                     BounceHandler.addBounceHandler(entity, entity.getMotion().y);
-
-                } else if (!entity.world.isRemote && entity.isSneaking()) {
-                    event.setDamageMultiplier(0.2F);
-                }
+                } else if (!entity.world.isRemote && entity.isSneaking()) event.setDamageMultiplier(0.2F);
             }
         }
     }

@@ -13,7 +13,10 @@ import java.util.IdentityHashMap;
 
 public class BounceHandler {
     //--------------------------------------
-    // Yoinked and modified/updated from tinkers boots, but atleast im honest!
+    // Yoinked and modified/updated from tinkers boots, but atleast im honest! Figured I ought implement my slime mechanic in a similar way to slime boots,
+    //                                                                                                                          you know...
+    //
+    //                                                                                                                                          For consistency.
     //----------------------------------
     private static final IdentityHashMap<Entity, BounceHandler> bouncingEntities = new IdentityHashMap();
     public final LivingEntity entityLiving;
@@ -29,12 +32,7 @@ public class BounceHandler {
         this.timer = 0;
         this.wasInAir = false;
         this.bounce = bounce;
-        if (bounce != 0.0D) {
-            this.bounceTick = entityLiving.ticksExisted;
-        } else {
-            this.bounceTick = 0;
-        }
-
+        this.bounceTick = (bounce != 0.0D) ? entityLiving.ticksExisted : 0;
         bouncingEntities.put(entityLiving, this);
     }
 
@@ -46,7 +44,6 @@ public class BounceHandler {
                 event.player.setMotion(vec3d.x, this.bounce, vec3d.z);
                 this.bounceTick = 0;
             }
-
             if (!this.entityLiving.func_233570_aj_() && this.entityLiving.ticksExisted != this.bounceTick && (this.lastMovX != this.entityLiving.getMotion().x || this.lastMovZ != this.entityLiving.getMotion().z)) {
                 double f = 0.935D;
                 Vector3d vec3d = this.entityLiving.getMotion();
@@ -55,11 +52,9 @@ public class BounceHandler {
                 this.lastMovX = this.entityLiving.getMotion().x;
                 this.lastMovZ = this.entityLiving.getMotion().z;
             }
-
             if (this.wasInAir && this.entityLiving.func_233570_aj_()) {
-                if (this.timer == 0) {
-                    this.timer = this.entityLiving.ticksExisted;
-                } else if (this.entityLiving.ticksExisted - this.timer > 5) {
+                if (this.timer == 0) this.timer = this.entityLiving.ticksExisted;
+                else if (this.entityLiving.ticksExisted - this.timer > 5) {
                     MinecraftForge.EVENT_BUS.unregister(this);
                     bouncingEntities.remove(this.entityLiving);
                 }
@@ -71,20 +66,18 @@ public class BounceHandler {
 
     }
 
-    public static void addBounceHandler(LivingEntity entity) {
-        addBounceHandler(entity, 0.0D);
-    }
+//    public static void addBounceHandler(LivingEntity entity) {
+//        addBounceHandler(entity, 0.0D);
+//    }
 
     public static void addBounceHandler(LivingEntity entity, double bounce) {
         if (entity instanceof PlayerEntity && !(entity instanceof FakePlayer)) {
-            BounceHandler handler = (BounceHandler)bouncingEntities.get(entity);
-            if (handler == null) {
-                MinecraftForge.EVENT_BUS.register(new BounceHandler(entity, bounce));
-            } else if (bounce != 0.0D) {
+            BounceHandler handler = bouncingEntities.get(entity);
+            if (handler == null) MinecraftForge.EVENT_BUS.register(new BounceHandler(entity, bounce));
+            else if (bounce != 0.0D) {
                 handler.bounce = bounce;
                 handler.bounceTick = entity.ticksExisted;
             }
-
         }
     }
 }
