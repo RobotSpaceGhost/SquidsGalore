@@ -23,7 +23,6 @@ public class SquidsGalore
 {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "squidsg";
-
     public SquidsGalore() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);

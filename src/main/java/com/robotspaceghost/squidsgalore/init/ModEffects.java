@@ -49,18 +49,17 @@ public class ModEffects {
     public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xEFE8CC);
     public static Effect DILUTED_HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xD79800);
     public static Effect PERFUME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x77FFA4);
-    public static Effect SLIME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect SLIME_BOTTLE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x8CD782);
     public static Effect GLUE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
-    public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
-    public static Effect BHJ_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
-    public static Effect INSTABILITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
-    public static Effect NITRO_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
-    public static Effect DOOM_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
+    public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0x005B08);
+    public static Effect BONE_HURTING_JUICE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xE0761F);
+    public static Effect INSTABILITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x72056F);
+    public static Effect NITRO_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x5F0000);
+    public static Effect LIQUID_DOOM_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
     public static Effect FLOWERING_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect DMT_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
     public static Effect NOTAVIBE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
     public static Effect CLOVER_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
-    public static Effect CLOVER_SPLASH_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect HOT_SAUCE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
     public static Effect COFFEE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect SLUSHY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
@@ -71,12 +70,9 @@ public class ModEffects {
     public static Effect ACTIVATED_CHARCOAL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect MINERS_DELIGHT_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect GEM_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
-    public static Effect GEM_SPLASH_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect SALT_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
-    public static Effect SALT_SPLASH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
     public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
     public static Effect HOUR_GLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
-    public static Effect HOUR_GLASS_SPLASH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
     public static Effect KRAKEN_BREATH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_breath_effect"));
     public static Effect OMEN_OF_THE_SEAS = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
 
@@ -176,7 +172,7 @@ public class ModEffects {
         @SubscribeEvent
         public static void slimeEffect(LivingFallEvent event){
             LivingEntity entity = event.getEntityLiving();
-            if (entity.isPotionActive(ModEffects.SLIME_EFFECT)) {
+            if (entity.isPotionActive(ModEffects.SLIME_BOTTLE_EFFECT)) {
                 if (!(entity instanceof PlayerEntity) && event.getDistance() > 2.0F) {
                     event.setDamageMultiplier(0.0F);
                     if (!entity.isAirBorne){
