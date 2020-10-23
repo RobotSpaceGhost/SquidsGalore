@@ -44,11 +44,11 @@ import java.util.List;
 public class ModEffects {
     public static Effect SQUID_INK_EFFECT =  new EffectBase(EffectType.HARMFUL, 0x0A0219).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"));
     public static Effect MILK_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "milk_bottle_effect"));
-    public static Effect BEARD_OIL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
+    public static Effect BEARD_OIL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x262626);
     public static Effect SQUID_AIR_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
-    public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
-    public static Effect HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
-    public static Effect EDV_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
+    public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xEFE8CC);
+    public static Effect DILUTED_HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xD79800);
+    public static Effect PERFUME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x77FFA4);
     public static Effect SLIME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
     public static Effect GLUE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
     public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
@@ -93,6 +93,7 @@ public class ModEffects {
             event.getRegistry().registerAll(
                     ModEffects.SQUID_INK_EFFECT,
                     ModEffects.MILK_BOTTLE_EFFECT,
+
                     ModEffects.KRAKEN_BREATH_EFFECT,
                     ModEffects.OMEN_OF_THE_SEAS
             );
@@ -123,7 +124,7 @@ public class ModEffects {
                         for (EffectInstance effect : activeEffects) if (effect.getPotion().isBeneficial()) activeBuffs.add(effect.getPotion());
                         for (Effect buff : activeBuffs) if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
                     }
-                }
+                } //edit when potion made
                 if (potionEffect.getPotion() == ModEffects.KRAKEN_BREATH_EFFECT) {
                     if (targetEntity instanceof ElderGuardianEntity)
                         targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier() + 2));
@@ -141,8 +142,11 @@ public class ModEffects {
             World worldIn = event.player.world;
             if (!worldIn.isRemote) {
                 PlayerEntity player = event.player;
-                if (player.isPotionActive(ModEffects.SQUID_INK_EFFECT)){
-                    //do stuff
+                if (player.isPotionActive(ModEffects.ACTIVATED_CHARCOAL_EFFECT)){
+                    Collection<EffectInstance> activeEffects = player.getActivePotionEffects();
+                    List<Effect> activeBuffs = new ArrayList<>();
+                    for (EffectInstance effect : activeEffects) if (effect.getPotion().getEffectType() == EffectType.HARMFUL) activeBuffs.add(effect.getPotion());
+                    for (Effect buff : activeBuffs) if (player.isPotionActive(buff)) player.removePotionEffect(buff);
                 }
             }
         }
