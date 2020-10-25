@@ -25,14 +25,48 @@
 
   "particle.squidsg.kraken_particle": "Kraken Particle",
 
-  "effect.squidsg.squid_ink_effect": "Squid Inked",
-  "item.squidsg.milk.squid_ink": "Bottle of Squid Ink",
-  "item.squidsg.milk.squid_ink_long": "Bottle of Squid Ink",
-  "item.squidsg.milk.squid_ink_thick": "Bottle of Squid Ink",
-  "item.minecraft.potion.effect.squid_ink_effect" : "Squid Ink Potion",
-  "item.minecraft.splash_potion.effect.squid_ink_effect" : "Splash Squid Ink Potion",
-  "item.minecraft.tipped_arrow.effect.squid_ink_effect" : "Squid Ink Tipped Arrow",
-  "item.minecraft.lingering_potion.effect.squid_ink_effect" : "Lingering Squid Ink Potion",
+  "effect.squidsg.activated_charcoal_effect": "Detoxified",
+
+  "effect.squidsg.bacon_grease_effect": "Greasy",
+
+  "effect.squidsg.beard_oil_effect": "Bearded",
+
+  "effect.squidsg.bone_hurting_juice_effect": "Brittle",
+
+  "effect.squidsg.chlorophyll_effect": "Green Thumb",
+
+  "effect.squidsg.coffee_effect": "Caffeinated",
+
+  "effect.squidsg.crystal_gem_effect": "Crystalline",
+
+  "effect.squidsg.diluted_honey_effect": "Sticky",
+
+  "effect.squidsg.dmt_effect": "Trippy",
+
+  "effect.squidsg.flowering_effect": "Floral",
+
+  "effect.squidsg.glowstone_bottle_effect": "Bright",
+
+  "effect.squidsg.glue_effect": "Slow",
+
+  "effect.squidsg.hot_sauce_effect": "Spicy!",
+
+  "effect.squidsg.hourglass_effect": "Quick Time Event",
+
+  "effect.squidsg.instability_effect": "Dimensionally Unstable",
+
+  "effect.squidsg.invisible_ink_effect": "Incognito",
+
+  "effect.squidsg.kraken_breath_effect": "Kraken's Blessing",
+  "item.squidsg.milk.kraken_breath" : "Kraken's Breath",
+  "item.squidsg.milk.kraken_breath_long" : "Kraken's Breath",
+  "item.squidsg.milk.kraken_breath_thick" : "Kraken's Breath",
+  "item.minecraft.potion.effect.kraken_breath_effect" : "Kraken's Breath Potion",
+  "item.minecraft.splash_potion.effect.kraken_breath_effect" : "Splash Kraken's Breath Potion",
+  "item.minecraft.tipped_arrow.effect.kraken_breath_effect" : "Kraken's Breath Tipped Arrow",
+  "item.minecraft.lingering_potion.effect.kraken_breath_effect" : "Lingering Kraken's Breath Potion",
+
+  "effect.squidsg.liquid_doom_effect": "Marked for Death",
 
   "effect.squidsg.milk_bottle_effect": "Strong Bones",
   "item.squidsg.milk.milk_bottle": "Bottle of Milk",
@@ -43,14 +77,38 @@
   "item.minecraft.tipped_arrow.effect.milk_bottle_effect" : "Milk Tipped Arrow",
   "item.minecraft.lingering_potion.effect.milk_bottle_effect" : "Lingering Milk Potion",
 
-  "effect.squidsg.kraken_breath_effect": "Kraken's Grace",
-  "item.squidsg.milk.kraken_breath" : "Kraken's Breath",
-  "item.squidsg.milk.kraken_breath_long" : "Kraken's Breath",
-  "item.squidsg.milk.kraken_breath_thick" : "Kraken's Breath",
-  "item.minecraft.potion.effect.kraken_breath_effect" : "Kraken's Breath Potion",
-  "item.minecraft.splash_potion.effect.kraken_breath_effect" : "Splash Kraken's Breath Potion",
-  "item.minecraft.tipped_arrow.effect.kraken_breath_effect" : "Kraken's Breath Tipped Arrow",
-  "item.minecraft.lingering_potion.effect.kraken_breath_effect" : "Lingering Kraken's Breath Potion",
+  "effect.squidsg.miners_delight_effect": "Well Lit",
 
-  "effect.squidsg.omen_of_the_seas_effect": "Omen of the Seas"
+  "effect.squidsg.mutagen_effect": "Infected",
+
+  "effect.squidsg.nitro_effect": "Explosives Expert",
+
+  "effect.squidsg.notavibe_effect": "Vibe Check: Failed",
+
+  "effect.squidsg.omen_of_the_seas_effect": "Omen of the Seas",
+
+  "effect.squidsg.perfume_effect": "Perfumed",
+
+  "effect.squidsg.petrichor_effect": "Petrified",
+
+  "effect.squidsg.redstone_bottle_effect": "Wireless Transmission",
+
+  "effect.squidsg.salt_effect": "Incredibly Salty",
+
+  "effect.squidsg.slime_bottle_effect": "Bouncy!",
+
+  "effect.squidsg.slushy_effect": "Brain Freeze",
+
+  "effect.squidsg.squid_air_effect": "Light Footed",
+
+  "effect.squidsg.squid_ink_effect": "Squid Inked",
+  "item.squidsg.milk.squid_ink": "Bottle of Squid Ink",
+  "item.squidsg.milk.squid_ink_long": "Bottle of Squid Ink",
+  "item.squidsg.milk.squid_ink_thick": "Bottle of Squid Ink",
+  "item.minecraft.potion.effect.squid_ink_effect" : "Squid Ink Potion",
+  "item.minecraft.splash_potion.effect.squid_ink_effect" : "Splash Squid Ink Potion",
+  "item.minecraft.tipped_arrow.effect.squid_ink_effect" : "Squid Ink Tipped Arrow",
+  "item.minecraft.lingering_potion.effect.squid_ink_effect" : "Lingering Squid Ink Potion",
+
+  "effect.squidsg.xp_boost_effect": "Knowledge of the Squid"
 }

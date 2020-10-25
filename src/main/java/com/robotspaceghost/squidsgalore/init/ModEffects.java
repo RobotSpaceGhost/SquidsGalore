@@ -44,35 +44,35 @@ import java.util.List;
 public class ModEffects {
     public static Effect SQUID_INK_EFFECT =  new EffectBase(EffectType.HARMFUL, 0x0A0219).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_ink_effect"));
     public static Effect MILK_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "milk_bottle_effect"));
-    public static Effect BEARD_OIL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x262626);
-    public static Effect SQUID_AIR_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF);
-    public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xEFE8CC);
-    public static Effect DILUTED_HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xD79800);
-    public static Effect PERFUME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x77FFA4);
-    public static Effect SLIME_BOTTLE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x8CD782);
-    public static Effect GLUE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
-    public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0x005B08);
-    public static Effect BONE_HURTING_JUICE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xE0761F);
-    public static Effect INSTABILITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x72056F);
-    public static Effect NITRO_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x5F0000);
-    public static Effect LIQUID_DOOM_EFFECT = new EffectBase(EffectType.HARMFUL, 0x000000);
-    public static Effect FLOWERING_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x3AA0FF);
-    public static Effect DMT_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF);
-    public static Effect NOTAVIBE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCF044B);
-    public static Effect CHLOROPHYLL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x18CD14);
-    public static Effect HOT_SAUCE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE63600);
-    public static Effect COFFEE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x490000);
-    public static Effect SLUSHY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x30CCB7);
-    public static Effect REDSTONE_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x770000);
-    public static Effect GLOWSTONE_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xC88B00);
-    public static Effect INVISIBLE_INK_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x000000);
-    public static Effect PETRICHOR_EFFECT = new EffectBase(EffectType.HARMFUL, 0x636363);
-    public static Effect ACTIVATED_CHARCOAL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x181818);
-    public static Effect MINERS_DELIGHT_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFD800);
-    public static Effect CRYSTAL_GEM_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xE968D7);
-    public static Effect SALT_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF);
-    public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xB1FB23);
-    public static Effect HOUR_GLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77);
+    public static Effect BEARD_OIL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x262626).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "beard_oil_effect"));
+    public static Effect SQUID_AIR_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "squid_air_effect"));
+    public static Effect BACON_GREASE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xEFE8CC).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "bacon_grease_effect"));
+    public static Effect DILUTED_HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xD79800).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "diluted_honey_effect"));
+    public static Effect PERFUME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x77FFA4).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "perfume_effect"));
+    public static Effect SLIME_BOTTLE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x8CD782).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "slime_bottle_effect"));
+    public static Effect GLUE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "glue_effect"));
+    public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0x005B08).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "mutagen_effect"));
+    public static Effect BONE_HURTING_JUICE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xE0761F).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "bone_hurting_juice_effect"));
+    public static Effect INSTABILITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x72056F).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "instability_effect"));
+    public static Effect NITRO_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x5F0000).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "nitro_effect"));
+    public static Effect LIQUID_DOOM_EFFECT = new EffectBase(EffectType.HARMFUL, 0x000000).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "liquid_doom_effect"));
+    public static Effect FLOWERING_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x3AA0FF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "flowering_effect"));
+    public static Effect DMT_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "dmt_effect"));
+    public static Effect NOTAVIBE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCF044B).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "notavibe_effect"));
+    public static Effect CHLOROPHYLL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x18CD14).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "chlorophyll_effect"));
+    public static Effect HOT_SAUCE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE63600).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hot_sauce_effect"));
+    public static Effect COFFEE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x490000).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "coffee_effect"));
+    public static Effect SLUSHY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x30CCB7).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "slushy_effect"));
+    public static Effect REDSTONE_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x770000).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "redstone_bottle_effect"));
+    public static Effect GLOWSTONE_BOTTLE_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xC88B00).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "glowstone_bottle_effect"));
+    public static Effect INVISIBLE_INK_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x000000).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "invisible_ink_effect"));
+    public static Effect PETRICHOR_EFFECT = new EffectBase(EffectType.HARMFUL, 0x636363).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "petrichor_effect"));
+    public static Effect ACTIVATED_CHARCOAL_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0x181818).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "activated_charcoal_effect"));
+    public static Effect MINERS_DELIGHT_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xFFD800).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "miners_delight_effect"));
+    public static Effect CRYSTAL_GEM_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xE968D7).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "crystal_gem_effect"));
+    public static Effect SALT_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "salt_effect"));
+    public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xB1FB23).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "xp_boost_effect"));
+    public static Effect HOUR_GLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hour_glass_effect"));
     public static Effect KRAKEN_BREATH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_breath_effect"));
     public static Effect OMEN_OF_THE_SEAS = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
 
@@ -89,7 +89,34 @@ public class ModEffects {
             event.getRegistry().registerAll(
                     ModEffects.SQUID_INK_EFFECT,
                     ModEffects.MILK_BOTTLE_EFFECT,
-
+                    ModEffects.BEARD_OIL_EFFECT,
+                    ModEffects.SQUID_AIR_EFFECT,
+                    ModEffects.BACON_GREASE_EFFECT,
+                    ModEffects.DILUTED_HONEY_EFFECT,
+                    ModEffects.PERFUME_EFFECT,
+                    ModEffects.GLUE_EFFECT,
+                    ModEffects.MUTAGEN_EFFECT,
+                    ModEffects.BONE_HURTING_JUICE_EFFECT,
+                    ModEffects.INSTABILITY_EFFECT,
+                    ModEffects.NITRO_EFFECT,
+                    ModEffects.LIQUID_DOOM_EFFECT,
+                    ModEffects.FLOWERING_EFFECT,
+                    ModEffects.DMT_EFFECT,
+                    ModEffects.NOTAVIBE_EFFECT,
+                    ModEffects.CHLOROPHYLL_EFFECT,
+                    ModEffects.HOT_SAUCE_EFFECT,
+                    ModEffects.COFFEE_EFFECT,
+                    ModEffects.SLUSHY_EFFECT,
+                    ModEffects.REDSTONE_BOTTLE_EFFECT,
+                    ModEffects.GLOWSTONE_BOTTLE_EFFECT,
+                    ModEffects.INVISIBLE_INK_EFFECT,
+                    ModEffects.PETRICHOR_EFFECT,
+                    ModEffects.ACTIVATED_CHARCOAL_EFFECT,
+                    ModEffects.MINERS_DELIGHT_EFFECT,
+                    ModEffects.CRYSTAL_GEM_EFFECT,
+                    ModEffects.SALT_EFFECT,
+                    ModEffects.XP_BOOST_EFFECT,
+                    ModEffects.HOUR_GLASS_EFFECT,
                     ModEffects.KRAKEN_BREATH_EFFECT,
                     ModEffects.OMEN_OF_THE_SEAS
             );
