@@ -31,7 +31,7 @@
 
   "effect.squidsg.beard_oil_effect": "Bearded",
 
-  "effect.squidsg.bone_hurting_juice_effect": "Brittle",
+  "effect.squidsg.bone_hurting_juice_effect": "Brittle Bones",
 
   "effect.squidsg.chlorophyll_effect": "Green Thumb",
 
@@ -53,7 +53,7 @@
 
   "effect.squidsg.hourglass_effect": "Quick Time Event",
 
-  "effect.squidsg.instability_effect": "Dimensionally Unstable",
+  "effect.squidsg.instability_effect": "Spatially Unstable",
 
   "effect.squidsg.invisible_ink_effect": "Incognito",
 
@@ -81,7 +81,7 @@
 
   "effect.squidsg.mutagen_effect": "Infected",
 
-  "effect.squidsg.nitro_effect": "Explosives Expert",
+  "effect.squidsg.nitro_effect": "Explosive Expert",
 
   "effect.squidsg.notavibe_effect": "Vibe Check: Failed",
 
@@ -91,7 +91,7 @@
 
   "effect.squidsg.petrichor_effect": "Petrified",
 
-  "effect.squidsg.redstone_bottle_effect": "Wireless Transmission",
+  "effect.squidsg.redstone_bottle_effect": "Wifi Transmission",
 
   "effect.squidsg.salt_effect": "Incredibly Salty",
 
@@ -110,5 +110,5 @@
   "item.minecraft.tipped_arrow.effect.squid_ink_effect" : "Squid Ink Tipped Arrow",
   "item.minecraft.lingering_potion.effect.squid_ink_effect" : "Lingering Squid Ink Potion",
 
-  "effect.squidsg.xp_boost_effect": "Knowledge of the Squid"
+  "effect.squidsg.xp_boost_effect": "Boosted Animal"
 }

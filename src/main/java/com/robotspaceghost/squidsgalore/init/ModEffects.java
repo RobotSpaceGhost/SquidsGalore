@@ -72,7 +72,7 @@ public class ModEffects {
     public static Effect CRYSTAL_GEM_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xE968D7).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "crystal_gem_effect"));
     public static Effect SALT_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "salt_effect"));
     public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xB1FB23).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "xp_boost_effect"));
-    public static Effect HOUR_GLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hour_glass_effect"));
+    public static Effect HOURGLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hour_glass_effect"));
     public static Effect KRAKEN_BREATH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_breath_effect"));
     public static Effect OMEN_OF_THE_SEAS = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
 
@@ -116,7 +116,7 @@ public class ModEffects {
                     ModEffects.CRYSTAL_GEM_EFFECT,
                     ModEffects.SALT_EFFECT,
                     ModEffects.XP_BOOST_EFFECT,
-                    ModEffects.HOUR_GLASS_EFFECT,
+                    ModEffects.HOURGLASS_EFFECT,
                     ModEffects.KRAKEN_BREATH_EFFECT,
                     ModEffects.OMEN_OF_THE_SEAS
             );
