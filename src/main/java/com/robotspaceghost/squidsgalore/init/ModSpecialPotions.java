@@ -71,7 +71,36 @@ public class ModSpecialPotions {
             event.getRegistry().registerAll(
                     ModSpecialPotions.SQUID_INK_POTION,
                     ModSpecialPotions.MILK_BOTTLE_POTION,
+//                    ModSpecialPotions.BEARD_OIL_POTION,
+//                    ModSpecialPotions.SQUID_AIR_POTION,
+//                    ModSpecialPotions.BACON_GREASE_POTION,
+//                    ModSpecialPotions.DILUTED_HONEY_POTION,
+//                    ModSpecialPotions.PERFUME_POTION,
+//                    ModSpecialPotions.GLUE_POTION,
+//                    ModSpecialPotions.MUTAGEN_POTION,
+//                    ModSpecialPotions.BONE_HURTING_JUICE_POTION,
+//                    ModSpecialPotions.INSTABILITY_POTION,
+//                    ModSpecialPotions.NITRO_POTION,
+//                    ModSpecialPotions.LIQUID_DOOM_POTION,
+//                    ModSpecialPotions.FLOWERING_POTION,
+//                    ModSpecialPotions.DMT_POTION,
+//                    ModSpecialPotions.NOTAVIBE_POTION,
+//                    ModSpecialPotions.CHLOROPHYLL_POTION,
+//                    ModSpecialPotions.HOT_SAUCE_POTION,
+//                    ModSpecialPotions.COFFEE_POTION,
+//                    ModSpecialPotions.SLUSHY_POTION,
+//                    ModSpecialPotions.REDSTONE_BOTTLE_POTION,
+//                    ModSpecialPotions.GLOWSTONE_BOTTLE_POTION,
+//                    ModSpecialPotions.INVISIBLE_INK_POTION,
+//                    ModSpecialPotions.PETRICHOR_POTION,
+//                    ModSpecialPotions.ACTIVATED_CHARCOAL_POTION,
+//                    ModSpecialPotions.MINERS_DELIGHT_POTION,
+//                    ModSpecialPotions.CRYSTAL_GEM_POTION,
+//                    ModSpecialPotions.SALT_POTION,
+//                    ModSpecialPotions.XP_BOOST_POTION,
+//                    ModSpecialPotions.HOURGLASS_POTION,
                     ModSpecialPotions.KRAKEN_BREATH_POTION
+//                    ModSpecialPotions.OMEN_OF_THE_SEAS_POTION
             );
         }
     }

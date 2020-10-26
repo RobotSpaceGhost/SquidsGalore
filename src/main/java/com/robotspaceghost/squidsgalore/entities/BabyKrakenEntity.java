@@ -285,7 +285,7 @@ public class BabyKrakenEntity extends CreatureEntity {
     @Override
     public void onDeath(DamageSource cause) {
         ServerPlayerEntity babyKiller = (ServerPlayerEntity) this.getRevengeTarget();
-        Effect effect = ModEffects.OMEN_OF_THE_SEAS;
+        Effect effect = ModEffects.OMEN_OF_THE_SEAS_EFFECT;
         Effect aestheticEffect = Effects.BLINDNESS;
         int effectDuration = 60*60*20 + 40*60*20;
         int aestheticEffectDuration = 50;

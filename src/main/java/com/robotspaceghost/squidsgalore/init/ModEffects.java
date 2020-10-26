@@ -74,7 +74,7 @@ public class ModEffects {
     public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xB1FB23).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "xp_boost_effect"));
     public static Effect HOURGLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hour_glass_effect"));
     public static Effect KRAKEN_BREATH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_breath_effect"));
-    public static Effect OMEN_OF_THE_SEAS = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
+    public static Effect OMEN_OF_THE_SEAS_EFFECT = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
 
     public static class EffectBase extends Effect{
         public EffectBase(EffectType typeIn, int liquidColorIn) {
@@ -118,7 +118,7 @@ public class ModEffects {
                     ModEffects.XP_BOOST_EFFECT,
                     ModEffects.HOURGLASS_EFFECT,
                     ModEffects.KRAKEN_BREATH_EFFECT,
-                    ModEffects.OMEN_OF_THE_SEAS
+                    ModEffects.OMEN_OF_THE_SEAS_EFFECT
             );
         }
     }
