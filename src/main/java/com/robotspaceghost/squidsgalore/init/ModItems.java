@@ -4,6 +4,7 @@ import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.blocks.BlockItemBase;
 import com.robotspaceghost.squidsgalore.items.*;
 import com.robotspaceghost.squidsgalore.items.SquidBucketItem;
+import com.robotspaceghost.squidsgalore.items.SquidMilk.BeardOilItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.KrakenBreathItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.MilkBottleItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
@@ -31,7 +32,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> BUCKET_OF_SALTY_SQUID = ITEMS.register("buckets/bucket_of_salty_squid",ItemBase::new);
 
-    //Squid Milk Drinkable
+    //Squid Milk
     public static final RegistryObject<SquidInkItem> SQUID_INK = ITEMS.register("milk/squid_ink", SquidInkItem::new);
     public static final RegistryObject<SquidInkItem> SQUID_INK_LONG = ITEMS.register("milk/squid_ink_long",
             () -> new SquidInkItem(1));
@@ -43,6 +44,14 @@ public class ModItems {
             () -> new MilkBottleItem(1));
     public static final RegistryObject<MilkBottleItem> MILK_BOTTLE_THICK = ITEMS.register("milk/milk_bottle_thick",
             () -> new MilkBottleItem(2));
+
+    public static final RegistryObject<BeardOilItem> BEARD_OIL = ITEMS.register("milk/beard_oil", BeardOilItem::new);
+    public static final RegistryObject<BeardOilItem> BEARD_OIL_LONG = ITEMS.register("milk/beard_oil_long",
+            () -> new BeardOilItem(1));
+    public static final RegistryObject<BeardOilItem> BEARD_OIL_THICK = ITEMS.register("milk/beard_oil_thick",
+            () -> new BeardOilItem(2));
+
+
 
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH = ITEMS.register("milk/kraken_breath", KrakenBreathItem::new);
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_LONG = ITEMS.register("milk/kraken_breath_long",

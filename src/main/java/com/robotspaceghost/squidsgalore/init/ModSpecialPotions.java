@@ -17,10 +17,36 @@ import net.minecraftforge.fml.common.Mod;
 public class ModSpecialPotions {
     public static Potion SQUID_INK_POTION = new Potion(new EffectInstance(ModEffects.SQUID_INK_EFFECT, ModItems.SQUID_INK.get().MILK_EFFECT_DURATION)).setRegistryName(location("squid_ink_effect"));
     public static Potion MILK_BOTTLE_POTION = new Potion(new EffectInstance(ModEffects.MILK_BOTTLE_EFFECT, ModItems.MILK_BOTTLE.get().MILK_EFFECT_DURATION)).setRegistryName(location("milk_bottle_effect"));
-
-
-
+    public static Potion BEARD_OIL_POTION = new Potion(new EffectInstance(ModEffects.BEARD_OIL_EFFECT, ModItems.BEARD_OIL.get().MILK_EFFECT_DURATION)).setRegistryName(location("beard_oil_effect"));
+    public static Potion SQUID_AIR_POTION = null;
+    public static Potion BACON_GREASE_POTION = null;
+    public static Potion DILUTED_HONEY_POTION = null;
+    public static Potion PERFUME_POTION = null;
+    public static Potion GLUE_POTION = null;
+    public static Potion MUTAGEN_POTION = null;
+    public static Potion BONE_HURTING_JUICE_POTION = null;
+    public static Potion INSTABILITY_POTION = null;
+    public static Potion NITRO_POTION = null;
+    public static Potion LIQUID_DOOM_POTION = null;
+    public static Potion FLOWERING_POTION = null;
+    public static Potion DMT_POTION = null;
+    public static Potion NOTAVIBE_POTION = null;
+    public static Potion CHLOROPHYLL_POTION = null;
+    public static Potion HOT_SAUCE_POTION = null;
+    public static Potion COFFEE_POTION = null;
+    public static Potion SLUSHY_POTION = null;
+    public static Potion REDSTONE_BOTTLE_POTION = null;
+    public static Potion GLOWSTONE_BOTTLE_POTION = null;
+    public static Potion INVISIBLE_INK_POTION = null;
+    public static Potion PETRICHOR_POTION = null;
+    public static Potion ACTIVATED_CHARCOAL_POTION = null;
+    public static Potion MINERS_DELIGHT_POTION = null;
+    public static Potion CRYSTAL_GEM_POTION = null;
+    public static Potion SALT_POTION = null;
+    public static Potion XP_BOOST_POTION = null;
+    public static Potion HOURGLASS_POTION = null;
     public static Potion KRAKEN_BREATH_POTION = new Potion(new EffectInstance(ModEffects.KRAKEN_BREATH_EFFECT, ModItems.KRAKEN_BREATH.get().MILK_EFFECT_DURATION)).setRegistryName(location("kraken_breath_effect"));
+
 
     public static ResourceLocation location(String name){
         return new ResourceLocation(SquidsGalore.MOD_ID, name);
@@ -51,6 +77,17 @@ public class ModSpecialPotions {
         BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), ModSpecialPotions.MILK_BOTTLE_POTION).getItem()),
                 Ingredient.fromItems(Items.DRAGON_BREATH), PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), ModSpecialPotions.MILK_BOTTLE_POTION));
 
+        //--------------------------
+        // Beard Oil brewing recipes
+        //-------------------------
+        BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.BEARD_OIL.get()),Ingredient.fromItems(Items.REDSTONE),new ItemStack(ModItems.BEARD_OIL_LONG.get()));
+        BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.BEARD_OIL.get()),Ingredient.fromItems(Items.GLOWSTONE_DUST),new ItemStack(ModItems.BEARD_OIL_THICK.get()));
+        BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.BEARD_OIL.get()),Ingredient.fromItems(Items.GLASS_BOTTLE),
+                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModSpecialPotions.BEARD_OIL_POTION));
+        BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(ModItems.BEARD_OIL.get()),Ingredient.fromItems(Items.GUNPOWDER),
+                PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), ModSpecialPotions.BEARD_OIL_POTION));
+        BrewingRecipeRegistry.addRecipe(Ingredient.fromItems(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), ModSpecialPotions.BEARD_OIL_POTION).getItem()),
+                Ingredient.fromItems(Items.DRAGON_BREATH), PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), ModSpecialPotions.BEARD_OIL_POTION));
 
         //--------------------------
         // Krakens Breath brewing recipes
@@ -71,7 +108,7 @@ public class ModSpecialPotions {
             event.getRegistry().registerAll(
                     ModSpecialPotions.SQUID_INK_POTION,
                     ModSpecialPotions.MILK_BOTTLE_POTION,
-//                    ModSpecialPotions.BEARD_OIL_POTION,
+                    ModSpecialPotions.BEARD_OIL_POTION,
 //                    ModSpecialPotions.SQUID_AIR_POTION,
 //                    ModSpecialPotions.BACON_GREASE_POTION,
 //                    ModSpecialPotions.DILUTED_HONEY_POTION,
@@ -100,7 +137,6 @@ public class ModSpecialPotions {
 //                    ModSpecialPotions.XP_BOOST_POTION,
 //                    ModSpecialPotions.HOURGLASS_POTION,
                     ModSpecialPotions.KRAKEN_BREATH_POTION
-//                    ModSpecialPotions.OMEN_OF_THE_SEAS_POTION
             );
         }
     }
