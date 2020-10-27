@@ -96,6 +96,7 @@ public class ModEffects {
                     ModEffects.BACON_GREASE_EFFECT,
                     ModEffects.DILUTED_HONEY_EFFECT,
                     ModEffects.PERFUME_EFFECT,
+                    ModEffects.SLIME_BOTTLE_EFFECT,
                     ModEffects.GLUE_EFFECT,
                     ModEffects.MUTAGEN_EFFECT,
                     ModEffects.BONE_HURTING_JUICE_EFFECT,
@@ -127,7 +128,7 @@ public class ModEffects {
     @Mod.EventBusSubscriber(modid = SquidsGalore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE,  value = Dist.CLIENT)
     public static class ModEffectEvents {
         @SubscribeEvent
-        public static void onPotionAdded(PotionEvent.PotionAddedEvent event){
+        public static void onPotionAdded(PotionEvent.PotionAddedEvent event) {
             LivingEntity targetEntity = event.getEntityLiving();
             EffectInstance potionEffect = event.getPotionEffect();
             int effectDuration = potionEffect.getDuration();
@@ -161,14 +162,11 @@ public class ModEffects {
                         targetEntity.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     }
                 }
-            }
-            if (potionEffect.getPotion() == ModEffects.OMEN_OF_THE_SEAS_EFFECT  && !targetEntity.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
-                if (!targetEntity.world.isRemote){
+                if (potionEffect.getPotion() == ModEffects.OMEN_OF_THE_SEAS_EFFECT && !targetEntity.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
                     ServerPlayerEntity omenRecipient = (ServerPlayerEntity) targetEntity;
                     omenRecipient.getServerWorld().spawnParticle(omenRecipient, ModParticles.KRAKEN_PARTICLE.get(), false, omenRecipient.getPosX(), omenRecipient.getPosY(), omenRecipient.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0);
                     omenRecipient.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 0));
                 }
-                targetEntity.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
             }
         }
         @SubscribeEvent

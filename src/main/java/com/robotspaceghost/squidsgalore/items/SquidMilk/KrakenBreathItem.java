@@ -52,19 +52,20 @@ public class KrakenBreathItem extends AbstractMilkItem {
 
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (!worldIn.isRemote) {
 
             if (isCorrupted && entityLiving instanceof PlayerEntity && !entityLiving.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
-                int corruptAmp = (!entityLiving.isPotionActive(ModEffects.OMEN_OF_THE_SEAS_EFFECT)) ? 0 : Objects.requireNonNull(entityLiving.getActivePotionEffect(ModEffects.OMEN_OF_THE_SEAS_EFFECT)).getAmplifier() + 1;
-                entityLiving.addPotionEffect(new EffectInstance(ModEffects.OMEN_OF_THE_SEAS_EFFECT, 60 * 60 * 20 + 40 * 60 * 20, corruptAmp));
-            } else {
+                if (!worldIn.isRemote) {
+                    int corruptAmp = (!entityLiving.isPotionActive(ModEffects.OMEN_OF_THE_SEAS_EFFECT)) ? 0 : Objects.requireNonNull(entityLiving.getActivePotionEffect(ModEffects.OMEN_OF_THE_SEAS_EFFECT)).getAmplifier() + 1;
+                    entityLiving.addPotionEffect(new EffectInstance(ModEffects.OMEN_OF_THE_SEAS_EFFECT, 60 * 60 * 20 + 40 * 60 * 20, corruptAmp));
+                }
+                entityLiving.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1.0f,1.0f);
+            } else if (!worldIn.isRemote){
                 entityLiving.addPotionEffect(new EffectInstance(
                         this.MILK_EFFECT,
                         ((this.isLong) ? this.MILK_EFFECT_DURATION * 2 : this.MILK_EFFECT_DURATION),
                         ((this.isThick) ? this.MILK_EFFECT_LEVEL + 1 : this.MILK_EFFECT_LEVEL)
                 ));
             }
-        }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
 
