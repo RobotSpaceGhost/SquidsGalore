@@ -22,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
@@ -39,6 +40,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ModEffects {
@@ -126,11 +128,10 @@ public class ModEffects {
     public static class ModEffectEvents {
         @SubscribeEvent
         public static void onPotionAdded(PotionEvent.PotionAddedEvent event){
+            LivingEntity targetEntity = event.getEntityLiving();
+            EffectInstance potionEffect = event.getPotionEffect();
+            int effectDuration = potionEffect.getDuration();
             if (!event.getEntity().world.isRemote) {
-                LivingEntity targetEntity = event.getEntityLiving();
-                EffectInstance potionEffect = event.getPotionEffect();
-                int effectDuration = potionEffect.getDuration();
-
                 if (potionEffect.getPotion() == ModEffects.SQUID_INK_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
                 }
@@ -141,11 +142,13 @@ public class ModEffects {
                 if (potionEffect.getPotion() == ModEffects.ACTIVATED_CHARCOAL_EFFECT) {
                     //int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
                     int defaultDuration = 200; //remove when made
-                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2){
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
                         Collection<EffectInstance> activeEffects = targetEntity.getActivePotionEffects();
                         List<Effect> activeBuffs = new ArrayList<>();
-                        for (EffectInstance effect : activeEffects) if (effect.getPotion().isBeneficial()) activeBuffs.add(effect.getPotion());
-                        for (Effect buff : activeBuffs) if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
+                        for (EffectInstance effect : activeEffects)
+                            if (effect.getPotion().isBeneficial()) activeBuffs.add(effect.getPotion());
+                        for (Effect buff : activeBuffs)
+                            if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
                     }
                 } //edit when potion made
                 if (potionEffect.getPotion() == ModEffects.KRAKEN_BREATH_EFFECT) {
@@ -158,6 +161,14 @@ public class ModEffects {
                         targetEntity.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     }
                 }
+            }
+            if (potionEffect.getPotion() == ModEffects.OMEN_OF_THE_SEAS_EFFECT  && !targetEntity.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
+                if (!targetEntity.world.isRemote){
+                    ServerPlayerEntity omenRecipient = (ServerPlayerEntity) targetEntity;
+                    omenRecipient.getServerWorld().spawnParticle(omenRecipient, ModParticles.KRAKEN_PARTICLE.get(), false, omenRecipient.getPosX(), omenRecipient.getPosY(), omenRecipient.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0);
+                    omenRecipient.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 0));
+                }
+                targetEntity.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE,1,1);
             }
         }
         @SubscribeEvent

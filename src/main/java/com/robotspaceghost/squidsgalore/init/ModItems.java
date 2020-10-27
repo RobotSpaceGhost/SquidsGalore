@@ -72,6 +72,12 @@ public class ModItems {
     public static final RegistryObject<PerfumeItem> PERFUME_THICK = ITEMS.register("milk/perfume_thick",
             () -> new PerfumeItem(2));
 
+    public static final RegistryObject<SlimeBottleItem> SLIME_BOTTLE = ITEMS.register("milk/slime_bottle", SlimeBottleItem::new);
+    public static final RegistryObject<SlimeBottleItem> SLIME_BOTTLE_LONG = ITEMS.register("milk/slime_bottle_long",
+            () -> new SlimeBottleItem(1));
+    public static final RegistryObject<SlimeBottleItem> SLIME_BOTTLE_THICK = ITEMS.register("milk/slime_bottle_thick",
+            () -> new SlimeBottleItem(2));
+
     public static final RegistryObject<GlueItem> GLUE = ITEMS.register("milk/glue", GlueItem::new);
     public static final RegistryObject<GlueItem> GLUE_LONG = ITEMS.register("milk/glue_long",
             () -> new GlueItem(1));
@@ -215,7 +221,7 @@ public class ModItems {
             () -> new KrakenBreathItem(1));
     public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_THICK = ITEMS.register("milk/kraken_breath_thick",
             () -> new KrakenBreathItem(2));
-    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_CORRUPTED = ITEMS.register("milk/kraken_breath_thick_corrupted",
+    public static final RegistryObject<KrakenBreathItem> KRAKEN_BREATH_CORRUPTED = ITEMS.register("milk/kraken_breath_corrupted",
             () -> new KrakenBreathItem(3));
 
     //Food
