@@ -74,7 +74,7 @@ public class ModEffects {
     public static Effect CRYSTAL_GEM_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xE968D7).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "crystal_gem_effect"));
     public static Effect SALT_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "salt_effect"));
     public static Effect XP_BOOST_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xB1FB23).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "xp_boost_effect"));
-    public static Effect HOURGLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hour_glass_effect"));
+    public static Effect HOURGLASS_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xE5BB77).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "hourglass_effect"));
     public static Effect KRAKEN_BREATH_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_breath_effect"));
     public static Effect OMEN_OF_THE_SEAS_EFFECT = new EffectBase(EffectType.HARMFUL, 0xCC49F3).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "omen_of_the_seas_effect"));
 
@@ -140,9 +140,90 @@ public class ModEffects {
                     targetEntity.clearActivePotions();
                     targetEntity.addPotionEffect(new EffectInstance(Effects.STRENGTH, potionEffect.getDuration(), potionEffect.getAmplifier()));
                 }
+                if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//complex, todo
+                if (potionEffect.getPotion() == ModEffects.BACON_GREASE_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                } //drink only stuff, ongoing todo
+                if (potionEffect.getPotion() == ModEffects.DILUTED_HONEY_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                } //splash stuff, todo
+                if (potionEffect.getPotion() == ModEffects.PERFUME_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//complex villager stuff todo
+                if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.MUTAGEN_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                } //complex conversion ritual, todo
+                if (potionEffect.getPotion() == ModEffects.BONE_HURTING_JUICE_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//teleport splash && tp home on effect end, todo
+                if (potionEffect.getPotion() == ModEffects.NITRO_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//drink only stuff, explosion portion done todo
+                if (potionEffect.getPotion() == ModEffects.LIQUID_DOOM_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.WITHER, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.FLOWERING_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//complex, todo
+                if (potionEffect.getPotion() == ModEffects.DMT_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//complex conversion stuff, todo
+                if (potionEffect.getPotion() == ModEffects.NOTAVIBE_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//repelling stuff, todo
+                if (potionEffect.getPotion() == ModEffects.CHLOROPHYLL_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.LUCK, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//bonemeal area splash todo
+                if (potionEffect.getPotion() == ModEffects.HOT_SAUCE_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//set fire splash , fire resistance drink todo
+                if (potionEffect.getPotion() == ModEffects.COFFEE_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.SPEED, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.HASTE, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//grow pumpkins, todo
+                if (potionEffect.getPotion() == ModEffects.SLUSHY_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//frost walker stuff, splash effect ice, todo
+                if (potionEffect.getPotion() == ModEffects.GLOWSTONE_BOTTLE_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.GLOWING, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.INVISIBLE_INK_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
+                if (potionEffect.getPotion() == ModEffects.PETRICHOR_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.RESISTANCE, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }
                 if (potionEffect.getPotion() == ModEffects.ACTIVATED_CHARCOAL_EFFECT) {
-                    //int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
-                    int defaultDuration = 200; //remove when made
+                    int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
                     if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
                         Collection<EffectInstance> activeEffects = targetEntity.getActivePotionEffects();
                         List<Effect> activeBuffs = new ArrayList<>();
@@ -151,7 +232,20 @@ public class ModEffects {
                         for (Effect buff : activeBuffs)
                             if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
                     }
-                } //edit when potion made
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                } //do ongoing effect, todo
+                if (potionEffect.getPotion() == ModEffects.CRYSTAL_GEM_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//drink only resistance and thorns, fusion effect splash, todo
+                if (potionEffect.getPotion() == ModEffects.SALT_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//splash team stuff, food stuff, todo
+                if (potionEffect.getPotion() == ModEffects.HOURGLASS_EFFECT) {
+                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                }//drink only, and splash random effects,todo
                 if (potionEffect.getPotion() == ModEffects.KRAKEN_BREATH_EFFECT) {
                     if (targetEntity instanceof ElderGuardianEntity)
                         targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier() + 2));
@@ -166,7 +260,7 @@ public class ModEffects {
                     ServerPlayerEntity omenRecipient = (ServerPlayerEntity) targetEntity;
                     omenRecipient.getServerWorld().spawnParticle(omenRecipient, ModParticles.KRAKEN_PARTICLE.get(), false, omenRecipient.getPosX(), omenRecipient.getPosY(), omenRecipient.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0);
                     omenRecipient.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 0));
-                }
+                }//ongoing effect for boss battle, todo
             }
         }
         @SubscribeEvent
@@ -181,6 +275,10 @@ public class ModEffects {
                     for (Effect buff : activeBuffs) if (player.isPotionActive(buff)) player.removePotionEffect(buff);
                 }
             }
+        }
+        @SubscribeEvent
+        public static void onPotionTermination(PotionEvent.PotionExpiryEvent event){
+            //stuff
         }
         @SubscribeEvent
         public static void onPotionImpact(ProjectileImpactEvent.Throwable event){
