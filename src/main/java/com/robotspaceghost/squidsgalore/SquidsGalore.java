@@ -31,6 +31,7 @@ public class SquidsGalore
         ModItems. ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModParticles.PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MinecraftForge.EVENT_BUS.register(BounceHandler.class);
         MinecraftForge.EVENT_BUS.register(this);
     }

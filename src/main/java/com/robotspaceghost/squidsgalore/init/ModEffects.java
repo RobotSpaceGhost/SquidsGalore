@@ -218,7 +218,13 @@ public class ModEffects {
                             }
                         }
                     }
-                    else if (potionEffect.getAmplifier() == 0) targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration() + (3 * 20), potionEffect.getAmplifier()));
+                    else {
+                        if (potionEffect.getAmplifier() == 0) targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration() + (3 * 20), potionEffect.getAmplifier()));
+                        SoundEvent teleportSound = (effectDuration == defaultDuration/2) ? ModSounds.TELEPORT_INIT_QUICK.get()
+                                : (potionEffect.getAmplifier() == 0) ? ModSounds.TELEPORT_INIT.get() : ModSounds.TELEPORT_INIT_THICK.get();
+                        worldIn.playSound(null, targetEntity.getPosX(), targetEntity.getPosY(), targetEntity.getPosZ(), teleportSound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        targetEntity.playSound(teleportSound, 1.0F, 1.0F);
+                    }
                 }//done!
                 if (potionEffect.getPotion() == ModEffects.NITRO_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
@@ -338,9 +344,6 @@ public class ModEffects {
                            if (spawnLoc != null) {
                                maybeSpawn = PlayerEntity.func_234567_a_(spawnWorld, spawnLoc, false, true);
                            }
-                           double d0 = targetEntity.getPosX();
-                           double d1 = targetEntity.getPosY();
-                           double d2 = targetEntity.getPosZ();
                            double d3 = -1;
                            double d4 = -1;
                            double d5 = -1;
@@ -362,10 +365,8 @@ public class ModEffects {
                                serverPlayer.sendMessage(ITextComponent.func_241827_a_("Respawn point missing or obstructed!"), serverPlayer.getUniqueID());
                            }
                            if (flag){
-                               worldIn.playSound(null, d0, d1, d2, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                               worldIn.playSound(null, d3, d4, d5, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                               targetEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1.0F, 1.0F);
-                               //play runescape sound
+                               worldIn.playSound(null, d3, d4, d5, ModSounds.TELEPORT_ARRIVAL.get(), SoundCategory.PLAYERS, 1.0F, 1.0F);
+                               targetEntity.playSound(ModSounds.TELEPORT_ARRIVAL.get(), 1.0F, 1.0F);
                            } else serverPlayer.sendMessage(ITextComponent.func_241827_a_("World spawn obstructed!"), serverPlayer.getUniqueID());
                        }
                    }

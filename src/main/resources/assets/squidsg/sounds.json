@@ -1,0 +1,42 @@
+{
+  "teleport_init": {
+     "category": "player",
+      "subtitle": "teleport_init",
+      "sounds": [
+        {
+          "name": "squidsg:player/teleport_init",
+          "stream": true
+        }
+      ]
+  },
+  "teleport_init_quick": {
+     "category": "player",
+      "subtitle": "teleport_init_quick",
+      "sounds": [
+        {
+          "name": "squidsg:player/teleport_init_quick",
+          "stream": true
+        }
+      ]
+  },
+  "teleport_init_thick": {
+     "category": "player",
+      "subtitle": "teleport_init_thick",
+      "sounds": [
+        {
+          "name": "squidsg:player/teleport_init_thick",
+          "stream": true
+        }
+      ]
+  },
+  "teleport_arrival": {
+    "category": "player",
+    "subtitle": "teleport_arrival",
+    "sounds": [
+      {
+        "name": "squidsg:player/teleport_arrival",
+        "stream": true
+      }
+    ]
+  }
+}
