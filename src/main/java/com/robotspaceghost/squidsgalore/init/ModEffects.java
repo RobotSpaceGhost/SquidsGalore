@@ -1,12 +1,16 @@
 package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
+import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.MilkBottleItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.ElderGuardianEntity;
 import net.minecraft.entity.monster.GuardianEntity;
+import net.minecraft.entity.passive.FoxEntity;
+import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
@@ -14,16 +18,18 @@ import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.*;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
@@ -37,10 +43,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class ModEffects {
@@ -131,56 +134,98 @@ public class ModEffects {
         public static void onPotionAdded(PotionEvent.PotionAddedEvent event) {
             LivingEntity targetEntity = event.getEntityLiving();
             EffectInstance potionEffect = event.getPotionEffect();
+            World worldIn = event.getEntity().world;
             int effectDuration = potionEffect.getDuration();
-            if (!event.getEntity().world.isRemote) {
+            if (!worldIn.isRemote) {
                 if (potionEffect.getPotion() == ModEffects.SQUID_INK_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.MILK_BOTTLE_EFFECT) {
                     targetEntity.clearActivePotions();
                     targetEntity.addPotionEffect(new EffectInstance(Effects.STRENGTH, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
-                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    System.out.println(potionEffect.getPotion().getName() + "needs work");
-                }//complex, todo
+                    int defaultDuration = ModItems.SQUID_AIR.get().MILK_EFFECT_DURATION;
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.LEVITATION, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    } else {
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.WATER_BREATHING, 10, potionEffect.getAmplifier()));
+                        targetEntity.setAir(targetEntity.getMaxAir());
+                    }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.BACON_GREASE_EFFECT) {
-                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    int defaultDuration = ModItems.BACON_GREASE.get().MILK_EFFECT_DURATION;
+                    if (effectDuration == defaultDuration || effectDuration == defaultDuration * 2) {
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.SATURATION, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    }
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
-                } //drink only stuff, ongoing todo
+                } //ongoing todo
                 if (potionEffect.getPotion() == ModEffects.DILUTED_HONEY_EFFECT) {
-                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    System.out.println(potionEffect.getPotion().getName() + "needs work");
-                } //splash stuff, todo
+                    int defaultDuration = ModItems.DILUTED_HONEY.get().MILK_EFFECT_DURATION;
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    }
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.REGENERATION, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    if (targetEntity.isPotionActive(Effects.POISON)) targetEntity.removePotionEffect(Effects.POISON);
+                } //needs testing
                 if (potionEffect.getPotion() == ModEffects.PERFUME_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
-                }//complex villager stuff todo
+                }//complex villager stuff todo later
                 if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.MUTAGEN_EFFECT) {
-                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        if (!(targetEntity instanceof AbstractSquidEntity || targetEntity instanceof SquidEntity || targetEntity instanceof VillagerEntity)){
+                            targetEntity.addPotionEffect(new EffectInstance(Effects.POISON, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        }
+                    }
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
-                } //complex conversion ritual, todo
+                } //complex conversion ritual, todo later
                 if (potionEffect.getPotion() == ModEffects.BONE_HURTING_JUICE_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier()));
-                }
+                } //needs testing
                 if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    System.out.println(potionEffect.getPotion().getName() + "needs work");
-                }//teleport splash && tp home on effect end, todo
+                    int defaultDuration = ModItems.INSTABILITY.get().MILK_EFFECT_DURATION;
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
+                        double d0 = targetEntity.getPosX();
+                        double d1 = targetEntity.getPosY();
+                        double d2 = targetEntity.getPosZ();
+                        for(int i = 0; i < 16; ++i) {
+                            double d3 = targetEntity.getPosX() + (targetEntity.getRNG().nextDouble() - 0.5D) * 16.0D;
+                            double d4 = MathHelper.clamp(targetEntity.getPosY() + (double)(targetEntity.getRNG().nextInt(16) - 8), 0.0D, (double)(worldIn.func_234938_ad_() - 1));
+                            double d5 = targetEntity.getPosZ() + (targetEntity.getRNG().nextDouble() - 0.5D) * 16.0D;
+                            if (targetEntity.isPassenger()) {
+                                targetEntity.stopRiding();
+                            }
+                            if (targetEntity.attemptTeleport(d3, d4, d5, true)) {
+                                SoundEvent soundevent = targetEntity instanceof FoxEntity ? SoundEvents.ENTITY_FOX_TELEPORT : SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
+                                worldIn.playSound(null, d0, d1, d2, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                                targetEntity.playSound(soundevent, 1.0F, 1.0F);
+                                break;
+                            }
+                        }
+                    }
+                    else targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration() + (3 * 20), potionEffect.getAmplifier()));
+                }//done!
                 if (potionEffect.getPotion() == ModEffects.NITRO_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
                 }//drink only stuff, explosion portion done todo
                 if (potionEffect.getPotion() == ModEffects.LIQUID_DOOM_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.WITHER, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.FLOWERING_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
@@ -213,15 +258,15 @@ public class ModEffects {
                 if (potionEffect.getPotion() == ModEffects.GLOWSTONE_BOTTLE_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     targetEntity.addPotionEffect(new EffectInstance(Effects.GLOWING, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.INVISIBLE_INK_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.PETRICHOR_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.RESISTANCE, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     targetEntity.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.ACTIVATED_CHARCOAL_EFFECT) {
                     int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
                     if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
@@ -255,7 +300,7 @@ public class ModEffects {
                         targetEntity.addPotionEffect(new EffectInstance(Effects.CONDUIT_POWER, potionEffect.getDuration(), potionEffect.getAmplifier()));
                         targetEntity.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     }
-                }
+                } //done!
                 if (potionEffect.getPotion() == ModEffects.OMEN_OF_THE_SEAS_EFFECT && !targetEntity.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS)) {
                     ServerPlayerEntity omenRecipient = (ServerPlayerEntity) targetEntity;
                     omenRecipient.getServerWorld().spawnParticle(omenRecipient, ModParticles.KRAKEN_PARTICLE.get(), false, omenRecipient.getPosX(), omenRecipient.getPosY(), omenRecipient.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0);
@@ -278,7 +323,52 @@ public class ModEffects {
         }
         @SubscribeEvent
         public static void onPotionTermination(PotionEvent.PotionExpiryEvent event){
-            //stuff
+            World worldIn = event.getEntity().getEntityWorld();
+            LivingEntity targetEntity = event.getEntityLiving();
+            EffectInstance potionEffect = event.getPotionEffect();
+            if (potionEffect != null) {
+                if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT) {
+                   if (targetEntity instanceof PlayerEntity && targetEntity.isPotionActive(Effects.NAUSEA)) {
+                       ServerPlayerEntity serverPlayer = (ServerPlayerEntity) targetEntity;
+                       ServerWorld spawnWorld = serverPlayer.server.getWorld(serverPlayer.func_241141_L_());
+                       if (spawnWorld != null) {
+                           BlockPos spawnLoc = serverPlayer.func_241140_K_();
+                           Optional<Vector3d> maybeSpawn = Optional.empty();
+                           if (spawnLoc != null) {
+                               maybeSpawn = PlayerEntity.func_234567_a_(spawnWorld, spawnLoc, false, true);
+                           }
+                           double d0 = targetEntity.getPosX();
+                           double d1 = targetEntity.getPosY();
+                           double d2 = targetEntity.getPosZ();
+                           double d3 = -1;
+                           double d4 = -1;
+                           double d5 = -1;
+                           boolean flag = false;
+
+                           if (maybeSpawn.isPresent()){
+                               d3 = maybeSpawn.get().getX() ;
+                               d4 =  maybeSpawn.get().getY();
+                               d5 =  maybeSpawn.get().getZ();
+                               if (targetEntity.isPassenger()) targetEntity.stopRiding();
+                               if (!worldIn.isRemote) flag = targetEntity.attemptTeleport(d3, d4, d5, true);
+                           }
+                           if (!flag){
+                               d3 = spawnWorld.getWorldInfo().getSpawnX();
+                               d4 = spawnWorld.getWorldInfo().getSpawnY();
+                               d5 = spawnWorld.getWorldInfo().getSpawnZ();
+                               if (targetEntity.isPassenger()) targetEntity.stopRiding();
+                               if (!worldIn.isRemote) flag = targetEntity.attemptTeleport(d3, d4, d5, true);
+                               serverPlayer.sendMessage(ITextComponent.func_241827_a_("Respawn point missing or obstructed!"), serverPlayer.getUniqueID());
+                           }
+                           if (flag){
+                               worldIn.playSound(null, d0, d1, d2, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                               worldIn.playSound(null, d3, d4, d5, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                               targetEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1.0F, 1.0F);
+                           } else serverPlayer.sendMessage(ITextComponent.func_241827_a_("World spawn obstructed!"), serverPlayer.getUniqueID());
+                       }
+                   }
+                }
+            }
         }
         @SubscribeEvent
         public static void onPotionImpact(ProjectileImpactEvent.Throwable event){
