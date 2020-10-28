@@ -44,7 +44,7 @@ public class InstabilityItem extends AbstractMilkItem{
         if (!worldIn.isRemote) {
             entityLiving.addPotionEffect(new EffectInstance(
                      this.MILK_EFFECT,
-                    ((this.isLong) ? this.MILK_EFFECT_DURATION * 2 : this.MILK_EFFECT_DURATION),
+                    ((this.isLong) ? this.MILK_EFFECT_DURATION / 2 : this.MILK_EFFECT_DURATION),
                     ((this.isThick) ? this.MILK_EFFECT_LEVEL + 1 : this.MILK_EFFECT_LEVEL)
             ));
         }
@@ -55,11 +55,11 @@ public class InstabilityItem extends AbstractMilkItem{
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         String defaultDisplayName = stack.getDisplayName().getString();
-        if (this.isLong && !defaultDisplayName.contains("Extended")) {
-            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.RED + "Extended " + defaultDisplayName));
+        if (this.isLong && !defaultDisplayName.contains("Quick")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.RED + "Quick " + defaultDisplayName));
         }
-        else if (this.isThick && !defaultDisplayName.contains("Thickened")) {
-            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Thickened " + defaultDisplayName));
+        else if (this.isThick && !defaultDisplayName.contains("Nausea Free")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Nausea Free " + defaultDisplayName));
         }
         tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Theres no place like home!" ));
     }

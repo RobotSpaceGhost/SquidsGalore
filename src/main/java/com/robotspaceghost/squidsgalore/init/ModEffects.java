@@ -198,7 +198,8 @@ public class ModEffects {
                 } //needs testing
                 if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT) {
                     int defaultDuration = ModItems.INSTABILITY.get().MILK_EFFECT_DURATION;
-                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration / 2) {
+                        potionEffect.setPotionDurationMax(true);
                         double d0 = targetEntity.getPosX();
                         double d1 = targetEntity.getPosY();
                         double d2 = targetEntity.getPosZ();
@@ -217,7 +218,7 @@ public class ModEffects {
                             }
                         }
                     }
-                    else targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration() + (3 * 20), potionEffect.getAmplifier()));
+                    else if (potionEffect.getAmplifier() == 0) targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration() + (3 * 20), potionEffect.getAmplifier()));
                 }//done!
                 if (potionEffect.getPotion() == ModEffects.NITRO_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
@@ -327,8 +328,8 @@ public class ModEffects {
             LivingEntity targetEntity = event.getEntityLiving();
             EffectInstance potionEffect = event.getPotionEffect();
             if (potionEffect != null) {
-                if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT) {
-                   if (targetEntity instanceof PlayerEntity && targetEntity.isPotionActive(Effects.NAUSEA)) {
+                if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT && !potionEffect.getIsPotionDurationMax()) {
+                   if (targetEntity instanceof PlayerEntity) {
                        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) targetEntity;
                        ServerWorld spawnWorld = serverPlayer.server.getWorld(serverPlayer.func_241141_L_());
                        if (spawnWorld != null) {
@@ -364,6 +365,7 @@ public class ModEffects {
                                worldIn.playSound(null, d0, d1, d2, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
                                worldIn.playSound(null, d3, d4, d5, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
                                targetEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1.0F, 1.0F);
+                               //play runescape sound
                            } else serverPlayer.sendMessage(ITextComponent.func_241827_a_("World spawn obstructed!"), serverPlayer.getUniqueID());
                        }
                    }
