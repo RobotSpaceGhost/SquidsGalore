@@ -18,7 +18,7 @@ import java.util.List;
 
 public class GlueItem extends AbstractMilkItem{
     public final Effect MILK_EFFECT = ModEffects.GLUE_EFFECT;
-    public final int MILK_EFFECT_DURATION =  10 * 20;
+    public final int MILK_EFFECT_DURATION =  60 * 20;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;

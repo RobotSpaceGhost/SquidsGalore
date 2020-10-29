@@ -5,6 +5,10 @@ import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.MilkBottleItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
+import net.minecraft.block.AirBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.ElderGuardianEntity;
@@ -18,6 +22,7 @@ import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.*;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -31,14 +36,18 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.client.event.sound.PlaySoundSourceEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -139,25 +148,25 @@ public class ModEffects {
             if (!worldIn.isRemote) {
                 if (potionEffect.getPotion() == ModEffects.SQUID_INK_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }//needs testing
+                }//done!!
                 if (potionEffect.getPotion() == ModEffects.MILK_BOTTLE_EFFECT) {
                     targetEntity.clearActivePotions();
                     targetEntity.addPotionEffect(new EffectInstance(Effects.STRENGTH, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }//needs testing
+                }//done!!
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }//needs testing
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier() + 1));
+                }//done!!!
                 if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
                     int defaultDuration = ModItems.SQUID_AIR.get().MILK_EFFECT_DURATION;
                     if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
-                        targetEntity.addPotionEffect(new EffectInstance(Effects.LEVITATION, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.LEVITATION, Math.min(potionEffect.getDuration(), 10 * 20), 1));
                     } else {
                         targetEntity.addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, potionEffect.getDuration(), potionEffect.getAmplifier()));
                         targetEntity.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, potionEffect.getDuration(), potionEffect.getAmplifier()));
                         targetEntity.addPotionEffect(new EffectInstance(Effects.WATER_BREATHING, 10, potionEffect.getAmplifier()));
                         targetEntity.setAir(targetEntity.getMaxAir());
                     }
-                }//needs testing
+                }//done!!!
                 if (potionEffect.getPotion() == ModEffects.BACON_GREASE_EFFECT) {
                     int defaultDuration = ModItems.BACON_GREASE.get().MILK_EFFECT_DURATION;
                     if (effectDuration == defaultDuration || effectDuration == defaultDuration * 2) {
@@ -179,16 +188,17 @@ public class ModEffects {
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
                 }//complex villager stuff todo later
                 if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                }//needs testing
-                if (potionEffect.getPotion() == ModEffects.MUTAGEN_EFFECT) {
-                    int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
+                    int defaultDuration = ModItems.GLUE.get().MILK_EFFECT_DURATION;
                     if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
-                        targetEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                        targetEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                        if (!(targetEntity instanceof AbstractSquidEntity || targetEntity instanceof SquidEntity || targetEntity instanceof VillagerEntity)){
-                            targetEntity.addPotionEffect(new EffectInstance(Effects.POISON, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                        }
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier() + 4));
+                    } else targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), 0));
+
+                }//wall walking todo
+                if (potionEffect.getPotion() == ModEffects.MUTAGEN_EFFECT) {
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    if (!(targetEntity instanceof AbstractSquidEntity || targetEntity instanceof SquidEntity || targetEntity instanceof VillagerEntity)){
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.POISON, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     }
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
                 } //complex conversion ritual, todo later
@@ -239,10 +249,11 @@ public class ModEffects {
                 }//complex, todo
                 if (potionEffect.getPotion() == ModEffects.DMT_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    System.out.println(potionEffect.getPotion().getName() + "needs work");
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_HEALTH, 1, potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, potionEffect.getDuration(), potionEffect.getAmplifier()));
                 }//complex conversion stuff, todo
                 if (potionEffect.getPotion() == ModEffects.NOTAVIBE_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier()));
+                    if (potionEffect.getAmplifier() == 0) targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, 0));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
                 }//repelling stuff, todo
                 if (potionEffect.getPotion() == ModEffects.CHLOROPHYLL_EFFECT) {
@@ -250,9 +261,11 @@ public class ModEffects {
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
                 }//bonemeal area splash todo
                 if (potionEffect.getPotion() == ModEffects.HOT_SAUCE_EFFECT) {
-                    //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    System.out.println(potionEffect.getPotion().getName() + "needs work");
-                }//set fire splash , fire resistance drink todo
+                    int defaultDuration = ModItems.HOT_SAUCE.get().MILK_EFFECT_DURATION;
+                    if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
+                        targetEntity.setFire(Math.min(potionEffect.getDuration(), 10 * 20));
+                    } else targetEntity.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                }//needs testing
                 if (potionEffect.getPotion() == ModEffects.COFFEE_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.SPEED, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     targetEntity.addPotionEffect(new EffectInstance(Effects.HASTE, potionEffect.getDuration(), potionEffect.getAmplifier()));
@@ -263,16 +276,17 @@ public class ModEffects {
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
                 }//frost walker stuff, splash effect ice, todo
                 if (potionEffect.getPotion() == ModEffects.GLOWSTONE_BOTTLE_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.GLOWING, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, potionEffect.getDuration(), 0));
+                    if (potionEffect.getAmplifier() == 0) targetEntity.addPotionEffect(new EffectInstance(Effects.GLOWING, potionEffect.getDuration(), 0));
                 }//needs testing
                 if (potionEffect.getPotion() == ModEffects.INVISIBLE_INK_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    if (potionEffect.getAmplifier() > 0) targetEntity.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, potionEffect.getDuration(), 0,false,false));
+                    else targetEntity.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, potionEffect.getDuration()));
                 }//needs testing
                 if (potionEffect.getPotion() == ModEffects.PETRICHOR_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.RESISTANCE, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.RESISTANCE, potionEffect.getDuration(), 4));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), 9));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, potionEffect.getDuration(), 9));
                 }//needs testing
                 if (potionEffect.getPotion() == ModEffects.ACTIVATED_CHARCOAL_EFFECT) {
                     int defaultDuration = ModItems.ACTIVATED_CHARCOAL.get().MILK_EFFECT_DURATION;
@@ -284,8 +298,7 @@ public class ModEffects {
                         for (Effect buff : activeBuffs)
                             if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
                     }
-                    System.out.println(potionEffect.getPotion().getName() + "needs work");
-                } //do ongoing effect, todo
+                }
                 if (potionEffect.getPotion() == ModEffects.CRYSTAL_GEM_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
@@ -318,23 +331,73 @@ public class ModEffects {
         @SubscribeEvent
         public static void onPotionActive(TickEvent.PlayerTickEvent event){
             World worldIn = event.player.world;
+            PlayerEntity player = event.player;
             if (!worldIn.isRemote) {
-                PlayerEntity player = event.player;
                 if (player.isPotionActive(ModEffects.ACTIVATED_CHARCOAL_EFFECT)){
+                    int charcoalDuration = Objects.requireNonNull(player.getActivePotionEffect(ModEffects.ACTIVATED_CHARCOAL_EFFECT)).getDuration();
+                    int charcoalLevel = Objects.requireNonNull(player.getActivePotionEffect(ModEffects.ACTIVATED_CHARCOAL_EFFECT)).getAmplifier();
                     Collection<EffectInstance> activeEffects = player.getActivePotionEffects();
-                    List<Effect> activeBuffs = new ArrayList<>();
-                    for (EffectInstance effect : activeEffects) if (effect.getPotion().getEffectType() == EffectType.HARMFUL) activeBuffs.add(effect.getPotion());
-                    for (Effect buff : activeBuffs) if (player.isPotionActive(buff)) player.removePotionEffect(buff);
+                    List<Effect> activeDebuffs = new ArrayList<>();
+                    for (EffectInstance effect : activeEffects) if (effect.getPotion().getEffectType() == EffectType.HARMFUL) activeDebuffs.add(effect.getPotion());
+                    for (Effect debuff : activeDebuffs){
+                        if (player.isPotionActive(debuff)) {
+                            player.removePotionEffect(debuff);
+                            if (charcoalLevel > 0){
+                                if (player.isPotionActive(Effects.STRENGTH)){
+                                    int strengthLevel = Objects.requireNonNull(player.getActivePotionEffect(Effects.STRENGTH)).getAmplifier();
+                                    if (strengthLevel < 9) player.addPotionEffect(new EffectInstance(Effects.STRENGTH, charcoalDuration, strengthLevel + 1));
+                                }else  player.addPotionEffect(new EffectInstance(Effects.STRENGTH, charcoalDuration, 0));
+                            }
+                        }
+                    }
+                }
+            }
+            if (player.isPotionActive(ModEffects.GLUE_EFFECT)){
+                if( Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getAmplifier() > 0){
+                    if (Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getDuration() > 1 && player.isAirBorne
+                            && player.collidedHorizontally){
+                        player.setMotion(player.getMotion().x, 0, player.getMotion().z);
+                        player.setNoGravity(true);
+                    }
+                    else if (!player.isSneaking()) {
+                        if (player.hasNoGravity()){
+                            if (!worldIn.getBlockState(player.func_233580_cy_().offset(player.getHorizontalFacing(), 1)).isSolid()){
+                                Vector3d jumpDir = player.getLookVec().normalize();
+                                player.setMotion(jumpDir.x * .5D, 0 ,jumpDir.z * .5D);
+                                player.jump();
+                            }
+                        }
+                        player.setNoGravity(false);
+                    }
+                    if(player.isSneaking() && player.hasNoGravity()){
+                        BlockPos stickPos;
+                        boolean stuck = false;
+                        for (int i = -1; i < 2; i++) {
+                            if (stuck) break;
+                            for (int j = -1; j < 2; j++) {
+                                if (stuck) break;
+                                for (int k = 0; k < 3; k++) {
+                                    stickPos = new BlockPos(player.getPosX() + i, player.getPosY() + k, player.getPosZ() + j);
+                                    if (!worldIn.getBlockState(stickPos).isSolid()) {
+                                        stuck = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (!stuck) player.setNoGravity(false);
+                    }
                 }
             }
         }
+
         @SubscribeEvent
         public static void onPotionTermination(PotionEvent.PotionExpiryEvent event){
             World worldIn = event.getEntity().getEntityWorld();
             LivingEntity targetEntity = event.getEntityLiving();
             EffectInstance potionEffect = event.getPotionEffect();
             if (potionEffect != null) {
-                if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT && !potionEffect.getIsPotionDurationMax()) {
+                if (potionEffect.getPotion() == ModEffects.INSTABILITY_EFFECT) {
                    if (targetEntity instanceof PlayerEntity) {
                        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) targetEntity;
                        ServerWorld spawnWorld = serverPlayer.server.getWorld(serverPlayer.func_241141_L_());
@@ -371,6 +434,20 @@ public class ModEffects {
                        }
                    }
                 }
+                if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
+                    if (targetEntity instanceof PlayerEntity && potionEffect.getAmplifier() > 0) targetEntity.setNoGravity(false);
+                }
+            }
+        }
+        @SubscribeEvent
+        public static void onPotionCleared(PotionEvent.PotionRemoveEvent event){
+            World worldIn = event.getEntity().getEntityWorld();
+            LivingEntity targetEntity = event.getEntityLiving();
+            EffectInstance potionEffect = event.getPotionEffect();
+            if (potionEffect != null) {
+                if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
+                    if (targetEntity instanceof PlayerEntity && potionEffect.getAmplifier() > 0) targetEntity.setNoGravity(false);
+                }
             }
         }
         @SubscribeEvent
@@ -381,15 +458,15 @@ public class ModEffects {
                 Potion potion = (thrownObject instanceof PotionEntity) ? PotionUtils.getPotionFromItem(((PotionEntity) thrownObject).getItem()) : null;
                 EffectInstance potionEI = (potion != null && !potion.getEffects().isEmpty()) ? potion.getEffects().get(0) : null;
                 if (potionEI != null) {
-                    double PR = 4.25;
-                    AxisAlignedBB PotionRadiusBB = new AxisAlignedBB(
-                            thrownObject.getPosX()-PR,
-                            thrownObject.getPosY()-PR,
-                            0,
-                            thrownObject.getPosX()+PR,
-                            thrownObject.getPosY()+PR,
-                            thrownObject.getPosZ()+PR
-                    ); //might not need
+//                    double PR = 4.25;
+//                    AxisAlignedBB PotionRadiusBB = new AxisAlignedBB(
+//                            thrownObject.getPosX()-PR,
+//                            thrownObject.getPosY()-PR,
+//                            0,
+//                            thrownObject.getPosX()+PR,
+//                            thrownObject.getPosY()+PR,
+//                            thrownObject.getPosZ()+PR
+//                    ); //might not need
                     if (potionEI.getPotion() == ModEffects.NITRO_EFFECT) {
                         worldIn.createExplosion(thrownObject,thrownObject.getPosX(),thrownObject.getPosY(),thrownObject.getPosZ(),2.5f, Explosion.Mode.BREAK);
                     }
@@ -397,8 +474,16 @@ public class ModEffects {
             }
         }
         @SubscribeEvent
-        public static void slimeEffect(LivingFallEvent event){
+        public static void glueKnockback(LivingKnockBackEvent event){
+            if (!event.getEntityLiving().getEntityWorld().isRemote && event.getEntityLiving().isPotionActive(ModEffects.GLUE_EFFECT)){
+                event.setCanceled(true);
+            }
+        }
+
+        @SubscribeEvent
+        public static void effectFallHandler(LivingFallEvent event){
             LivingEntity entity = event.getEntityLiving();
+            World worldIn = entity.getEntityWorld();
             if (entity.isPotionActive(ModEffects.SLIME_BOTTLE_EFFECT)) {
                 if (!(entity instanceof PlayerEntity) && event.getDistance() > 2.0F) {
                     event.setDamageMultiplier(0.0F);
@@ -422,6 +507,26 @@ public class ModEffects {
                     entity.playSound(SoundEvents.ENTITY_SLIME_JUMP, 1.0F, 1.0F);
                     BounceHandler.addBounceHandler(entity, entity.getMotion().y);
                 } else if (!entity.world.isRemote && entity.isSneaking()) event.setDamageMultiplier(0.2F);
+            }
+            else if (entity.isPotionActive(ModEffects.GLUE_EFFECT) ) {
+                if (Objects.requireNonNull(entity.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getAmplifier() > 0) {
+                    BlockPos stickPos;
+                    boolean stuck = false;
+                    for (int i = -1; i < 2; i++) {
+                        if (stuck) break;
+                        for (int j = -1; j < 2; j++) {
+                            if (stuck) break;
+                            for (int k = 0; k < 3; k++) {
+                                stickPos = new BlockPos(entity.getPosX() + i, entity.getPosY() + k, entity.getPosZ() + j);
+                                if (!worldIn.getBlockState(stickPos).isSolid()) {
+                                    stuck = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    event.setCanceled(stuck);
+                }
             }
         }
     }

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class InvisibleInkItem extends AbstractMilkItem{
     public final Effect MILK_EFFECT = ModEffects.INVISIBLE_INK_EFFECT;
-    public final int MILK_EFFECT_DURATION =  10 * 20;
+    public final int MILK_EFFECT_DURATION =  5 * 60 * 20;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;
@@ -45,7 +45,9 @@ public class InvisibleInkItem extends AbstractMilkItem{
             entityLiving.addPotionEffect(new EffectInstance(
                      this.MILK_EFFECT,
                     ((this.isLong) ? this.MILK_EFFECT_DURATION * 2 : this.MILK_EFFECT_DURATION),
-                    ((this.isThick) ? this.MILK_EFFECT_LEVEL + 1 : this.MILK_EFFECT_LEVEL)
+                    ((this.isThick) ? this.MILK_EFFECT_LEVEL + 1 : this.MILK_EFFECT_LEVEL),
+                    false,
+                    !this.isThick
             ));
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
@@ -58,9 +60,9 @@ public class InvisibleInkItem extends AbstractMilkItem{
         if (this.isLong && !defaultDisplayName.contains("Extended")) {
             stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.RED + "Extended " + defaultDisplayName));
         }
-        else if (this.isThick && !defaultDisplayName.contains("Thickened")) {
-            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Thickened " + defaultDisplayName));
+        else if (this.isThick && !defaultDisplayName.contains("Really")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Really " + defaultDisplayName));
         }
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
+        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Remember to delete your search History... Just in case"));
     }
 }

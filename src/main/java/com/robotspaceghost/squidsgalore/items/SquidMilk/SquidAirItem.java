@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SquidAirItem extends AbstractMilkItem{
     public final Effect MILK_EFFECT = ModEffects.SQUID_AIR_EFFECT;
-    public final int MILK_EFFECT_DURATION =  10 * 20;
+    public final int MILK_EFFECT_DURATION =  2 * 60 * 20 + 30 * 20;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;
@@ -61,6 +61,6 @@ public class SquidAirItem extends AbstractMilkItem{
         else if (this.isThick && !defaultDisplayName.contains("Thickened")) {
             stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Thickened " + defaultDisplayName));
         }
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
+        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Naturally Sourced Perri-Air" ));
     }
 }

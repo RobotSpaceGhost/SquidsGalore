@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MilkBottleItem extends AbstractMilkItem{
     public final Effect MILK_EFFECT = ModEffects.MILK_BOTTLE_EFFECT;
-    public final int MILK_EFFECT_DURATION =  10 * 20;
+    public final int MILK_EFFECT_DURATION =  3 * 60 * 20;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;

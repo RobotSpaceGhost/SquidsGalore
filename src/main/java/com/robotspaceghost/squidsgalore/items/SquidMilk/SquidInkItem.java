@@ -19,7 +19,7 @@ import java.util.List;
 
 public class SquidInkItem extends AbstractMilkItem{
     public final Effect MILK_EFFECT = ModEffects.SQUID_INK_EFFECT;
-    public final int MILK_EFFECT_DURATION =  10 * 20;
+    public final int MILK_EFFECT_DURATION =  30 * 20;
     public final int MILK_EFFECT_LEVEL = 0;
     public final boolean isLong;
     public final boolean isThick;
