@@ -354,22 +354,27 @@ public class ModEffects {
             }
             if (player.isPotionActive(ModEffects.GLUE_EFFECT)){
                 if( Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getAmplifier() > 0){
-                    if (Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getDuration() > 1 && player.isAirBorne
-                            && player.collidedHorizontally){
-                        player.setMotion(player.getMotion().x, 0, player.getMotion().z);
+                    if (Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getDuration() > 3 && player.isAirBorne
+                            && player.collidedHorizontally && player.isSneaking() && !player.hasNoGravity()){
                         player.setNoGravity(true);
+                        player.setMotion(0, 0, 0);
+                        player.playSound(SoundEvents.ENTITY_SLIME_SQUISH, .5f, .75f);
                     }
                     else if (!player.isSneaking()) {
                         if (player.hasNoGravity()){
-                            if (!worldIn.getBlockState(player.func_233580_cy_().offset(player.getHorizontalFacing(), 1)).isSolid()){
+                            if (worldIn.getBlockState(player.func_233580_cy_().offset(player.getHorizontalFacing(), 1)).isAir()){
                                 Vector3d jumpDir = player.getLookVec().normalize();
                                 player.setMotion(jumpDir.x * .5D, 0 ,jumpDir.z * .5D);
                                 player.jump();
+                                player.playSound(SoundEvents.ENTITY_SLIME_JUMP, .5f,.75f);
+                            }else if (worldIn.getBlockState(player.func_233580_cy_().offset(player.getHorizontalFacing(), 1).offset(Direction.UP, 1)).isAir()){
+                                player.jump();
+                                player.playSound(SoundEvents.ENTITY_SLIME_JUMP_SMALL, 1, 1);
                             }
                         }
                         player.setNoGravity(false);
                     }
-                    if(player.isSneaking() && player.hasNoGravity()){
+                    if(player.hasNoGravity()){
                         BlockPos stickPos;
                         boolean stuck = false;
                         for (int i = -1; i < 2; i++) {
@@ -378,7 +383,7 @@ public class ModEffects {
                                 if (stuck) break;
                                 for (int k = 0; k < 3; k++) {
                                     stickPos = new BlockPos(player.getPosX() + i, player.getPosY() + k, player.getPosZ() + j);
-                                    if (!worldIn.getBlockState(stickPos).isSolid()) {
+                                    if (!worldIn.getBlockState(stickPos).isAir()) {
                                         stuck = true;
                                         break;
                                     }
@@ -387,6 +392,7 @@ public class ModEffects {
                         }
                         if (!stuck) player.setNoGravity(false);
                     }
+                    if (Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getDuration() < 3) player.setNoGravity(false);
                 }
             }
         }
@@ -435,7 +441,7 @@ public class ModEffects {
                    }
                 }
                 if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
-                    if (targetEntity instanceof PlayerEntity && potionEffect.getAmplifier() > 0) targetEntity.setNoGravity(false);
+                    targetEntity.setNoGravity(false);
                 }
             }
         }
@@ -446,7 +452,7 @@ public class ModEffects {
             EffectInstance potionEffect = event.getPotionEffect();
             if (potionEffect != null) {
                 if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
-                    if (targetEntity instanceof PlayerEntity && potionEffect.getAmplifier() > 0) targetEntity.setNoGravity(false);
+                    targetEntity.setNoGravity(false);
                 }
             }
         }
@@ -518,7 +524,7 @@ public class ModEffects {
                             if (stuck) break;
                             for (int k = 0; k < 3; k++) {
                                 stickPos = new BlockPos(entity.getPosX() + i, entity.getPosY() + k, entity.getPosZ() + j);
-                                if (!worldIn.getBlockState(stickPos).isSolid()) {
+                                if (!worldIn.getBlockState(stickPos).isAir()) {
                                     stuck = true;
                                     break;
                                 }
