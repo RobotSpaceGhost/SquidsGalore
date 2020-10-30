@@ -125,6 +125,7 @@
   "item.minecraft.lingering_potion.effect.glowstone_bottle_effect" : "Lingering Glowstone Potion",
 
   "effect.squidsg.glue_effect": "Slow",
+  "effect.squidsg.gravity_effect": "Gravity: ON",
   "item.squidsg.milk.glue" : "ACME Brand Glue",
   "item.squidsg.milk.glue_long" : "ACME Brand Glue",
   "item.squidsg.milk.glue_thick" : "ACME Brand Glue",

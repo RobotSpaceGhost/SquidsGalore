@@ -66,10 +66,6 @@ public class BounceHandler {
 
     }
 
-//    public static void addBounceHandler(LivingEntity entity) {
-//        addBounceHandler(entity, 0.0D);
-//    }
-
     public static void addBounceHandler(LivingEntity entity, double bounce) {
         if (entity instanceof PlayerEntity && !(entity instanceof FakePlayer)) {
             BounceHandler handler = bouncingEntities.get(entity);

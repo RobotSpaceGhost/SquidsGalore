@@ -2,13 +2,10 @@ package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
-import com.robotspaceghost.squidsgalore.items.SquidMilk.MilkBottleItem;
-import com.robotspaceghost.squidsgalore.items.SquidMilk.SquidInkItem;
+
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.EnchantmentHelper;
+
+import com.robotspaceghost.squidsgalore.util.GravityHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.ElderGuardianEntity;
@@ -19,40 +16,38 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.potion.*;
-import net.minecraft.stats.Stats;
+
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
+
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.client.event.sound.PlaySoundSourceEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.ForgeEventFactory;
+
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityEvent;
+
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.Event;
+
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import net.minecraftforge.fml.common.Mod;
 
+
 import java.util.*;
+
 
 
 public class ModEffects {
@@ -64,7 +59,8 @@ public class ModEffects {
     public static Effect DILUTED_HONEY_EFFECT = new EffectBase(EffectType.BENEFICIAL, 0xD79800).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "diluted_honey_effect"));
     public static Effect PERFUME_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x77FFA4).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "perfume_effect"));
     public static Effect SLIME_BOTTLE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x8CD782).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "slime_bottle_effect"));
-    public static Effect GLUE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "glue_effect"));
+    public static Effect GRAVITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x000000).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "gravity_effect"));
+    public static Effect GLUE_EFFECT = new EffectBase(EffectType.NEUTRAL, 0xFFFFFF).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "glue_effect"));
     public static Effect MUTAGEN_EFFECT = new EffectBase(EffectType.HARMFUL, 0x005B08).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "mutagen_effect"));
     public static Effect BONE_HURTING_JUICE_EFFECT = new EffectBase(EffectType.HARMFUL, 0xE0761F).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "bone_hurting_juice_effect"));
     public static Effect INSTABILITY_EFFECT = new EffectBase(EffectType.NEUTRAL, 0x72056F).setRegistryName(new ResourceLocation(SquidsGalore.MOD_ID, "instability_effect"));
@@ -110,6 +106,7 @@ public class ModEffects {
                     ModEffects.PERFUME_EFFECT,
                     ModEffects.SLIME_BOTTLE_EFFECT,
                     ModEffects.GLUE_EFFECT,
+                    ModEffects.GRAVITY_EFFECT,
                     ModEffects.MUTAGEN_EFFECT,
                     ModEffects.BONE_HURTING_JUICE_EFFECT,
                     ModEffects.INSTABILITY_EFFECT,
@@ -137,6 +134,7 @@ public class ModEffects {
             );
         }
     }
+
     @Mod.EventBusSubscriber(modid = SquidsGalore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE,  value = Dist.CLIENT)
     public static class ModEffectEvents {
         @SubscribeEvent
@@ -150,7 +148,18 @@ public class ModEffects {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.MILK_BOTTLE_EFFECT) {
-                    targetEntity.clearActivePotions();
+                    Collection<EffectInstance> activeEffects = targetEntity.getActivePotionEffects();
+                    List<Effect> removableEffects = new ArrayList<>();
+                    for (EffectInstance effect : activeEffects)
+                        if (effect.getPotion() != ModEffects.MILK_BOTTLE_EFFECT && effect.getPotion() != ModEffects.GLUE_EFFECT) removableEffects.add(effect.getPotion());
+                    for (Effect removableEffect : removableEffects)
+                        if (targetEntity.isPotionActive(removableEffect)) targetEntity.removePotionEffect(removableEffect);
+                    if (targetEntity.isPotionActive(ModEffects.GLUE_EFFECT)){
+                        if (Objects.requireNonNull(targetEntity.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getAmplifier() > 0){
+                            targetEntity.addPotionEffect(new EffectInstance(ModEffects.GRAVITY_EFFECT, 5 * 20, 0, false, false, true));
+                        }
+                        targetEntity.removePotionEffect(ModEffects.GLUE_EFFECT);
+                    }
                     targetEntity.addPotionEffect(new EffectInstance(Effects.STRENGTH, potionEffect.getDuration(), potionEffect.getAmplifier()));
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
@@ -191,9 +200,10 @@ public class ModEffects {
                     int defaultDuration = ModItems.GLUE.get().MILK_EFFECT_DURATION;
                     if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
                         targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), potionEffect.getAmplifier() + 4));
-                    } else targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), 0));
-
-                }//wall walking todo
+                    } else
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, potionEffect.getDuration(), 0));
+                    if (potionEffect.getAmplifier() > 0) GravityHandler.addGravityHandler(targetEntity);
+                }//done?
                 if (potionEffect.getPotion() == ModEffects.MUTAGEN_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     targetEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, potionEffect.getDuration(), potionEffect.getAmplifier()));
@@ -215,7 +225,7 @@ public class ModEffects {
                         double d2 = targetEntity.getPosZ();
                         for(int i = 0; i < 16; ++i) {
                             double d3 = targetEntity.getPosX() + (targetEntity.getRNG().nextDouble() - 0.5D) * 16.0D;
-                            double d4 = MathHelper.clamp(targetEntity.getPosY() + (double)(targetEntity.getRNG().nextInt(16) - 8), 0.0D, (double)(worldIn.func_234938_ad_() - 1));
+                            double d4 = MathHelper.clamp(targetEntity.getPosY() + (double)(targetEntity.getRNG().nextInt(16) - 8), 0.0D, (worldIn.func_234938_ad_() - 1));
                             double d5 = targetEntity.getPosZ() + (targetEntity.getRNG().nextDouble() - 0.5D) * 16.0D;
                             if (targetEntity.isPassenger()) {
                                 targetEntity.stopRiding();
@@ -327,6 +337,7 @@ public class ModEffects {
                     omenRecipient.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 0));
                 }//ongoing effect for boss battle, todo
             }
+
         }
         @SubscribeEvent
         public static void onPotionActive(TickEvent.PlayerTickEvent event){
@@ -395,6 +406,10 @@ public class ModEffects {
                     if (Objects.requireNonNull(player.getActivePotionEffect(ModEffects.GLUE_EFFECT)).getDuration() < 3) player.setNoGravity(false);
                 }
             }
+            if (player.isPotionActive(ModEffects.GRAVITY_EFFECT)){
+                player.setNoGravity(false);
+                player.removeActivePotionEffect(ModEffects.GRAVITY_EFFECT);
+            }
         }
 
         @SubscribeEvent
@@ -440,20 +455,16 @@ public class ModEffects {
                        }
                    }
                 }
-                if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
-                    targetEntity.setNoGravity(false);
-                }
             }
         }
+
         @SubscribeEvent
         public static void onPotionCleared(PotionEvent.PotionRemoveEvent event){
             World worldIn = event.getEntity().getEntityWorld();
             LivingEntity targetEntity = event.getEntityLiving();
             EffectInstance potionEffect = event.getPotionEffect();
             if (potionEffect != null) {
-                if (potionEffect.getPotion() == ModEffects.GLUE_EFFECT) {
-                    targetEntity.setNoGravity(false);
-                }
+                //do something
             }
         }
         @SubscribeEvent
@@ -536,4 +547,19 @@ public class ModEffects {
             }
         }
     }
+//    private static final String PROTOCOL_VERSION = "1";
+//    public static final SimpleChannel GRAVITY_PACKET = NetworkRegistry.newSimpleChannel(
+//            new ResourceLocation(SquidsGalore.MOD_ID, "main"),
+//            () -> PROTOCOL_VERSION,
+//            PROTOCOL_VERSION::equals,
+//            PROTOCOL_VERSION::equals
+//    );
+//    public static void handle(boolean msg, Supplier<NetworkEvent.Context> ctx) {
+//        ctx.get().enqueueWork(() -> {
+//            // Work that needs to be threadsafe (most work)
+//            ServerPlayerEntity sender = ctx.get().getSender(); // the client that sent this packet
+//            if (sender != null) sender.setNoGravity(msg);
+//        });
+//        ctx.get().setPacketHandled(true);
+//    }
 }
