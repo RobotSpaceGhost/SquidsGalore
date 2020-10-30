@@ -61,6 +61,6 @@ public class SlushyItem extends AbstractMilkItem{
         else if (this.isThick && !defaultDisplayName.contains("Thickened")) {
             stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Thickened " + defaultDisplayName));
         }
-        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"To remove stains, be sure to use rubbing alcohol!" ));
+        tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Freeeeze your braaaain~" ));
     }
 }

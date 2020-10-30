@@ -55,11 +55,11 @@ public class GlueItem extends AbstractMilkItem{
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         String defaultDisplayName = stack.getDisplayName().getString();
-        if (this.isLong && !defaultDisplayName.contains("Extended")) {
-            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.RED + "Extended " + defaultDisplayName));
+        if (this.isLong && !defaultDisplayName.contains("Orangutan")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.RED + "Orangutan " + defaultDisplayName));
         }
-        else if (this.isThick && !defaultDisplayName.contains("Super")) {
-            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "Super " + defaultDisplayName));
+        else if (this.isThick && !defaultDisplayName.contains("ACME Brand Super")) {
+            stack.setDisplayName(ITextComponent.func_241827_a_(TextFormatting.GOLD + "ACME Brand Super " + defaultDisplayName));
         }
         tooltip.add(ITextComponent.func_241827_a_(TextFormatting.GRAY +"Don't eat paste, kids" ));
     }

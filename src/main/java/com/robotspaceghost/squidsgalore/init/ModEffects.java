@@ -1,5 +1,6 @@
 package com.robotspaceghost.squidsgalore.init;
 
+import com.mojang.realmsclient.gui.screens.RealmsSubscriptionInfoScreen;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 
@@ -34,6 +35,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 
@@ -145,7 +147,12 @@ public class ModEffects {
             int effectDuration = potionEffect.getDuration();
             if (!worldIn.isRemote) {
                 if (potionEffect.getPotion() == ModEffects.SQUID_INK_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), potionEffect.getAmplifier()));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, potionEffect.getDuration(), 0 ));
+                    targetEntity.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, potionEffect.getDuration(), 0 ));
+                    if (potionEffect.getAmplifier() > 0){
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, potionEffect.getDuration(), 0 ));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.SPEED, potionEffect.getDuration(), 1 ));
+                    }
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.MILK_BOTTLE_EFFECT) {
                     Collection<EffectInstance> activeEffects = targetEntity.getActivePotionEffects();
@@ -164,7 +171,7 @@ public class ModEffects {
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier() + 1));
-                }//done!!!
+                }//done, but consider adding beard model
                 if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
                     int defaultDuration = ModItems.SQUID_AIR.get().MILK_EFFECT_DURATION;
                     if (effectDuration != defaultDuration && effectDuration != defaultDuration * 2) {
@@ -308,7 +315,7 @@ public class ModEffects {
                         for (Effect buff : activeBuffs)
                             if (targetEntity.isPotionActive(buff)) targetEntity.removePotionEffect(buff);
                     }
-                }
+                } //done!!
                 if (potionEffect.getPotion() == ModEffects.CRYSTAL_GEM_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
@@ -335,6 +342,7 @@ public class ModEffects {
                     ServerPlayerEntity omenRecipient = (ServerPlayerEntity) targetEntity;
                     omenRecipient.getServerWorld().spawnParticle(omenRecipient, ModParticles.KRAKEN_PARTICLE.get(), false, omenRecipient.getPosX(), omenRecipient.getPosY(), omenRecipient.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0);
                     omenRecipient.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 0));
+                    omenRecipient.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 50, 0 ));
                 }//ongoing effect for boss battle, todo
             }
 
@@ -349,7 +357,9 @@ public class ModEffects {
                     int charcoalLevel = Objects.requireNonNull(player.getActivePotionEffect(ModEffects.ACTIVATED_CHARCOAL_EFFECT)).getAmplifier();
                     Collection<EffectInstance> activeEffects = player.getActivePotionEffects();
                     List<Effect> activeDebuffs = new ArrayList<>();
-                    for (EffectInstance effect : activeEffects) if (effect.getPotion().getEffectType() == EffectType.HARMFUL) activeDebuffs.add(effect.getPotion());
+                    for (EffectInstance effect : activeEffects) {
+                        if (effect.getPotion().getEffectType() == EffectType.HARMFUL || (effect.getPotion() == Effects.RESISTANCE) && effect.getAmplifier() == 4) activeDebuffs.add(effect.getPotion());
+                    }
                     for (Effect debuff : activeDebuffs){
                         if (player.isPotionActive(debuff)) {
                             player.removePotionEffect(debuff);
@@ -546,20 +556,10 @@ public class ModEffects {
                 }
             }
         }
+//        @SubscribeEvent
+//        public void onPlayerRender(RenderPlayerEvent.Pre event) {
+//            event.getRenderer().addLayer(new LayerDojutsuBase(event.getRenderer()));
+//        }
     }
-//    private static final String PROTOCOL_VERSION = "1";
-//    public static final SimpleChannel GRAVITY_PACKET = NetworkRegistry.newSimpleChannel(
-//            new ResourceLocation(SquidsGalore.MOD_ID, "main"),
-//            () -> PROTOCOL_VERSION,
-//            PROTOCOL_VERSION::equals,
-//            PROTOCOL_VERSION::equals
-//    );
-//    public static void handle(boolean msg, Supplier<NetworkEvent.Context> ctx) {
-//        ctx.get().enqueueWork(() -> {
-//            // Work that needs to be threadsafe (most work)
-//            ServerPlayerEntity sender = ctx.get().getSender(); // the client that sent this packet
-//            if (sender != null) sender.setNoGravity(msg);
-//        });
-//        ctx.get().setPacketHandled(true);
-//    }
+
 }

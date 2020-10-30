@@ -23,4 +23,7 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> TELEPORT_ARRIVAL = SOUNDS.register("teleport_arrival",
             () -> new SoundEvent(new ResourceLocation(SquidsGalore.MOD_ID, "teleport_arrival")));
+
+//    public static final RegistryObject<SoundEvent> BEARD_EQUIP = SOUNDS.register("beard_equip",
+//            () -> new SoundEvent(new ResourceLocation(SquidsGalore.MOD_ID, "beard_equip")));
 }

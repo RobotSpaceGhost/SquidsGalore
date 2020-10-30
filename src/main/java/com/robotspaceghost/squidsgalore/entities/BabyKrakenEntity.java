@@ -294,7 +294,7 @@ public class BabyKrakenEntity extends CreatureEntity {
                     if (babyKiller.isPotionActive(effect)) effectLevel = Objects.requireNonNull(babyKiller.getActivePotionEffect(effect)).getAmplifier() + 1;
                     babyKiller.addPotionEffect(new EffectInstance(effect, effectDuration, effectLevel));
                 }
-                babyKiller.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 1, 1);
+                this.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 1, 1);
             }
         }
         if (this.getKrakenMom() != this.getRevengeTarget() && !this.getKrakenMom().addItemStackToInventory(new ItemStack(ModItems.BABY_KRAKEN_EGG.get()))){

@@ -7,6 +7,7 @@
   "item.squidsg.raw_squidchop": "Raw Squidchop",
   "item.squidsg.squid_beef": "Squid Steak",
   "item.squidsg.squidchop": "Squidchop",
+  "item.squidsg.beard": "Beard",
 
   "block.squidsg.kraken_glass": "Kraken Glass",
   "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
@@ -88,7 +89,7 @@
   "item.minecraft.tipped_arrow.effect.crystal_gem_effect" : "Crystal Tipped Arrow",
   "item.minecraft.lingering_potion.effect.crystal_gem_effect" : "Lingering Crystalline Potion",
 
-  "effect.squidsg.diluted_honey_effect": "Sticky",
+  "effect.squidsg.diluted_honey_effect": "Antibiotic",
   "item.squidsg.milk.diluted_honey" : "Diluted Honey",
   "item.squidsg.milk.diluted_honey_long" : "Diluted Honey",
   "item.squidsg.milk.diluted_honey_thick" : "Diluted Honey",
@@ -124,11 +125,11 @@
   "item.minecraft.tipped_arrow.effect.glowstone_bottle_effect" : "Glowstone Tipped Arrow",
   "item.minecraft.lingering_potion.effect.glowstone_bottle_effect" : "Lingering Glowstone Potion",
 
-  "effect.squidsg.glue_effect": "Slow",
+  "effect.squidsg.glue_effect": "Sticky",
   "effect.squidsg.gravity_effect": "Gravity: ON",
-  "item.squidsg.milk.glue" : "ACME Brand Glue",
-  "item.squidsg.milk.glue_long" : "ACME Brand Glue",
-  "item.squidsg.milk.glue_thick" : "ACME Brand Glue",
+  "item.squidsg.milk.glue" : "Glue",
+  "item.squidsg.milk.glue_long" : "Glue",
+  "item.squidsg.milk.glue_thick" : "Glue",
   "item.minecraft.potion.effect.glue_effect" : "Glue Potion",
   "item.minecraft.splash_potion.effect.glue_effect" : "Splash Glue Potion",
   "item.minecraft.tipped_arrow.effect.glue_effect" : "Glue Tipped Arrow",

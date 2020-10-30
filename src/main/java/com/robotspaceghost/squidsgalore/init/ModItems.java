@@ -5,7 +5,10 @@ import com.robotspaceghost.squidsgalore.blocks.BlockItemBase;
 import com.robotspaceghost.squidsgalore.items.*;
 import com.robotspaceghost.squidsgalore.items.SquidBucketItem;
 import com.robotspaceghost.squidsgalore.items.SquidMilk.*;
+import com.robotspaceghost.squidsgalore.util.enums.ModArmorMaterial;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
@@ -241,6 +244,10 @@ public class ModItems {
             () -> new BlockItemBase(ModBlocks.KRAKEN_GLASS.get()));
     public static final RegistryObject<Item> INVERTED_KRAKEN_GLASS_ITEM = ITEMS.register("inverted_kraken_glass",
             () -> new BlockItemBase(ModBlocks.INVERTED_KRAKEN_GLASS.get()));
+
+    //Armor
+    public static final RegistryObject<ArmorItem> BEARD = ITEMS.register("beard",
+            () -> new ArmorItem(ModArmorMaterial.BEARD, EquipmentSlotType.HEAD, new Item.Properties().group(SquidsGalore.TAB)));
 
     //GlowSquidSoul OnlyCreative
     public static final RegistryObject<Item> GLOW_SQUID_SOUL_ITEM = ITEMS.register("glow_squid_soul",

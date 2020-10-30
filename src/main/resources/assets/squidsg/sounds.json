@@ -38,5 +38,15 @@
         "stream": true
       }
     ]
+  },
+  "beard_equip": {
+    "category": "player",
+    "subtitle": "beard_equip",
+    "sounds": [
+      {
+        "name": "squidsg:player/beard_equip",
+        "stream": true
+      }
+    ]
   }
 }
