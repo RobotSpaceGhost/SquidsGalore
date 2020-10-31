@@ -327,7 +327,7 @@ public class ModEffects {
                 if (potionEffect.getPotion() == ModEffects.HOURGLASS_EFFECT) {
                     //targetEntity.addPotionEffect(new EffectInstance(Effects.DUMMY, potionEffect.getDuration(), potionEffect.getAmplifier()));
                     System.out.println(potionEffect.getPotion().getName() + "needs work");
-                }//drink only, and splash random effects,todo
+                }//drink only nearby movespeed, and splash random effects,todo
                 if (potionEffect.getPotion() == ModEffects.KRAKEN_BREATH_EFFECT) {
                     if (targetEntity instanceof ElderGuardianEntity)
                         targetEntity.addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, potionEffect.getAmplifier() + 2));
@@ -556,10 +556,6 @@ public class ModEffects {
                 }
             }
         }
-//        @SubscribeEvent
-//        public void onPlayerRender(RenderPlayerEvent.Pre event) {
-//            event.getRenderer().addLayer(new LayerDojutsuBase(event.getRenderer()));
-//        }
     }
 
 }

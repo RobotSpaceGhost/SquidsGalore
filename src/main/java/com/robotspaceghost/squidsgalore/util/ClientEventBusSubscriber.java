@@ -1,10 +1,8 @@
 package com.robotspaceghost.squidsgalore.util;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
-import com.robotspaceghost.squidsgalore.client.render.BabyKrakenRenderer;
-import com.robotspaceghost.squidsgalore.client.render.DomesticSquidRenderer;
-import com.robotspaceghost.squidsgalore.client.render.KrakenRenderer;
-import com.robotspaceghost.squidsgalore.client.render.KrakenTentacleRenderer;
+import com.robotspaceghost.squidsgalore.client.render.*;
+import com.robotspaceghost.squidsgalore.entities.BeardEntity;
 import com.robotspaceghost.squidsgalore.init.*;
 import com.robotspaceghost.squidsgalore.items.ModSpawnEggItem;
 import com.robotspaceghost.squidsgalore.particles.KrakenParticle;
@@ -28,6 +26,7 @@ public class ClientEventBusSubscriber {
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.KRAKEN.get(), KrakenRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.KRAKEN_TENTACLE.get(), KrakenTentacleRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.BEARD_ENTITY.get(), BeardEntityRenderer::new);
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event){

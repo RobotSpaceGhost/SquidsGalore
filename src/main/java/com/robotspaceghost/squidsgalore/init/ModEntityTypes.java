@@ -1,10 +1,7 @@
 package com.robotspaceghost.squidsgalore.init;
 
 import com.robotspaceghost.squidsgalore.SquidsGalore;
-import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
-import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
-import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
-import com.robotspaceghost.squidsgalore.entities.KrakenTentacleEntity;
+import com.robotspaceghost.squidsgalore.entities.*;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -33,4 +30,8 @@ public class ModEntityTypes {
             () -> EntityType.Builder.create(KrakenTentacleEntity::new,  EntityClassification.MONSTER)
                     .size(1.0f, 3f) //change later
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_tentacle").toString()));
+    public static final RegistryObject<EntityType<BeardEntity>> BEARD_ENTITY = ENTITY_TYPES.register("beard_entity",
+            () -> EntityType.Builder.create(BeardEntity::new,  EntityClassification.CREATURE)
+                    .size(.5f, 0.75f)
+                    .build(new ResourceLocation(SquidsGalore.MOD_ID, "beard_entity").toString()));
 }

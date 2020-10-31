@@ -1,9 +1,6 @@
 package com.robotspaceghost.squidsgalore;
 
-import com.robotspaceghost.squidsgalore.entities.BabyKrakenEntity;
-import com.robotspaceghost.squidsgalore.entities.DomesticSquidEntity;
-import com.robotspaceghost.squidsgalore.entities.KrakenEntity;
-import com.robotspaceghost.squidsgalore.entities.KrakenTentacleEntity;
+import com.robotspaceghost.squidsgalore.entities.*;
 import com.robotspaceghost.squidsgalore.init.*;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
 import com.robotspaceghost.squidsgalore.util.GravityHandler;
@@ -46,6 +43,8 @@ public class SquidsGalore
             GlobalEntityTypeAttributes.put(ModEntityTypes.DOMESTIC_SQUID.get(), DomesticSquidEntity.setCustomAttributes().func_233813_a_());
             GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN.get(), KrakenEntity.setCustomAttributes().func_233813_a_());
             GlobalEntityTypeAttributes.put(ModEntityTypes.KRAKEN_TENTACLE.get(), KrakenTentacleEntity.setCustomAttributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntityTypes.BEARD_ENTITY.get(), BeardEntity.setCustomAttributes().func_233813_a_());
+
 
             ModSpecialPotions.registerBrewingRecipes();
         });
