@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.screens.RealmsSubscriptionInfoScreen;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 
+import com.robotspaceghost.squidsgalore.util.BeardHandler;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
 
 import com.robotspaceghost.squidsgalore.util.GravityHandler;
@@ -171,6 +172,7 @@ public class ModEffects {
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier() + 1));
+                    BeardHandler.addBeardHandler(targetEntity);
                 }//done, but consider adding beard model
                 if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
                     int defaultDuration = ModItems.SQUID_AIR.get().MILK_EFFECT_DURATION;
@@ -345,6 +347,9 @@ public class ModEffects {
                     omenRecipient.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 50, 0 ));
                 }//ongoing effect for boss battle, todo
             }
+//            if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT){
+//                BeardHandler.addBeardHandler(targetEntity);
+//            } //beard oil beard handler
 
         }
         @SubscribeEvent

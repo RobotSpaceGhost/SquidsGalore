@@ -28,10 +28,7 @@ public class GravityHandler {
         if (event.phase == TickEvent.Phase.END && event.player == this.entityLiving && !event.player.isElytraFlying()) {
             Collection<EffectInstance> activeEffects = this.entityLiving.getActivePotionEffects();
             if (activeEffects.isEmpty()){
-                System.out.println("attempting to add gravity effect on glue end 2");
-                if (this.entityLiving.addPotionEffect(new EffectInstance(ModEffects.GRAVITY_EFFECT, 5 * 20, 0, false, false, false))) {
-                    System.out.println("success in removing");
-                } else System.out.println("failed in removing");
+                this.entityLiving.addPotionEffect(new EffectInstance(ModEffects.GRAVITY_EFFECT, 5 * 20, 0, false, false, false));
                 MinecraftForge.EVENT_BUS.unregister(this);
                 gravityEntities.remove(this.entityLiving);
             }

@@ -18,7 +18,8 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class SquidBucketItem extends BucketItem {
+public class
+SquidBucketItem extends BucketItem {
     private final EntityType<?> squidType;
     private final java.util.function.Supplier<? extends EntityType<?>> squidTypeSupplier;
     public SquidBucketItem(java.util.function.Supplier<? extends EntityType<?>> squidTypeIn, java.util.function.Supplier<? extends Fluid> fluid, Item.Properties builder) {

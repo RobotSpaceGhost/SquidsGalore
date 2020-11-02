@@ -32,6 +32,6 @@ public class ModEntityTypes {
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_tentacle").toString()));
     public static final RegistryObject<EntityType<BeardEntity>> BEARD_ENTITY = ENTITY_TYPES.register("beard_entity",
             () -> EntityType.Builder.create(BeardEntity::new,  EntityClassification.CREATURE)
-                    .size(.5f, 0.75f)
+                    .size(0.1f, 0.75f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "beard_entity").toString()));
 }

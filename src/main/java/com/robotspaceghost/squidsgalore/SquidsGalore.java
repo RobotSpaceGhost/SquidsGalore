@@ -2,6 +2,7 @@ package com.robotspaceghost.squidsgalore;
 
 import com.robotspaceghost.squidsgalore.entities.*;
 import com.robotspaceghost.squidsgalore.init.*;
+import com.robotspaceghost.squidsgalore.util.BeardHandler;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
 import com.robotspaceghost.squidsgalore.util.GravityHandler;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -34,6 +35,7 @@ public class SquidsGalore
         ModParticles.PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
         MinecraftForge.EVENT_BUS.register(BounceHandler.class);
         MinecraftForge.EVENT_BUS.register(GravityHandler.class);
+        MinecraftForge.EVENT_BUS.register(BeardHandler.class);
         MinecraftForge.EVENT_BUS.register(this);
     }
     //func_233813 -> create();

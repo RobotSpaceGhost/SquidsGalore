@@ -7,7 +7,7 @@
   "item.squidsg.raw_squidchop": "Raw Squidchop",
   "item.squidsg.squid_beef": "Squid Steak",
   "item.squidsg.squidchop": "Squidchop",
-  "item.squidsg.beard": "Beard",
+  "item.squidsg.beard": "Well Groomed Beard",
 
   "block.squidsg.kraken_glass": "Kraken Glass",
   "block.squidsg.inverted_kraken_glass": "Inverted Kraken Glass",
@@ -23,7 +23,7 @@
   "entity.squidsg.baby_kraken": "Baby Kraken",
   "entity.squidsg.kraken": "Kraken",
   "entity.squidsg.kraken_tentacle": "Kraken Tentacle",
-  "entity.squidsg.beard_entity": "Well Groomed Beard",
+  "entity.squidsg.beard_entity": "Wild Beard",
 
   "particle.squidsg.kraken_particle": "Kraken Particle",
 
