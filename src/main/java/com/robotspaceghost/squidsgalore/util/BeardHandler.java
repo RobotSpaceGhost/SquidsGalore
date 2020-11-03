@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 
@@ -32,17 +33,17 @@ public class BeardHandler {
     public final LivingEntity entityLiving;
     public final BeardEntity beard;
 
-    public BeardHandler(LivingEntity entityLiving) {
+    public BeardHandler(LivingEntity entityLiving, @Nullable BeardEntity beard) {
         this.entityLiving = entityLiving;
-        World worldIn = this.entityLiving.world;
-        BlockPos pos = new BlockPos(this.entityLiving.getPosX(),this.entityLiving.getPosY(),this.entityLiving.getPosZ());
-        this.beard  = ModEntityTypes.BEARD_ENTITY.get().spawn(worldIn, null, null, null, pos, SpawnReason.EVENT, true, false);
+        if (beard != null) this.beard = beard;
+        else {
+            System.out.println("Creating new beard!");
+            World worldIn = this.entityLiving.world;
+            BlockPos pos = new BlockPos(this.entityLiving.getPosX(), this.entityLiving.getPosY(), this.entityLiving.getPosZ());
+            this.beard = ModEntityTypes.BEARD_ENTITY.get().spawn(worldIn, null, null, null, pos, SpawnReason.EVENT, true, false);
+        }
         if (this.beard != null){
-            this.beard.setOwnerId(this.entityLiving.getEntityId());
             beardedEntities.put(entityLiving, this);
-            if (this.beard.getBeardParent() == null){
-                System.out.println("beard parent null???");
-            }
         }else{
             System.out.println("Unregistering in beard protect in init!");
             MinecraftForge.EVENT_BUS.unregister(this);
@@ -53,13 +54,15 @@ public class BeardHandler {
 
     @SubscribeEvent
     public void beardProtectEvent(LivingDamageEvent event){
-        if (this.entityLiving == event.getEntityLiving()){
+        if (!this.entityLiving.world.isRemote && this.entityLiving == event.getEntityLiving()){
+            System.out.println("damage event entity match!");
             this.beard.setHealth(Math.max(this.beard.getHealth() - event.getAmount(), 0));
             if (this.beard.getHealth() <= 0){
                 System.out.println("Unregistering in beard protect!");
                 MinecraftForge.EVENT_BUS.unregister(this);
                 beardedEntities.remove(this.entityLiving);
             } //else this.beard.performHurtAnimation();
+            event.setAmount(0);
             event.setCanceled(true);
         }
     }
@@ -105,12 +108,16 @@ public class BeardHandler {
         }
     }
 
-    public static void addBeardHandler(LivingEntity entity) {
+    public static boolean addBeardHandler(LivingEntity entity, @Nullable BeardEntity beard) {
         if (entity.isAlive() && !(entity instanceof BeardEntity) && !(entity instanceof AnimalEntity) && (entity.getWidth() == .6f)) {
             BeardHandler handler = beardedEntities.get(entity);
-            if (handler == null && !entity.world.isRemote) {
+            if (handler == null) {
                 System.out.println("registering new beard");
-                MinecraftForge.EVENT_BUS.register(new BeardHandler(entity));}
+                MinecraftForge.EVENT_BUS.register(new BeardHandler(entity, beard));
+                return true;
+            }
+            else return(handler.beard == beard);
         }
+        return false;
     }
 }

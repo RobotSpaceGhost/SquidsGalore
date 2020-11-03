@@ -172,7 +172,7 @@ public class ModEffects {
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier() + 1));
-                    BeardHandler.addBeardHandler(targetEntity);
+                    BeardHandler.addBeardHandler(targetEntity, null);
                 }//done, but consider adding beard model
                 if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
                     int defaultDuration = ModItems.SQUID_AIR.get().MILK_EFFECT_DURATION;

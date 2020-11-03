@@ -1,45 +1,29 @@
 package com.robotspaceghost.squidsgalore.entities;
 
 
-import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.init.ModSounds;
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import net.minecraft.block.BlockState;
+import com.robotspaceghost.squidsgalore.util.BeardHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.UUID;
+
 
 public class BeardEntity extends CreatureEntity {
 
-    protected static final DataParameter<Float> BEARD_PARENT = EntityDataManager.createKey(BabyKrakenEntity.class, DataSerializers.FLOAT);
+    private LivingEntity beardParent;
+
     public BeardEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
     }
-
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
         return MobEntity.registerAttributes()
@@ -81,25 +65,19 @@ public class BeardEntity extends CreatureEntity {
         return false;
     }
 
-    public void setOwnerId(float ownerId) { this.dataManager.set(BEARD_PARENT, ownerId); }
-    public float getOwnerId() { return this.dataManager.get(BEARD_PARENT); }
-    public LivingEntity getBeardParent(){
-        int owner = (int) getOwnerId();
-        return (LivingEntity) this.world.getEntityByID(owner);
-    }
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(BEARD_PARENT, -1f);
-    }
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putFloat("BeardParent", this.getOwnerId());
-    }
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        this.setOwnerId(compound.getFloat("BeardParent"));
-    }
+    @Override
+    public void setAIMoveSpeed(float speedIn) { super.setAIMoveSpeed(0); }
+    @Override
+    public void setMoveForward(float amount) { super.setMoveForward(0); }
+    @Override
+    public void setMoveVertical(float amount) { super.setMoveVertical(0); }
+    @Override
+    public void setMoveStrafing(float amount) { super.setMoveStrafing(0); }
 
+
+    public LivingEntity getBeardParent(){
+        return this.beardParent;
+    }
 
     @Override
     protected boolean canTriggerWalking() {
@@ -118,27 +96,36 @@ public class BeardEntity extends CreatureEntity {
 
     @Override
     public void livingTick() {
-        super.livingTick();
+        //super.livingTick();
         //if (this.beardParent == null) this.beardParent = this.world.getClosestPlayer(this,10D);
-        LivingEntity beardParent = this.getBeardParent();
-        if (beardParent != null && beardParent.isAlive() && this.world.isRemote){
-            this.setPosition(beardParent.getPosX()
-            , beardParent.getPosY() + beardParent.getEyeHeight() - .68
-            , beardParent.getPosZ());
+        if (this.world.isRemote) System.out.println("remote parent exists: " + (this.beardParent != null));
+        else System.out.println("server parent exists: " + (this.beardParent != null));
+        if(this.beardParent == null){
+            double R = 10;
+            AxisAlignedBB beardRad = new AxisAlignedBB(
+                    this.getPosX()-R,
+                    this.getPosY()-R,
+                    this.getPosZ()-R,
+                    this.getPosX()+R,
+                    this.getPosY()+R,
+                    this.getPosZ()+R
+            );
+            List<Entity> potentialHosts = this.world.getEntitiesWithinAABBExcludingEntity(this,beardRad);
+            for (Entity host : potentialHosts){
+                if (host instanceof LivingEntity &&  BeardHandler.addBeardHandler((LivingEntity) host, this)){
+                    this.beardParent = (LivingEntity) host;
+                    break;
+                }
+            }
+            if (this.beardParent == null) this.setHealth(0);
+        } else {
+            if (this.beardParent.isAlive() && this.world.isRemote) {
+                this.setPosition(this.beardParent.getPosX()
+                        , this.beardParent.getPosY() + this.beardParent.getEyeHeight() - .68
+                        , this.beardParent.getPosZ());
+            }
+            if (!this.beardParent.isAlive()) this.setHealth(0);
         }
     }
-
-//    @Mod.EventBusSubscriber(modid = SquidsGalore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE,  value = Dist.CLIENT)
-//    public static class beardEvents {
-//        @SubscribeEvent
-//        public static void noOwnerDamage(AttackEntityEvent event){
-//            if (event.getTarget() instanceof BeardEntity){
-//                BeardEntity beard = (BeardEntity) event.getTarget();
-//                if (event.getEntityLiving() == beard.getBeardParent()){
-//                    event.setCanceled(true);
-//                }
-//            }
-//        }
-//    }
 
 }
