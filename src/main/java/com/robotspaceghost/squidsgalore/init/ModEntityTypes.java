@@ -16,7 +16,7 @@ public class ModEntityTypes {
     //Entity Types
     public static final RegistryObject<EntityType<BabyKrakenEntity>> BABY_KRAKEN = ENTITY_TYPES.register("baby_kraken",
             () -> EntityType.Builder.create(BabyKrakenEntity::new,  EntityClassification.CREATURE)
-                    .size(1.0f, 0.75f)
+                    .size(.6f, 0.9f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "baby_kraken").toString()));
     public static final RegistryObject<EntityType<DomesticSquidEntity>> DOMESTIC_SQUID = ENTITY_TYPES.register("domestic_squid",
             () -> EntityType.Builder.create(DomesticSquidEntity::new,  EntityClassification.WATER_CREATURE)
@@ -32,6 +32,6 @@ public class ModEntityTypes {
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "kraken_tentacle").toString()));
     public static final RegistryObject<EntityType<BeardEntity>> BEARD_ENTITY = ENTITY_TYPES.register("beard_entity",
             () -> EntityType.Builder.create(BeardEntity::new,  EntityClassification.CREATURE)
-                    .size(0.1f, 0.75f)
+                    .size(0.1f, 0.1f)
                     .build(new ResourceLocation(SquidsGalore.MOD_ID, "beard_entity").toString()));
 }

@@ -40,7 +40,6 @@ public class BeardEntityModel <T extends BeardEntity> extends EntityModel<T> {
         beard.setTextureOffset(26, 17).addBox(-4.0F, -4.0F, -4.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
         beard.setTextureOffset(47, 17).addBox(3.0F, -4.0F, -4.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
 
-        setRotation(head,0,0,0);
     }
 
 

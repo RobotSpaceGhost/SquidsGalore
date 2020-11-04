@@ -79,6 +79,10 @@ public class BeardEntity extends CreatureEntity {
         return this.beardParent;
     }
 
+    public void setBeardParent(LivingEntity entityIn){
+        this.beardParent = entityIn;
+    }
+
     @Override
     protected boolean canTriggerWalking() {
         return false;
@@ -87,10 +91,13 @@ public class BeardEntity extends CreatureEntity {
     @Override
     protected void doBlockCollisions() { }
 
+
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public boolean isInRangeToRenderDist(double distance) {
         if (distance < 1) return false;
+        else if (this.beardParent != null) return this.beardParent.isInRangeToRenderDist(distance);
         else return super.isInRangeToRenderDist(distance);
     }
 
@@ -98,28 +105,29 @@ public class BeardEntity extends CreatureEntity {
     public void livingTick() {
         //super.livingTick();
         //if (this.beardParent == null) this.beardParent = this.world.getClosestPlayer(this,10D);
-        if (this.world.isRemote) System.out.println("remote parent exists: " + (this.beardParent != null));
-        else System.out.println("server parent exists: " + (this.beardParent != null));
         if(this.beardParent == null){
-            double R = 10;
+            //this.beardParent = BeardHandler.getParentFromBeard(this.entityUniqueID);
+            //this.beardParent = this.world.getClosestPlayer(this,10D);
+            //System.out.println("Remote? : " + this.world.isRemote);
+            //if (this.beardParent == null) this.setHealth(0);
+            double R = 2;
             AxisAlignedBB beardRad = new AxisAlignedBB(
-                    this.getPosX()-R,
-                    this.getPosY()-R,
-                    this.getPosZ()-R,
-                    this.getPosX()+R,
-                    this.getPosY()+R,
-                    this.getPosZ()+R
+                    this.getPosX() - R,
+                    this.getPosY() - R,
+                    this.getPosZ() - R,
+                    this.getPosX() + R,
+                    this.getPosY() + R,
+                    this.getPosZ() + R
             );
             List<Entity> potentialHosts = this.world.getEntitiesWithinAABBExcludingEntity(this,beardRad);
-            for (Entity host : potentialHosts){
-                if (host instanceof LivingEntity &&  BeardHandler.addBeardHandler((LivingEntity) host, this)){
+            for (Entity host : potentialHosts) {
+                if (!(host instanceof BeardEntity) && (host instanceof LivingEntity)) {
                     this.beardParent = (LivingEntity) host;
                     break;
                 }
             }
-            if (this.beardParent == null) this.setHealth(0);
         } else {
-            if (this.beardParent.isAlive() && this.world.isRemote) {
+            if (this.beardParent.isAlive()) {
                 this.setPosition(this.beardParent.getPosX()
                         , this.beardParent.getPosY() + this.beardParent.getEyeHeight() - .68
                         , this.beardParent.getPosZ());
@@ -129,3 +137,27 @@ public class BeardEntity extends CreatureEntity {
     }
 
 }
+/*
+if(this.beardParent == null){
+            this.beardParent = BeardHandler.getParentFromBeard(this);
+            if (this.beardParent == null) {
+                double R = 10;
+                AxisAlignedBB beardRad = new AxisAlignedBB(
+                        this.getPosX() - R,
+                        this.getPosY() - R,
+                        this.getPosZ() - R,
+                        this.getPosX() + R,
+                        this.getPosY() + R,
+                        this.getPosZ() + R
+                );
+                List<Entity> potentialHosts = this.world.getEntitiesWithinAABBExcludingEntity(this, beardRad);
+                for (Entity host : potentialHosts) {
+                    if (host instanceof LivingEntity && BeardHandler.addBeardHandler((LivingEntity) host, this)) {
+                        this.beardParent = (LivingEntity) host;
+                        break;
+                    }
+                }
+            }
+            if (this.beardParent == null) this.setHealth(0);
+        }
+ */
