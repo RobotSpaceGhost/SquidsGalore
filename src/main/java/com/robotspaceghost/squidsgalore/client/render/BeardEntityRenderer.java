@@ -20,6 +20,11 @@ public class BeardEntityRenderer extends MobRenderer<BeardEntity, BeardEntityMod
         super(renderManagerIn, new BeardEntityModel<>(), 0.0f);
     }
 
+    protected void preRenderCallback(BeardEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        if (entitylivingbaseIn.beardParent != null)
+            matrixStackIn.translate(0,(entitylivingbaseIn.beardParent.getHeight() - entitylivingbaseIn.beardParent.getEyeHeight() + .23),0);
+    }
+
     @Override
     public ResourceLocation getEntityTexture(BeardEntity entity) {
         return new ResourceLocation(SquidsGalore.MOD_ID, "textures/entity/beard_entity.png");
