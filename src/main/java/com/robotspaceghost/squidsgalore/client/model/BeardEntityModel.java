@@ -45,6 +45,7 @@ public class BeardEntityModel <T extends BeardEntity> extends EntityModel<T> {
 
     @Override
     public void setLivingAnimations(BeardEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+
         if (entityIn.beardParent != null){
             this.head.rotateAngleY = entityIn.beardParent.rotationYawHead * ((float)Math.PI / 180F);
             this.head.rotateAngleX = entityIn.beardParent.rotationPitch * ((float)Math.PI / 180F);
@@ -53,8 +54,10 @@ public class BeardEntityModel <T extends BeardEntity> extends EntityModel<T> {
 
     @Override
     public void setRotationAngles(BeardEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        //this.beard.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-        //this.beard.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+//        if (entityIn.beardParent != null) {
+//            this.head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
+//            //this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+//        }
     }
 
     @Override

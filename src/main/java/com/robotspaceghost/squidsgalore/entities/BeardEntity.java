@@ -19,6 +19,7 @@ import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -122,7 +123,6 @@ public class BeardEntity extends CreatureEntity {
 //        this.prevRotationPitch = MathHelper.clamp(this.prevRotationPitch, -90.0F, 90.0F);
 //    }
 
-
     @Override
     public double getMountedYOffset() {
         if (this.beardParent != null) return (this.beardParent.getEyeHeight() - .68);
@@ -207,7 +207,6 @@ public class BeardEntity extends CreatureEntity {
         else {
             if (this.beardParent.isAlive()) {
                 this.startRiding(this.beardParent);
-
                 //this.setPosition(this.beardParent.getPosX(), this.beardParent.getPosY() + this.beardParent.getEyeHeight() - .68, this.beardParent.getPosZ());
 
             }
@@ -216,6 +215,19 @@ public class BeardEntity extends CreatureEntity {
            }
         }
     }
+
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        if (this.isAlive() && this.beardParent != null){
+            //this.rotationYaw = this.beardParent.rotationYaw;
+            //this.rotationYawHead = this.beardParent.rotationYawHead;
+            //this.rotationPitch = 0;
+        }
+    }
+
+
+
 
     @Override
     protected void onDeathUpdate() {

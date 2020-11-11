@@ -67,14 +67,10 @@ public class BeardHandler {
     public void beardProtectEvent(LivingDamageEvent event){
         if (!this.entityLiving.world.isRemote && this.entityLiving == event.getEntityLiving()){
             System.out.println("damage event entity match!");
-            this.beard.setHealth(Math.max(this.beard.getHealth() - event.getAmount(), 0));
-//            if (this.beard.getHealth() <= 0){
-//                System.out.println("Unregistering in beard protect!");
-//                MinecraftForge.EVENT_BUS.unregister(this);
-//                beardedEntities.remove(this.entityLiving);
-//            }
-            event.setAmount(0);
-            event.setCanceled(true);
+            float beardHealth = this.beard.getHealth();
+            this.beard.setHealth(Math.max(beardHealth - event.getAmount(), 0));
+            event.setAmount(Math.max(event.getAmount() - beardHealth, 0));
+            event.setCanceled(event.getAmount() <= 0);
         }
     }
 

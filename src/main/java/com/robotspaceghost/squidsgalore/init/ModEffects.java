@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.screens.RealmsSubscriptionInfoScreen;
 import com.robotspaceghost.squidsgalore.SquidsGalore;
 import com.robotspaceghost.squidsgalore.entities.AbstractSquidEntity;
 
+import com.robotspaceghost.squidsgalore.entities.BeardEntity;
 import com.robotspaceghost.squidsgalore.util.BeardHandler;
 import com.robotspaceghost.squidsgalore.util.BounceHandler;
 
@@ -171,8 +172,11 @@ public class ModEffects {
                     targetEntity.addPotionEffect(new EffectInstance(Effects.STRENGTH, potionEffect.getDuration(), potionEffect.getAmplifier()));
                 }//done!!
                 if (potionEffect.getPotion() == ModEffects.BEARD_OIL_EFFECT) {
-                    targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier() + 1));
-                    BeardHandler.addBeardHandler(targetEntity, null);
+                    if (!(targetEntity instanceof BeardEntity)){
+                        //targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), potionEffect.getAmplifier() + 1));
+                        targetEntity.addPotionEffect(new EffectInstance(Effects.ABSORPTION, potionEffect.getDuration(), 4));
+                        BeardHandler.addBeardHandler(targetEntity, null);
+                    }
                 }//done, but consider adding beard model
                 if (potionEffect.getPotion() == ModEffects.SQUID_AIR_EFFECT) {
                     int defaultDuration = ModItems.SQUID_AIR.get().MILK_EFFECT_DURATION;
